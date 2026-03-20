@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AppService } from "@/service/app.service";
-import { createSuccessResponse, type ApiResponse } from "@/lib/types/response";
+import type { AppService } from "../service/index.js";
+import { createSuccessResponse, type ApiResponse } from "../lib/types/response.js";
 
 export class AppController {
   private appService: AppService;

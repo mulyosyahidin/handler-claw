@@ -35,3 +35,4 @@ pids/
 
 # AI Tools
 .claude/
+/src/generated/prisma
