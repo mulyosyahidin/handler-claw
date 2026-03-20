@@ -100,6 +100,126 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>;
 };
 
+export type EnumPrayerTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerType | Prisma.EnumPrayerTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel> | $Enums.PrayerType;
+};
+
+export type EnumPrayerCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerCategory | Prisma.EnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel> | $Enums.PrayerCategory;
+};
+
+export type BoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean;
+};
+
+export type EnumPrayerMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerMethod | Prisma.EnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  not?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel> | $Enums.PrayerMethod | null;
+};
+
+export type EnumPrayerPlaceNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerPlace | Prisma.EnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  not?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel> | $Enums.PrayerPlace | null;
+};
+
+export type StringNullableFilter<$PrismaModel = never> = {
+  equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+  in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  notIn?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  lt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  lte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  contains?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  startsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  endsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  mode?: Prisma.QueryMode;
+  not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null;
+};
+
+export type EnumPrayerTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerType | Prisma.EnumPrayerTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrayerType;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel>;
+};
+
+export type EnumPrayerCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerCategory | Prisma.EnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PrayerCategory;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel>;
+};
+
+export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>;
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>;
+};
+
+export type EnumPrayerMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerMethod | Prisma.EnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  not?:
+    | Prisma.NestedEnumPrayerMethodNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.PrayerMethod
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel>;
+};
+
+export type EnumPrayerPlaceNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerPlace | Prisma.EnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  not?:
+    | Prisma.NestedEnumPrayerPlaceNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.PrayerPlace
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel>;
+};
+
+export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+  in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  notIn?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  lt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  lte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  contains?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  startsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  endsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  mode?: Prisma.QueryMode;
+  not?: Prisma.NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedStringNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedStringNullableFilter<$PrismaModel>;
+};
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>;
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
@@ -201,4 +321,122 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>;
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>;
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>;
+};
+
+export type NestedEnumPrayerTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerType | Prisma.EnumPrayerTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel> | $Enums.PrayerType;
+};
+
+export type NestedEnumPrayerCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerCategory | Prisma.EnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel> | $Enums.PrayerCategory;
+};
+
+export type NestedBoolFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean;
+};
+
+export type NestedEnumPrayerMethodNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerMethod | Prisma.EnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  not?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel> | $Enums.PrayerMethod | null;
+};
+
+export type NestedEnumPrayerPlaceNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerPlace | Prisma.EnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  not?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel> | $Enums.PrayerPlace | null;
+};
+
+export type NestedStringNullableFilter<$PrismaModel = never> = {
+  equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+  in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  notIn?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  lt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  lte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  contains?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  startsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  endsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null;
+};
+
+export type NestedEnumPrayerTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerType | Prisma.EnumPrayerTypeFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerType[] | Prisma.ListEnumPrayerTypeFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrayerType;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerTypeFilter<$PrismaModel>;
+};
+
+export type NestedEnumPrayerCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerCategory | Prisma.EnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  in?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  notIn?: $Enums.PrayerCategory[] | Prisma.ListEnumPrayerCategoryFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedEnumPrayerCategoryWithAggregatesFilter<$PrismaModel> | $Enums.PrayerCategory;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerCategoryFilter<$PrismaModel>;
+};
+
+export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedBoolFilter<$PrismaModel>;
+  _max?: Prisma.NestedBoolFilter<$PrismaModel>;
+};
+
+export type NestedEnumPrayerMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerMethod | Prisma.EnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerMethod[] | Prisma.ListEnumPrayerMethodFieldRefInput<$PrismaModel> | null;
+  not?:
+    | Prisma.NestedEnumPrayerMethodNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.PrayerMethod
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerMethodNullableFilter<$PrismaModel>;
+};
+
+export type NestedEnumPrayerPlaceNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PrayerPlace | Prisma.EnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  in?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  notIn?: $Enums.PrayerPlace[] | Prisma.ListEnumPrayerPlaceFieldRefInput<$PrismaModel> | null;
+  not?:
+    | Prisma.NestedEnumPrayerPlaceNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.PrayerPlace
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumPrayerPlaceNullableFilter<$PrismaModel>;
+};
+
+export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null;
+  in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  notIn?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null;
+  lt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  lte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gt?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  gte?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  contains?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  startsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  endsWith?: string | Prisma.StringFieldRefInput<$PrismaModel>;
+  not?: Prisma.NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedStringNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedStringNullableFilter<$PrismaModel>;
 };

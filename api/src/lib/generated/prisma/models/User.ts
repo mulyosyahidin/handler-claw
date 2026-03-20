@@ -194,6 +194,7 @@ export type UserWhereInput = {
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+  prayerLogs?: Prisma.PrayerLogListRelationFilter;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -204,6 +205,7 @@ export type UserOrderByWithRelationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
+  prayerLogs?: Prisma.PrayerLogOrderByRelationAggregateInput;
 };
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -218,6 +220,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+    prayerLogs?: Prisma.PrayerLogListRelationFilter;
   },
   "id" | "email"
 >;
@@ -256,6 +259,7 @@ export type UserCreateInput = {
   lastLoginAt?: Date | string | null;
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -266,6 +270,7 @@ export type UserUncheckedCreateInput = {
   lastLoginAt?: Date | string | null;
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserUpdateInput = {
@@ -276,6 +281,7 @@ export type UserUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -286,6 +292,7 @@ export type UserUncheckedUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -348,6 +355,11 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder;
 };
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput;
+  isNot?: Prisma.UserWhereInput;
+};
+
 export type StringFieldUpdateOperationsInput = {
   set?: string;
 };
@@ -358,6 +370,135 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string;
+};
+
+export type UserCreateNestedOneWithoutPrayerLogsInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedCreateWithoutPrayerLogsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrayerLogsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutPrayerLogsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedCreateWithoutPrayerLogsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPrayerLogsInput;
+  upsert?: Prisma.UserUpsertWithoutPrayerLogsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutPrayerLogsInput,
+      Prisma.UserUpdateWithoutPrayerLogsInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutPrayerLogsInput
+  >;
+};
+
+export type UserCreateWithoutPrayerLogsInput = {
+  id?: string;
+  email: string;
+  name: string;
+  password: string;
+  lastLoginAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+};
+
+export type UserUncheckedCreateWithoutPrayerLogsInput = {
+  id?: string;
+  email: string;
+  name: string;
+  password: string;
+  lastLoginAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+};
+
+export type UserCreateOrConnectWithoutPrayerLogsInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedCreateWithoutPrayerLogsInput
+  >;
+};
+
+export type UserUpsertWithoutPrayerLogsInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedUpdateWithoutPrayerLogsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedCreateWithoutPrayerLogsInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutPrayerLogsInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutPrayerLogsInput,
+    Prisma.UserUncheckedUpdateWithoutPrayerLogsInput
+  >;
+};
+
+export type UserUpdateWithoutPrayerLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  password?: Prisma.StringFieldUpdateOperationsInput | string;
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+
+export type UserUncheckedUpdateWithoutPrayerLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  password?: Prisma.StringFieldUpdateOperationsInput | string;
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+
+/**
+ * Count Type UserCountOutputType
+ */
+
+export type UserCountOutputType = {
+  prayerLogs: number;
+};
+
+export type UserCountOutputTypeSelect<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+  prayerLogs?: boolean | UserCountOutputTypeCountPrayerLogsArgs;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeDefaultArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the UserCountOutputType
+   */
+  select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPrayerLogsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.PrayerLogWhereInput;
 };
 
 export type UserSelect<
@@ -371,6 +512,8 @@ export type UserSelect<
     lastLoginAt?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>;
+    _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs["result"]["user"]
 >;
@@ -421,12 +564,26 @@ export type UserOmit<
   "id" | "email" | "name" | "password" | "lastLoginAt" | "createdAt" | "updatedAt",
   ExtArgs["result"]["user"]
 >;
+export type UserInclude<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+  prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>;
+  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
+};
+export type UserIncludeCreateManyAndReturn<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {};
+export type UserIncludeUpdateManyAndReturn<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {};
 
 export type $UserPayload<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
   name: "User";
-  objects: {};
+  objects: {
+    prayerLogs: Prisma.$PrayerLogPayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: string;
@@ -946,6 +1103,17 @@ export interface Prisma__UserClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise";
+  prayerLogs<T extends Prisma.User$prayerLogsArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.User$prayerLogsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$PrayerLogPayload<ExtArgs>,
+        T,
+        "findMany",
+        GlobalOmitOptions
+      >
+    | Null
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1002,6 +1170,10 @@ export type UserFindUniqueArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput;
@@ -1022,6 +1194,10 @@ export type UserFindUniqueOrThrowArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput;
@@ -1041,6 +1217,10 @@ export type UserFindFirstArgs<
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
   /**
    * Filter, which User to fetch.
    */
@@ -1092,6 +1272,10 @@ export type UserFindFirstOrThrowArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * Filter, which User to fetch.
    */
   where?: Prisma.UserWhereInput;
@@ -1142,6 +1326,10 @@ export type UserFindManyArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * Filter, which Users to fetch.
    */
   where?: Prisma.UserWhereInput;
@@ -1186,6 +1374,10 @@ export type UserCreateArgs<
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
   /**
    * The data needed to create a User.
    */
@@ -1240,6 +1432,10 @@ export type UserUpdateArgs<
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
   /**
    * The data needed to update a User.
    */
@@ -1313,6 +1509,10 @@ export type UserUpsertArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * The filter to search for the User to update in case it exists.
    */
   where: Prisma.UserWhereUniqueInput;
@@ -1341,6 +1541,10 @@ export type UserDeleteArgs<
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  /**
    * Filter which User to delete.
    */
   where: Prisma.UserWhereUniqueInput;
@@ -1363,6 +1567,32 @@ export type UserDeleteManyArgs<
 };
 
 /**
+ * User.prayerLogs
+ */
+export type User$prayerLogsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the PrayerLog
+   */
+  select?: Prisma.PrayerLogSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the PrayerLog
+   */
+  omit?: Prisma.PrayerLogOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrayerLogInclude<ExtArgs> | null;
+  where?: Prisma.PrayerLogWhereInput;
+  orderBy?: Prisma.PrayerLogOrderByWithRelationInput | Prisma.PrayerLogOrderByWithRelationInput[];
+  cursor?: Prisma.PrayerLogWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: Prisma.PrayerLogScalarFieldEnum | Prisma.PrayerLogScalarFieldEnum[];
+};
+
+/**
  * User without action
  */
 export type UserDefaultArgs<
@@ -1376,4 +1606,8 @@ export type UserDefaultArgs<
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
 };

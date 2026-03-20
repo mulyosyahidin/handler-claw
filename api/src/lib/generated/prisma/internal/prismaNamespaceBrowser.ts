@@ -53,6 +53,7 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull;
 
 export const ModelName = {
   User: "User",
+  PrayerLog: "PrayerLog",
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -82,6 +83,25 @@ export const UserScalarFieldEnum = {
 } as const;
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+
+export const PrayerLogScalarFieldEnum = {
+  id: "id",
+  userId: "userId",
+  date: "date",
+  prayer: "prayer",
+  category: "category",
+  performed: "performed",
+  performedAt: "performedAt",
+  method: "method",
+  place: "place",
+  isQadha: "isQadha",
+  notes: "notes",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+} as const;
+
+export type PrayerLogScalarFieldEnum =
+  (typeof PrayerLogScalarFieldEnum)[keyof typeof PrayerLogScalarFieldEnum];
 
 export const SortOrder = {
   asc: "asc",

@@ -8,5 +8,38 @@
  * 🟢 You can import this file directly.
  */
 
-// This file is empty because there are no enums in the schema.
-export {};
+export const PrayerCategory = {
+  WAJIB: "WAJIB",
+  SUNNAH: "SUNNAH",
+} as const;
+
+export type PrayerCategory = (typeof PrayerCategory)[keyof typeof PrayerCategory];
+
+export const PrayerType = {
+  SUBUH: "SUBUH",
+  DZUHUR: "DZUHUR",
+  ASHAR: "ASHAR",
+  MAGHRIB: "MAGHRIB",
+  ISYA: "ISYA",
+  JUMAT: "JUMAT",
+  DHUHA: "DHUHA",
+  TAHAJUD: "TAHAJUD",
+  WITIR: "WITIR",
+} as const;
+
+export type PrayerType = (typeof PrayerType)[keyof typeof PrayerType];
+
+export const PrayerMethod = {
+  JAMAAH: "JAMAAH",
+  SENDIRI: "SENDIRI",
+} as const;
+
+export type PrayerMethod = (typeof PrayerMethod)[keyof typeof PrayerMethod];
+
+export const PrayerPlace = {
+  MASJID: "MASJID",
+  RUMAH: "RUMAH",
+  LAINNYA: "LAINNYA",
+} as const;
+
+export type PrayerPlace = (typeof PrayerPlace)[keyof typeof PrayerPlace];

@@ -21,3 +21,8 @@ export * from "./enums.js";
  *
  */
 export type User = Prisma.UserModel;
+/**
+ * Model PrayerLog
+ *
+ */
+export type PrayerLog = Prisma.PrayerLogModel;

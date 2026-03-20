@@ -13,14 +13,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PrayerCategory {
+  WAJIB
+  SUNNAH
+}
+
+enum PrayerType {
+  // wajib
+  SUBUH
+  DZUHUR
+  ASHAR
+  MAGHRIB
+  ISYA
+  JUMAT
+
+  // sunnah
+  DHUHA
+  TAHAJUD
+  WITIR
+}
+
+enum PrayerMethod {
+  JAMAAH
+  SENDIRI
+}
+
+enum PrayerPlace {
+  MASJID
+  RUMAH
+  LAINNYA
+}
+
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
+  id          String    @id @default(uuid())
+  email       String    @unique
   name        String
   password    String
   lastLoginAt DateTime? @map("last_login_at")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  prayerLogs PrayerLog[]
 
   @@map("users")
+}
+
+model PrayerLog {
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  date     DateTime
+  prayer   PrayerType
+  category PrayerCategory
+
+  performed   Boolean   @default(false)
+  performedAt DateTime? @map("performed_at")
+
+  method PrayerMethod?
+  place  PrayerPlace?
+
+  isQadha Boolean @default(false) @map("is_qadha")
+
+  notes String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, date])
+  @@map("prayer_logs")
 }

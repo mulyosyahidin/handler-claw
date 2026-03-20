@@ -51,3 +51,8 @@ path.join(process.cwd(), "src/lib/generated/prisma/query_engine-windows.dll.node
  *
  */
 export type User = Prisma.UserModel;
+/**
+ * Model PrayerLog
+ *
+ */
+export type PrayerLog = Prisma.PrayerLogModel;

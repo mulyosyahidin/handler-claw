@@ -388,6 +388,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: "User",
+  PrayerLog: "PrayerLog",
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -407,7 +408,7 @@ export type TypeMap<
     omit: GlobalOmitOptions;
   };
   meta: {
-    modelProps: "user";
+    modelProps: "user" | "prayerLog";
     txIsolationLevel: TransactionIsolationLevel;
   };
   model: {
@@ -485,6 +486,80 @@ export type TypeMap<
         };
       };
     };
+    PrayerLog: {
+      payload: Prisma.$PrayerLogPayload<ExtArgs>;
+      fields: Prisma.PrayerLogFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.PrayerLogFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.PrayerLogFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        findFirst: {
+          args: Prisma.PrayerLogFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.PrayerLogFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        findMany: {
+          args: Prisma.PrayerLogFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>[];
+        };
+        create: {
+          args: Prisma.PrayerLogCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        createMany: {
+          args: Prisma.PrayerLogCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.PrayerLogCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>[];
+        };
+        delete: {
+          args: Prisma.PrayerLogDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        update: {
+          args: Prisma.PrayerLogUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        deleteMany: {
+          args: Prisma.PrayerLogDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.PrayerLogUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.PrayerLogUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>[];
+        };
+        upsert: {
+          args: Prisma.PrayerLogUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrayerLogPayload>;
+        };
+        aggregate: {
+          args: Prisma.PrayerLogAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrayerLog>;
+        };
+        groupBy: {
+          args: Prisma.PrayerLogGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.PrayerLogGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.PrayerLogCountArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.PrayerLogCountAggregateOutputType> | number;
+        };
+      };
+    };
   };
 } & {
   other: {
@@ -536,6 +611,25 @@ export const UserScalarFieldEnum = {
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
 
+export const PrayerLogScalarFieldEnum = {
+  id: "id",
+  userId: "userId",
+  date: "date",
+  prayer: "prayer",
+  category: "category",
+  performed: "performed",
+  performedAt: "performedAt",
+  method: "method",
+  place: "place",
+  isQadha: "isQadha",
+  notes: "notes",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+} as const;
+
+export type PrayerLogScalarFieldEnum =
+  (typeof PrayerLogScalarFieldEnum)[keyof typeof PrayerLogScalarFieldEnum];
+
 export const SortOrder = {
   asc: "asc",
   desc: "desc",
@@ -580,6 +674,75 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, "DateTime[]">;
+
+/**
+ * Reference to a field of type 'PrayerType'
+ */
+export type EnumPrayerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerType"
+>;
+
+/**
+ * Reference to a field of type 'PrayerType[]'
+ */
+export type ListEnumPrayerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerType[]"
+>;
+
+/**
+ * Reference to a field of type 'PrayerCategory'
+ */
+export type EnumPrayerCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerCategory"
+>;
+
+/**
+ * Reference to a field of type 'PrayerCategory[]'
+ */
+export type ListEnumPrayerCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerCategory[]"
+>;
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, "Boolean">;
+
+/**
+ * Reference to a field of type 'PrayerMethod'
+ */
+export type EnumPrayerMethodFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerMethod"
+>;
+
+/**
+ * Reference to a field of type 'PrayerMethod[]'
+ */
+export type ListEnumPrayerMethodFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerMethod[]"
+>;
+
+/**
+ * Reference to a field of type 'PrayerPlace'
+ */
+export type EnumPrayerPlaceFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerPlace"
+>;
+
+/**
+ * Reference to a field of type 'PrayerPlace[]'
+ */
+export type ListEnumPrayerPlaceFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  "PrayerPlace[]"
+>;
 
 /**
  * Reference to a field of type 'Int'
@@ -683,6 +846,7 @@ export interface PrismaClientOptions {
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit;
+  prayerLog?: Prisma.PrayerLogOmit;
 };
 
 /* Types for Logging */
