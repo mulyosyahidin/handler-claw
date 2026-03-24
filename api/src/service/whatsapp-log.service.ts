@@ -8,9 +8,13 @@ import type {
 import type {
   CreateWhatsappLogInput,
   GetWhatsappLogsQuery,
+  GetWhatsappLogsSummaryQuery,
 } from "../lib/schemas/whatsapp-log.schema.js";
 import { toWhatsappLogEntity } from "../lib/mappers/whatsapp-log.mapper.js";
 import { Prisma } from "../lib/generated/prisma/client.js";
+import { getWhatsappDateFilter } from "../lib/utils/whatsapp-date-filter.js";
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export class WhatsappLogService {
   // ─── CREATE ──────────────────────────────────────────────────────────────
@@ -61,9 +65,15 @@ export class WhatsappLogService {
   async getLogs(
     query: GetWhatsappLogsQuery,
   ): Promise<SuccessResponse<GetWhatsappLogsResponseData>> {
-    const { cursor, take } = query;
+    const { cursor, take, date_type, start, end } = query;
+    const {
+      filter: dateFilter,
+      date_start,
+      date_end,
+    } = getWhatsappDateFilter(date_type, start, end);
 
     const logs = await prisma.whatsappLog.findMany({
+      where: dateFilter,
       take: take + 1, // Ambil satu ekstra untuk menentukan apakah ada halaman berikutnya
       ...(cursor !== undefined && {
         cursor: { id: cursor },
@@ -80,6 +90,14 @@ export class WhatsappLogService {
     }
 
     return createSuccessResponse("Berhasil mengambil whatsapp logs", {
+      filter: {
+        date_type,
+        ...(date_type === "custom" ? { start, end } : {}),
+        filtered: {
+          date_start,
+          date_end,
+        },
+      },
       whatsapp_logs: logs.map(toWhatsappLogEntity),
       next_cursor: nextCursor,
     });
@@ -87,20 +105,36 @@ export class WhatsappLogService {
 
   // ─── GET SUMMARY ─────────────────────────────────────────────────────────
 
-  async getSummary(): Promise<SuccessResponse<GetWhatsappLogsSummaryResponseData>> {
-    const [total, byDeviceRaw, byMessageTypeRaw, byIsGroupRaw] = await Promise.all([
-      prisma.whatsappLog.count(),
+  async getSummary(
+    query: GetWhatsappLogsSummaryQuery,
+  ): Promise<SuccessResponse<GetWhatsappLogsSummaryResponseData>> {
+    const { date_type, start, end } = query;
+    const {
+      filter: dateFilter,
+      date_start,
+      date_end,
+    } = getWhatsappDateFilter(date_type, start, end);
+
+    const [total, byDeviceRaw, byMessageTypeRaw, byIsGroupRaw, logsRaw] = await Promise.all([
+      prisma.whatsappLog.count({ where: dateFilter }),
       prisma.whatsappLog.groupBy({
         by: ["device"],
+        where: dateFilter,
         _count: { id: true },
       }),
       prisma.whatsappLog.groupBy({
         by: ["messageType"],
+        where: dateFilter,
         _count: { id: true },
       }),
       prisma.whatsappLog.groupBy({
         by: ["isGroup"],
+        where: dateFilter,
         _count: { id: true },
+      }),
+      prisma.whatsappLog.findMany({
+        where: dateFilter,
+        orderBy: { receivedAt: "asc" },
       }),
     ]);
 
@@ -117,7 +151,56 @@ export class WhatsappLogService {
     const groupCount = byIsGroupRaw.find((x) => x.isGroup)?._count.id || 0;
     const personalCount = byIsGroupRaw.find((x) => !x.isGroup)?._count.id || 0;
 
+    const messagesMap: Record<
+      string,
+      Record<
+        string,
+        { sender_name: string | null; messages: ReturnType<typeof toWhatsappLogEntity>[] }
+      >
+    > = {};
+
+    for (const log of logsRaw) {
+      const jakartaDate = toZonedTime(log.receivedAt, "Asia/Jakarta");
+      const dateKey = format(jakartaDate, "yyyy-MM-dd");
+      const senderKey = log.sender;
+
+      if (!messagesMap[dateKey]) messagesMap[dateKey] = {};
+      if (!messagesMap[dateKey][senderKey]) {
+        messagesMap[dateKey][senderKey] = {
+          sender_name: log.senderName,
+          messages: [],
+        };
+      }
+
+      messagesMap[dateKey][senderKey].messages.push(toWhatsappLogEntity(log));
+    }
+
+    const messages: Record<
+      string,
+      {
+        sender_name: string | null;
+        sender: string;
+        messages: ReturnType<typeof toWhatsappLogEntity>[];
+      }[]
+    > = {};
+
+    for (const [dateKey, senders] of Object.entries(messagesMap)) {
+      messages[dateKey] = Object.entries(senders).map(([senderKey, data]) => ({
+        sender_name: data.sender_name,
+        sender: senderKey,
+        messages: data.messages,
+      }));
+    }
+
     return createSuccessResponse("Berhasil mengambil summary whatsapp logs", {
+      filter: {
+        date_type,
+        ...(date_type === "custom" ? { start, end } : {}),
+        filtered: {
+          date_start,
+          date_end,
+        },
+      },
       total,
       by_device,
       by_message_type,
@@ -125,6 +208,7 @@ export class WhatsappLogService {
         group: groupCount,
         personal: personalCount,
       },
+      messages,
     });
   }
 }

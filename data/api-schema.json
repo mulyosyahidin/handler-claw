@@ -431,6 +431,28 @@
         "parameters": [
           {
             "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "string",
               "enum": [
                 "today",
@@ -465,28 +487,6 @@
             },
             "required": false,
             "name": "end",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "nullable": true,
-              "minimum": 0,
-              "default": 0
-            },
-            "required": false,
-            "name": "offset",
             "in": "query"
           }
         ],
@@ -687,80 +687,39 @@
           {
             "schema": {
               "type": "string",
-              "maxLength": 30,
-              "description": "Filter by device",
-              "example": "device01"
-            },
-            "required": false,
-            "description": "Filter by device",
-            "name": "device",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 50,
-              "description": "Filter by sender phone",
-              "example": "628123456789@s.whatsapp.net"
-            },
-            "required": false,
-            "description": "Filter by sender phone",
-            "name": "sender",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "boolean",
-              "nullable": true,
-              "description": "Filter by group/private message"
-            },
-            "required": false,
-            "description": "Filter by group/private message",
-            "name": "is_group",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string",
               "enum": [
-                "daily",
-                "weekly",
-                "monthly",
-                "yearly",
-                "week",
-                "month",
-                "year",
+                "today",
+                "this_week",
+                "this_month",
+                "this_year",
+                "7_days",
+                "30_days",
+                "1_year",
                 "all",
                 "custom"
               ],
-              "default": "all",
-              "description": "Filter period"
+              "default": "all"
             },
             "required": false,
-            "description": "Filter period",
             "name": "date_type",
             "in": "query"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Filter from date (YYYY-MM-DD)",
-              "example": "2026-03-01"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "required": false,
-            "description": "Filter from date (YYYY-MM-DD)",
-            "name": "start_date",
+            "name": "start",
             "in": "query"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Filter to date (YYYY-MM-DD)",
-              "example": "2026-03-31"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "required": false,
-            "description": "Filter to date (YYYY-MM-DD)",
-            "name": "end_date",
+            "name": "end",
             "in": "query"
           }
         ],
@@ -785,57 +744,39 @@
           {
             "schema": {
               "type": "string",
-              "maxLength": 30,
-              "description": "Filter summary by device",
-              "example": "device01"
-            },
-            "required": false,
-            "description": "Filter summary by device",
-            "name": "device",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string",
               "enum": [
-                "daily",
-                "weekly",
-                "monthly",
-                "yearly",
-                "week",
-                "month",
-                "year",
+                "today",
+                "this_week",
+                "this_month",
+                "this_year",
+                "7_days",
+                "30_days",
+                "1_year",
                 "all",
                 "custom"
               ],
-              "default": "all",
-              "description": "Filter period"
+              "default": "all"
             },
             "required": false,
-            "description": "Filter period",
             "name": "date_type",
             "in": "query"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Filter from date (YYYY-MM-DD)",
-              "example": "2026-03-01"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "required": false,
-            "description": "Filter from date (YYYY-MM-DD)",
-            "name": "start_date",
+            "name": "start",
             "in": "query"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Filter to date (YYYY-MM-DD)",
-              "example": "2026-03-31"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "required": false,
-            "description": "Filter to date (YYYY-MM-DD)",
-            "name": "end_date",
+            "name": "end",
             "in": "query"
           }
         ],

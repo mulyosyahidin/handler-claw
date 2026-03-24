@@ -62,7 +62,7 @@ export class WhatsappLogController {
       return;
     }
 
-    const result = await this.whatsappLogService.getSummary();
+    const result = await this.whatsappLogService.getSummary(parsed.data);
     res.status(200).json(result);
   };
 }

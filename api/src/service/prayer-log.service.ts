@@ -1,3 +1,4 @@
+import { toZonedTime } from "date-fns-tz";
 import prisma from "../config/prisma.js";
 import {
   PrayerCategory,
@@ -35,18 +36,18 @@ export class PrayerLogService {
       notes,
     } = data;
 
-    // `date` field: simpan sebagai kalender lokal user (tanpa konversi timezone).
-    // local_date dari Zod sudah berupa Date object; ambil Y/M/D via local getters
-    // lalu buat ulang sebagai UTC midnight agar @db.Date tersimpan tanpa offset.
-    // Jika local_date tidak dikirim, fallback ke tanggal lokal dari performed_at.
+    // `date` field: simpan sebagai kalender lokal user.
+    // Gunakan timezone spesifik agar mendapatkan hari ini berdasarkan timezone (bukan UTC).
+    // local_date dari Zod sudah berupa Date object.
     const _ref = local_date ?? performed_at ?? new Date();
-    const date = new Date(Date.UTC(_ref.getFullYear(), _ref.getMonth(), _ref.getDate()));
+    const jakartaDate = toZonedTime(_ref, "Asia/Jakarta");
+    const date = new Date(
+      Date.UTC(jakartaDate.getFullYear(), jakartaDate.getMonth(), jakartaDate.getDate()),
+    );
 
-    // `performedAt`: Prisma menyimpan DateTime sebagai UTC. Input performed_at
-    // sudah berupa Date object (hasil z.coerce.date()) dengan nilai lokal user;
-    // kita simpan apa adanya — Prisma/PG akan menyimpannya sebagai UTC.
-    // Gunakan null (bukan undefined) agar kompatibel dengan exactOptionalPropertyTypes.
-    const performedAt: Date | null = performed_at ? new Date(performed_at) : null;
+    // `performedAt`: Prisma menyimpan DateTime sebagai UTC.
+    // Jika performed_at kosong, gunakan current time (now) dalam UTC.
+    const performedAt: Date = performed_at ? new Date(performed_at) : new Date();
 
     const wajibPrayers: PrayerType[] = [
       PrayerType.SUBUH,

@@ -56,7 +56,7 @@ registry.registerPath({
   path: "/api/whatsapp-logs/summary",
   summary: "Get WhatsApp logs summary",
   description:
-    "Mengambil ringkasan statistik WhatsApp log (jumlah, berdasarkan device, tipe pesan, dll).",
+    "Mengambil ringkasan statistik WhatsApp log (jumlah, berdasarkan device, tipe pesan, dll) serta daftar pesan yang dikelompokkan per hari dan per pengirim (di dalam field `messages`).",
   tags: ["WhatsApp Logs"],
   request: {
     query: getWhatsappLogsSummaryQuerySchema,

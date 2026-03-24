@@ -3,6 +3,52 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 
 extendZodWithOpenApi(z);
 
+const whatsappDateTypeEnum = z.enum([
+  "today",
+  "this_week",
+  "this_month",
+  "this_year",
+  "7_days",
+  "30_days",
+  "1_year",
+  "all",
+  "custom",
+]);
+
+const dateRangeShape = {
+  date_type: whatsappDateTypeEnum.default("all"),
+  start: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
+    .optional(),
+  end: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
+    .optional(),
+};
+
+const dateRangeSuperRefine = (
+  data: { date_type: string; start?: string | undefined; end?: string | undefined },
+  ctx: z.RefinementCtx,
+) => {
+  if (data.date_type === "custom") {
+    if (!data.start) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "start date is required when date_type is 'custom'",
+        path: ["start"],
+      });
+    }
+    if (!data.end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "end date is required when date_type is 'custom'",
+        path: ["end"],
+      });
+    }
+  }
+};
+
 // ─── CREATE SCHEMA ─────────────────────────────────────────────────────────
 
 export const createWhatsappLogSchema = z
@@ -75,13 +121,16 @@ export const getWhatsappLogsQuerySchema = z
       description: "Number of items to return (max 200)",
       example: 50,
     }),
+    ...dateRangeShape,
   })
+  .superRefine(dateRangeSuperRefine)
   .openapi("GetWhatsappLogsQuery");
 
 // ─── SUMMARY QUERY SCHEMA ──────────────────────────────────────────────────
 
 export const getWhatsappLogsSummaryQuerySchema = z
-  .object({})
+  .object(dateRangeShape)
+  .superRefine(dateRangeSuperRefine)
   .openapi("GetWhatsappLogsSummaryQuery");
 
 export type CreateWhatsappLogInput = z.infer<typeof createWhatsappLogSchema>;
