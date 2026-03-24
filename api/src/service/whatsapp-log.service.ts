@@ -12,6 +12,7 @@ import type {
 } from "../lib/schemas/whatsapp-log.schema.js";
 import { toWhatsappLogEntity } from "../lib/mappers/whatsapp-log.mapper.js";
 import { Prisma } from "../lib/generated/prisma/client.js";
+import { getDateRangeFromType } from "../utils/utils.js";
 
 export class WhatsappLogService {
   // ─── CREATE ──────────────────────────────────────────────────────────────
@@ -62,7 +63,8 @@ export class WhatsappLogService {
   async getLogs(
     query: GetWhatsappLogsQuery,
   ): Promise<SuccessResponse<GetWhatsappLogsResponseData>> {
-    const { cursor, take, device, sender, is_group } = query;
+    const { cursor, take, device, sender, is_group, date_type, start_date, end_date } = query;
+    const dateRange = getDateRangeFromType(date_type, start_date, end_date);
 
     const logs = await prisma.whatsappLog.findMany({
       take: take + 1, // Ambil satu ekstra untuk menentukan apakah ada halaman berikutnya
@@ -74,6 +76,7 @@ export class WhatsappLogService {
         ...(device !== undefined && { device }),
         ...(sender !== undefined && { sender }),
         ...(is_group !== undefined && { isGroup: is_group }),
+        ...(dateRange && { receivedAt: dateRange }),
       },
       orderBy: { id: "desc" },
     });
@@ -96,16 +99,12 @@ export class WhatsappLogService {
   async getSummary(
     query: GetWhatsappLogsSummaryQuery,
   ): Promise<SuccessResponse<GetWhatsappLogsSummaryResponseData>> {
-    const { device, start_date, end_date } = query;
+    const { device, date_type, start_date, end_date } = query;
+    const dateRange = getDateRangeFromType(date_type, start_date, end_date);
 
     const whereClause: Prisma.WhatsappLogWhereInput = {
       ...(device !== undefined && { device }),
-      ...((start_date || end_date) && {
-        receivedAt: {
-          ...(start_date && { gte: new Date(start_date) }),
-          ...(end_date && { lte: new Date(end_date) }),
-        },
-      }),
+      ...(dateRange && { receivedAt: dateRange }),
     };
 
     const [total, byDeviceRaw, byMessageTypeRaw, byIsGroupRaw] = await Promise.all([

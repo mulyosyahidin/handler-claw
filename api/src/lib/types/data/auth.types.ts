@@ -8,3 +8,7 @@ export interface LoginResponseData {
 export interface RefreshTokenResponseData {
   access_token: string;
 }
+
+export interface GetMeResponseData {
+  user: IUser;
+}

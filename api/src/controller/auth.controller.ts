@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { AuthRequest } from "../middleware/auth.middleware.js";
 import type { AuthService } from "../service/index.js";
 import { loginSchema, refreshTokenSchema } from "../lib/schemas/index.js";
 import { createErrorResponse } from "../lib/types/response.js";
@@ -48,6 +49,23 @@ export class AuthController {
       res.status(200).json(result);
     } else {
       res.status(401).json(result);
+    }
+  };
+
+  getMe = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+    
+    if (!userId) {
+      res.status(401).json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    const result = await this.authService.getMe(userId);
+
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json(result);
     }
   };
 }

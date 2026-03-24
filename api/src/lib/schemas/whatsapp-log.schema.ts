@@ -89,6 +89,18 @@ export const getWhatsappLogsQuerySchema = z
       .boolean()
       .optional()
       .openapi({ description: "Filter by group/private message" }),
+    date_type: z
+      .enum(["daily", "weekly", "monthly", "yearly", "all", "custom"])
+      .default("all")
+      .openapi({ description: "Filter period" }),
+    start_date: z
+      .string()
+      .optional()
+      .openapi({ description: "Filter from date (YYYY-MM-DD)", example: "2026-03-01" }),
+    end_date: z
+      .string()
+      .optional()
+      .openapi({ description: "Filter to date (YYYY-MM-DD)", example: "2026-03-31" }),
   })
   .openapi("GetWhatsappLogsQuery");
 
@@ -101,16 +113,18 @@ export const getWhatsappLogsSummaryQuerySchema = z
       .max(30)
       .optional()
       .openapi({ description: "Filter summary by device", example: "device01" }),
+    date_type: z
+      .enum(["daily", "weekly", "monthly", "yearly", "all", "custom"])
+      .default("all")
+      .openapi({ description: "Filter period" }),
     start_date: z
       .string()
-      .datetime()
       .optional()
-      .openapi({ description: "Filter from date (ISO 8601)" }),
+      .openapi({ description: "Filter from date (YYYY-MM-DD)", example: "2026-03-01" }),
     end_date: z
       .string()
-      .datetime()
       .optional()
-      .openapi({ description: "Filter to date (ISO 8601)" }),
+      .openapi({ description: "Filter to date (YYYY-MM-DD)", example: "2026-03-31" }),
   })
   .openapi("GetWhatsappLogsSummaryQuery");
 

@@ -3,7 +3,7 @@ import { prisma } from "../config/index.js";
 import { createAccessToken, refreshAccessToken } from "../lib/jose.js";
 import { toUserEntity } from "../lib/mappers/index.js";
 import type { LoginRequest } from "../lib/schemas/index.js";
-import type { LoginResponseData, RefreshTokenResponseData } from "../lib/types/data/auth.types.js";
+import type { LoginResponseData, RefreshTokenResponseData, GetMeResponseData } from "../lib/types/data/auth.types.js";
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -64,5 +64,21 @@ export class AuthService {
         token: "Token tidak valid atau tidak dapat diverifikasi",
       });
     }
+  }
+
+  async getMe(userId: string): Promise<SuccessResponse<GetMeResponseData> | ErrorResponse<unknown>> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return createErrorResponse("User tidak ditemukan", {
+        user: "User tidak valid atau sudah dihapus",
+      });
+    }
+
+    return createSuccessResponse("Berhasil mengambil profil user", {
+      user: toUserEntity(user),
+    });
   }
 }

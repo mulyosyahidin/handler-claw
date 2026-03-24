@@ -45,6 +45,15 @@ export class WhatsappLogController {
       return;
     }
 
+    if (parsed.data.date_type === "custom" && (!parsed.data.start_date || !parsed.data.end_date)) {
+      res.status(422).json(
+        createErrorResponse("Validation error", {
+          errors: { start_date: "start_date dan end_date wajib diisi jika date_type=custom" },
+        }),
+      );
+      return;
+    }
+
     const result = await this.whatsappLogService.getLogs(parsed.data);
     res.status(200).json(result);
   };
@@ -57,6 +66,15 @@ export class WhatsappLogController {
       res.status(422).json(
         createErrorResponse("Validation error", {
           errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    if (parsed.data.date_type === "custom" && (!parsed.data.start_date || !parsed.data.end_date)) {
+      res.status(422).json(
+        createErrorResponse("Validation error", {
+          errors: { start_date: "start_date dan end_date wajib diisi jika date_type=custom" },
         }),
       );
       return;
