@@ -44,6 +44,13 @@ enum PrayerPlace {
   LAINNYA
 }
 
+enum ReminderHookStatus {
+  RECEIVED
+  PROCESSING
+  PROCESSED
+  FAILED
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -54,6 +61,7 @@ model User {
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
   prayerLogs PrayerLog[]
+  reminderHooks ReminderHook[]
 
   @@map("users")
 }
@@ -129,4 +137,28 @@ model WhatsappLog {
   @@index([receivedAt])
   @@index([isGroup])
   @@map("whatsapp_logs")
+}
+
+model ReminderHook {
+  id      String @id @default(uuid())
+  userId  String @map("user_id")
+  eventId String @map("event_id")
+
+  status ReminderHookStatus @default(RECEIVED)
+
+  headersJson Json @map("headers_json")
+  payloadJson Json @map("payload_json")
+
+  errorMessage String?   @map("error_message")
+  processedAt  DateTime? @map("processed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("reminder_hooks")
 }

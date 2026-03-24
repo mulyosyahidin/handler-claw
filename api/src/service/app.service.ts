@@ -1,4 +1,4 @@
-import type { HealthCheckData } from "../lib/types/data/health.type.js";
+import type { HealthCheckData } from "../lib/types/data/health.types.js";
 import { createSuccessResponse, type SuccessResponse } from "../lib/types/response.js";
 import { prisma } from "../config/index.js";
 

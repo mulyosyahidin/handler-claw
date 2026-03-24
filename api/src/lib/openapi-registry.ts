@@ -1,7 +1,6 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import { loginSchema, logPrayerSchema, refreshTokenSchema } from "./schemas/index.js";
 import { z } from "zod";
-import type { OpenAPIObject } from '@asteasolutions/zod-to-openapi/dist/types.js';
 
 export const registry = new OpenAPIRegistry();
 

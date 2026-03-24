@@ -47,3 +47,13 @@ export const PrayerPlace = {
 } as const
 
 export type PrayerPlace = (typeof PrayerPlace)[keyof typeof PrayerPlace]
+
+
+export const ReminderHookStatus = {
+  RECEIVED: 'RECEIVED',
+  PROCESSING: 'PROCESSING',
+  PROCESSED: 'PROCESSED',
+  FAILED: 'FAILED'
+} as const
+
+export type ReminderHookStatus = (typeof ReminderHookStatus)[keyof typeof ReminderHookStatus]

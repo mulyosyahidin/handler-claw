@@ -392,7 +392,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   PrayerLog: 'PrayerLog',
-  WhatsappLog: 'WhatsappLog'
+  WhatsappLog: 'WhatsappLog',
+  ReminderHook: 'ReminderHook'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "prayerLog" | "whatsappLog"
+    modelProps: "user" | "prayerLog" | "whatsappLog" | "reminderHook"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -634,6 +635,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReminderHook: {
+      payload: Prisma.$ReminderHookPayload<ExtArgs>
+      fields: Prisma.ReminderHookFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReminderHookFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReminderHookFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        findFirst: {
+          args: Prisma.ReminderHookFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReminderHookFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        findMany: {
+          args: Prisma.ReminderHookFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
+        }
+        create: {
+          args: Prisma.ReminderHookCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        createMany: {
+          args: Prisma.ReminderHookCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReminderHookCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
+        }
+        delete: {
+          args: Prisma.ReminderHookDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        update: {
+          args: Prisma.ReminderHookUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReminderHookDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReminderHookUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReminderHookUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReminderHookUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
+        }
+        aggregate: {
+          args: Prisma.ReminderHookAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReminderHook>
+        }
+        groupBy: {
+          args: Prisma.ReminderHookGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReminderHookGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReminderHookCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReminderHookCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -734,6 +809,22 @@ export const WhatsappLogScalarFieldEnum = {
 export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
 
 
+export const ReminderHookScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  eventId: 'eventId',
+  status: 'status',
+  headersJson: 'headersJson',
+  payloadJson: 'payloadJson',
+  errorMessage: 'errorMessage',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReminderHookScalarFieldEnum = (typeof ReminderHookScalarFieldEnum)[keyof typeof ReminderHookScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -748,6 +839,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -915,6 +1013,20 @@ export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'ReminderHookStatus'
+ */
+export type EnumReminderHookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderHookStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ReminderHookStatus[]'
+ */
+export type ListEnumReminderHookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderHookStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1017,6 +1129,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   prayerLog?: Prisma.PrayerLogOmit
   whatsappLog?: Prisma.WhatsappLogOmit
+  reminderHook?: Prisma.ReminderHookOmit
 }
 
 /* Types for Logging */

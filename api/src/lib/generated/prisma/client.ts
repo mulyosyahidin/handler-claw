@@ -59,3 +59,8 @@ export type PrayerLog = Prisma.PrayerLogModel
  * 
  */
 export type WhatsappLog = Prisma.WhatsappLogModel
+/**
+ * Model ReminderHook
+ * 
+ */
+export type ReminderHook = Prisma.ReminderHookModel
