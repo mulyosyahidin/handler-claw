@@ -4,7 +4,7 @@ services:
     container_name: db_handler_claw_dev
     environment:
       POSTGRES_USER: uclaw
-      POSTGRES_PASSWORD: FXywBb3ehGmz1Alj
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: db_handler_claw_dev
       POSTGRES_SCHEMA: public
     ports:
@@ -15,7 +15,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U uclaw -d db_handler_claw && PGPASSWORD=password psql -U uclaw -d db_handler_claw -c 'SELECT 1' > /dev/null 2>&1",
+          "pg_isready -U uclaw -d db_handler_claw_dev && PGPASSWORD=password psql -U uclaw -d db_handler_claw_dev -c 'SELECT 1' > /dev/null 2>&1",
         ]
       interval: 5s
       timeout: 5s

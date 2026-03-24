@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { PrayerMethod, PrayerPlace, PrayerType } from "../generated/prisma/enums.js";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
 
 // ENUMS
 const prayerTypeEnum = z.enum(PrayerType, {
@@ -27,6 +30,7 @@ export const logPrayerSchema = z
         path: ["is_qadha"],
       });
     }
-  });
+  })
+  .openapi("PrayerLog");
 
 export type LogPrayerInput = z.infer<typeof logPrayerSchema>;

@@ -8,5 +8,7 @@ const prayerLogService = new PrayerLogService();
 const prayerLogController = new PrayerLogController(prayerLogService);
 
 prayerLogRouter.post("/", authMiddleware, prayerLogController.insertLog);
+prayerLogRouter.get("/", authMiddleware, prayerLogController.getLogs);
+prayerLogRouter.get("/summary", authMiddleware, prayerLogController.getSummary);
 
 export default prayerLogRouter;

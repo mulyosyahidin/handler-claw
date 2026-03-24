@@ -69,6 +69,17 @@ The API will be available at `http://localhost:3000`.
 
 ---
 
+## API Documentation
+
+Interactive API documentation is provided by **Scalar** and is automatically generated from Zod schemas.
+
+- **URL:** `http://localhost:3000/docs`
+- **Authentication:** Protected by Basic Auth. Use credentials defined in `DOCS_USERNAME` and `DOCS_PASSWORD`.
+- **Implementation:** Uses `@asteasolutions/zod-to-openapi` to bridge Zod validation schemas with OpenAPI specifications.
+- **Maintenance:** To add new routes to the documentation, register them in `src/lib/openapi-registry.ts`.
+
+---
+
 ## Production Deployment
 
 > [!CAUTION]

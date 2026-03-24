@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { verifyAccessToken, type TokenPayload } from "../lib/jose.js";
 import { createErrorResponse } from "../lib/types/response.js";
+import logger from "../config/logger.js";
 
 export interface AuthRequest extends Request {
   user?: TokenPayload;
@@ -39,7 +40,9 @@ export async function authMiddleware(
     req.userId = payload.userId;
     req.email = payload.email;
     next();
-  } catch (error) {
+  } catch (error: any) {
+    logger.error(error.message);
+
     res.status(401).json(
       createErrorResponse("Unauthorized", {
         token: "Token tidak valid atau sudah expired",

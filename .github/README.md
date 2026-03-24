@@ -39,6 +39,7 @@ To run these workflows, ensure the following are set in GitHub Repository **Sett
 | `DATABASE_URL` | Full Prisma connection string. |
 | `DB_PASSWORD` | Password for the PostgreSQL database container. |
 | `JWT_SECRET` | Secret key for JWT signing. |
+| `DOCS_PASSWORD` | Password for API Documentation Basic Auth. |
 | `SSH_HOST` | VPS IP address or hostname. |
 | `SSH_USER` | SSH username for the VPS (e.g., `root`, `ubuntu`). |
 | `SSH_PRIVATE_KEY` | Private key for SSH access. |
@@ -50,6 +51,7 @@ To run these workflows, ensure the following are set in GitHub Repository **Sett
 | `IMAGE_NAME` | Name of the Docker image (e.g., `handler-claw-api`). |
 | `DB_USER` | PostgreSQL username. |
 | `DB_NAME` | PostgreSQL database name. |
+| `DOCS_USERNAME` | Username for API Documentation Basic Auth (default: `admin`). |
 | `APP_PORT` | Port the application listens on (default: `3000`). |
 | `LOG_LEVEL` | Logging level for Winston (default: `info`). |
 
