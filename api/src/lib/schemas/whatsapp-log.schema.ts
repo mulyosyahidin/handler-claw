@@ -75,57 +75,13 @@ export const getWhatsappLogsQuerySchema = z
       description: "Number of items to return (max 200)",
       example: 50,
     }),
-    device: z
-      .string()
-      .max(30)
-      .optional()
-      .openapi({ description: "Filter by device", example: "device01" }),
-    sender: z
-      .string()
-      .max(50)
-      .optional()
-      .openapi({ description: "Filter by sender phone", example: "628123456789@s.whatsapp.net" }),
-    is_group: z.coerce
-      .boolean()
-      .optional()
-      .openapi({ description: "Filter by group/private message" }),
-    date_type: z
-      .enum(["daily", "weekly", "monthly", "yearly", "all", "custom"])
-      .default("all")
-      .openapi({ description: "Filter period" }),
-    start_date: z
-      .string()
-      .optional()
-      .openapi({ description: "Filter from date (YYYY-MM-DD)", example: "2026-03-01" }),
-    end_date: z
-      .string()
-      .optional()
-      .openapi({ description: "Filter to date (YYYY-MM-DD)", example: "2026-03-31" }),
   })
   .openapi("GetWhatsappLogsQuery");
 
 // ─── SUMMARY QUERY SCHEMA ──────────────────────────────────────────────────
 
 export const getWhatsappLogsSummaryQuerySchema = z
-  .object({
-    device: z
-      .string()
-      .max(30)
-      .optional()
-      .openapi({ description: "Filter summary by device", example: "device01" }),
-    date_type: z
-      .enum(["daily", "weekly", "monthly", "yearly", "all", "custom"])
-      .default("all")
-      .openapi({ description: "Filter period" }),
-    start_date: z
-      .string()
-      .optional()
-      .openapi({ description: "Filter from date (YYYY-MM-DD)", example: "2026-03-01" }),
-    end_date: z
-      .string()
-      .optional()
-      .openapi({ description: "Filter to date (YYYY-MM-DD)", example: "2026-03-31" }),
-  })
+  .object({})
   .openapi("GetWhatsappLogsSummaryQuery");
 
 export type CreateWhatsappLogInput = z.infer<typeof createWhatsappLogSchema>;

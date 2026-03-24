@@ -5,16 +5,20 @@ import {
   PrayerPlace,
   PrayerType,
 } from "../lib/generated/prisma/enums.js";
-import type { LogPrayerInput } from "../lib/schemas/index.js";
+import type {
+  GetPrayerLogsQuery,
+  GetPrayerLogsSummaryQuery,
+  LogPrayerInput,
+} from "../lib/schemas/index.js";
 import { createSuccessResponse, type SuccessResponse } from "../lib/types/response.js";
 import type {
   GetPrayerLogsResponseData,
   GetPrayerLogsSummaryResponseData,
   InsertPrayerLogResponseData,
   PrayerSummaryEntry,
-  SummaryType,
 } from "../lib/types/data/prayer-log.types.js";
 import { toPrayerLogEntity } from "../lib/mappers/prayer-log.mapper.js";
+import { getPrayerDateFilter } from "../lib/utils/prayer-date-filter.js";
 
 export class PrayerLogService {
   async insertLog(
@@ -24,18 +28,26 @@ export class PrayerLogService {
     const {
       prayer,
       performed_at,
+      local_date,
       method = PrayerMethod.SENDIRI,
       place = PrayerPlace.RUMAH,
-      is_qadha,
+      is_qadha = false,
       notes,
     } = data;
 
-    // Normalisasi waktu pelaksanaan dan turunkan nilai tanggal (awal hari)
-    const performedAt = performed_at ?? new Date();
-    const date = new Date(performedAt);
-    date.setHours(0, 0, 0, 0);
+    // `date` field: simpan sebagai kalender lokal user (tanpa konversi timezone).
+    // local_date dari Zod sudah berupa Date object; ambil Y/M/D via local getters
+    // lalu buat ulang sebagai UTC midnight agar @db.Date tersimpan tanpa offset.
+    // Jika local_date tidak dikirim, fallback ke tanggal lokal dari performed_at.
+    const _ref = local_date ?? performed_at ?? new Date();
+    const date = new Date(Date.UTC(_ref.getFullYear(), _ref.getMonth(), _ref.getDate()));
 
-    // Menentukan kategori salat (WAJIB atau SUNNAH)
+    // `performedAt`: Prisma menyimpan DateTime sebagai UTC. Input performed_at
+    // sudah berupa Date object (hasil z.coerce.date()) dengan nilai lokal user;
+    // kita simpan apa adanya — Prisma/PG akan menyimpannya sebagai UTC.
+    // Gunakan null (bukan undefined) agar kompatibel dengan exactOptionalPropertyTypes.
+    const performedAt: Date | null = performed_at ? new Date(performed_at) : null;
+
     const wajibPrayers: PrayerType[] = [
       PrayerType.SUBUH,
       PrayerType.DZUHUR,
@@ -48,7 +60,7 @@ export class PrayerLogService {
     const category = wajibPrayers.includes(prayer) ? PrayerCategory.WAJIB : PrayerCategory.SUNNAH;
 
     const prayerLog = await prisma.$transaction(async (tx) => {
-      // Mengambil data salat relevan pada hari yang sama untuk kebutuhan validasi aturan
+      // 1. Ambil data eksisting pada HARI KALENDER yang sama
       const existing = await tx.prayerLog.findMany({
         where: {
           userId,
@@ -59,55 +71,37 @@ export class PrayerLogService {
         },
       });
 
-      // Menjaga aturan eksklusivitas antara salat Jumat dan Dzuhur
+      // 2. Logika Eksklusivitas Jumat/Dzuhur
       if (category === PrayerCategory.WAJIB) {
-        if (prayer === PrayerType.JUMAT) {
-          const hasDzuhur = existing.some((p) => p.prayer === PrayerType.DZUHUR);
-          if (hasDzuhur) {
-            throw new Error("CONFLICT_JUMAT_DZUHUR");
-          }
+        if (prayer === PrayerType.JUMAT && existing.some((p) => p.prayer === PrayerType.DZUHUR)) {
+          throw new Error("CONFLICT_JUMAT_DZUHUR");
         }
-
-        if (prayer === PrayerType.DZUHUR) {
-          const hasJumat = existing.some((p) => p.prayer === PrayerType.JUMAT);
-          if (hasJumat) {
-            throw new Error("CONFLICT_DZUHUR_JUMAT");
-          }
+        if (prayer === PrayerType.DZUHUR && existing.some((p) => p.prayer === PrayerType.JUMAT)) {
+          throw new Error("CONFLICT_DZUHUR_JUMAT");
         }
 
         const existingPrayer = existing.find((p) => p.prayer === prayer);
 
-        // Menyusun data update dengan mengabaikan field yang tidak dikirim (undefined)
-        const baseData = {
+        const baseUpdateData = {
           performed: true,
           performedAt,
           isQadha: is_qadha,
-          ...(method !== undefined && { method }),
-          ...(place !== undefined && { place }),
-          ...(notes !== undefined && { notes }),
+          method,
+          place,
+          notes: notes ?? null,
+          updatedAt: new Date(),
         };
 
-        // Update jika data salat sudah ada sebelumnya
+        // 3. Update jika sudah ada (Upsert Logic)
         if (existingPrayer) {
           return await tx.prayerLog.update({
             where: { id: existingPrayer.id },
-            data: baseData,
+            data: baseUpdateData,
           });
         }
-
-        // Insert jika belum ada data untuk salat tersebut di hari yang sama
-        return await tx.prayerLog.create({
-          data: {
-            userId,
-            date,
-            prayer,
-            category,
-            ...baseData,
-          },
-        });
       }
 
-      // Salat sunnah tidak memiliki batasan unik, sehingga selalu dibuat sebagai data baru
+      // 4. Create New (Untuk Wajib baru atau Sunnah)
       return await tx.prayerLog.create({
         data: {
           userId,
@@ -117,9 +111,10 @@ export class PrayerLogService {
           performed: true,
           performedAt,
           isQadha: is_qadha,
-          ...(method !== undefined && { method }),
-          ...(place !== undefined && { place }),
-          ...(notes !== undefined && { notes }),
+          method,
+          place,
+          notes: notes ?? null,
+          updatedAt: new Date(),
         },
       });
     });
@@ -131,15 +126,36 @@ export class PrayerLogService {
 
   // ─── GET ALL LOGS ──────────────────────────────────────────────────────────
 
-  async getLogs(userId: string): Promise<SuccessResponse<GetPrayerLogsResponseData>> {
-    const logs = await prisma.prayerLog.findMany({
-      where: { userId },
-      orderBy: [{ date: "desc" }, { createdAt: "desc" }],
-    });
+  async getLogs(
+    userId: string,
+    query: GetPrayerLogsQuery,
+  ): Promise<SuccessResponse<GetPrayerLogsResponseData>> {
+    const { date_type, start, end, limit, offset } = query;
+    const { filter: dateFilter, date_start, date_end } = getPrayerDateFilter(date_type, start, end);
+
+    const [logs, total] = await Promise.all([
+      prisma.prayerLog.findMany({
+        where: { userId, ...dateFilter },
+        orderBy: [{ date: "desc" }, { prayer: "asc" }],
+        take: limit,
+        skip: offset,
+      }),
+      prisma.prayerLog.count({
+        where: { userId, ...dateFilter },
+      }),
+    ]);
 
     return createSuccessResponse("Berhasil mengambil jurnal solat", {
+      filter: {
+        date_type,
+        ...(date_type === "custom" ? { start, end } : {}),
+        filtered: {
+          date_start,
+          date_end,
+        },
+      },
       prayer_logs: logs.map(toPrayerLogEntity),
-      total: logs.length,
+      total,
     });
   }
 
@@ -147,63 +163,16 @@ export class PrayerLogService {
 
   async getSummary(
     userId: string,
-    type: SummaryType,
-    startDate?: Date,
-    endDate?: Date,
+    query: GetPrayerLogsSummaryQuery,
   ): Promise<SuccessResponse<GetPrayerLogsSummaryResponseData>> {
-    const now = new Date();
-
-    // Resolve date range
-    let rangeStart: Date | undefined;
-    let rangeEnd: Date | undefined;
-
-    switch (type) {
-      case "daily":
-        rangeStart = new Date(now);
-        rangeStart.setHours(0, 0, 0, 0);
-        rangeEnd = new Date(now);
-        rangeEnd.setHours(23, 59, 59, 999);
-        break;
-      case "weekly": {
-        // Monday as first day of week
-        const day = now.getDay();
-        const diffToMonday = day === 0 ? -6 : 1 - day;
-        rangeStart = new Date(now);
-        rangeStart.setDate(now.getDate() + diffToMonday);
-        rangeStart.setHours(0, 0, 0, 0);
-        rangeEnd = new Date(rangeStart);
-        rangeEnd.setDate(rangeStart.getDate() + 6);
-        rangeEnd.setHours(23, 59, 59, 999);
-        break;
-      }
-      case "monthly":
-        rangeStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-        rangeEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-        break;
-      case "yearly":
-        rangeStart = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
-        rangeEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-        break;
-      case "all":
-        rangeStart = undefined;
-        rangeEnd = undefined;
-        break;
-      case "custom":
-        if (!startDate || !endDate) {
-          throw new Error("CUSTOM_RANGE_REQUIRED");
-        }
-        rangeStart = new Date(startDate);
-        rangeStart.setHours(0, 0, 0, 0);
-        rangeEnd = new Date(endDate);
-        rangeEnd.setHours(23, 59, 59, 999);
-        break;
-    }
+    const { date_type, start, end } = query;
+    const { filter: dateFilter, date_start, date_end } = getPrayerDateFilter(date_type, start, end);
 
     const logs = await prisma.prayerLog.findMany({
       where: {
         userId,
-        ...(rangeStart && rangeEnd ? { date: { gte: rangeStart, lte: rangeEnd } } : {}),
         performed: true,
+        ...dateFilter,
       },
       orderBy: { date: "asc" },
     });
@@ -211,14 +180,29 @@ export class PrayerLogService {
     // Group logs by period label
     const grouped = new Map<string, typeof logs>();
 
+    if (date_start && date_end) {
+      // Pre-fill grouped map with all dates in the range
+      const [y1, m1, d1] = date_start.split("-").map(Number) as [number, number, number];
+      const [y2, m2, d2] = date_end.split("-").map(Number) as [number, number, number];
+
+      const cur = new Date(Date.UTC(y1, m1 - 1, d1));
+      const endObj = new Date(Date.UTC(y2, m2 - 1, d2));
+
+      while (cur <= endObj) {
+        grouped.set(this.toISODate(cur), []);
+        cur.setUTCDate(cur.getUTCDate() + 1);
+      }
+    }
+
     for (const log of logs) {
-      const label = this.periodLabel(log.date, type);
+      const label = this.toISODate(log.date);
       if (!grouped.has(label)) grouped.set(label, []);
       grouped.get(label)!.push(log);
     }
 
     // Build summary entries
     const summary: PrayerSummaryEntry[] = [];
+    const grandCount: Record<string, number> = {};
     let grandWajib = 0;
     let grandSunnah = 0;
     let grandTotal = 0;
@@ -226,12 +210,20 @@ export class PrayerLogService {
 
     for (const [label, entries] of grouped.entries()) {
       const byPrayer: PrayerSummaryEntry["by_prayer"] = {};
+
+      // Pre-fill by_prayer with all valid PrayerTypes so they show up even if 0
+      for (const p of Object.values(PrayerType)) {
+        byPrayer[p] = { performed: 0, qadha: 0, jamaah: 0 };
+      }
+
       let wajib = 0;
       let sunnah = 0;
       let qadha = 0;
 
       for (const e of entries) {
         const key = e.prayer as string;
+        grandCount[key] = (grandCount[key] || 0) + 1;
+
         if (!byPrayer[key]) byPrayer[key] = { performed: 0, qadha: 0, jamaah: 0 };
         byPrayer[key].performed++;
         if (e.isQadha) {
@@ -260,14 +252,17 @@ export class PrayerLogService {
       });
     }
 
-    const startLabel = type === "all" || !rangeStart ? null : this.toISODate(rangeStart);
-    const endLabel = type === "all" || !rangeEnd ? null : this.toISODate(rangeEnd);
-
     return createSuccessResponse("Berhasil mengambil ringkasan jurnal solat", {
-      type,
-      start_date: startLabel,
-      end_date: endLabel,
+      filter: {
+        date_type,
+        ...(date_type === "custom" ? { start, end } : {}),
+        filtered: {
+          date_start,
+          date_end,
+        },
+      },
       summary,
+      count: grandCount,
       grand_total: {
         total_wajib_performed: grandWajib,
         total_sunnah_performed: grandSunnah,
@@ -280,34 +275,8 @@ export class PrayerLogService {
   // ─── HELPERS ───────────────────────────────────────────────────────────────
 
   private toISODate(d: Date): string {
-    return d.toISOString().split("T")[0] ?? "";
-  }
-
-  private periodLabel(date: Date, type: SummaryType): string {
-    switch (type) {
-      case "daily":
-        return this.toISODate(date);
-      case "weekly": {
-        // ISO week label: YYYY-Www
-        const tmp = new Date(date);
-        tmp.setHours(0, 0, 0, 0);
-        tmp.setDate(tmp.getDate() + 3 - ((tmp.getDay() + 6) % 7));
-        const week1 = new Date(tmp.getFullYear(), 0, 4);
-        const weekNum =
-          Math.round(
-            ((tmp.getTime() - week1.getTime()) / 86400000 + ((week1.getDay() + 6) % 7)) / 7,
-          ) + 1;
-        return `${tmp.getFullYear()}-W${String(weekNum).padStart(2, "0")}`;
-      }
-      case "monthly":
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      case "yearly":
-        return `${date.getFullYear()}`;
-      case "all":
-      case "custom":
-        // group by date
-        return this.toISODate(date);
-    }
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
   }
 }
 

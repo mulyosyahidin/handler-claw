@@ -32,6 +32,8 @@
     "@prisma/client": "^6.19.2",
     "@scalar/express-api-reference": "^0.9.4",
     "bcrypt": "^6.0.0",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-basic-auth": "^1.2.1",

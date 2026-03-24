@@ -72,7 +72,7 @@ model PrayerLog {
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
 
-  date     DateTime
+  date     DateTime @db.Date
   prayer   PrayerType
   category PrayerCategory
 

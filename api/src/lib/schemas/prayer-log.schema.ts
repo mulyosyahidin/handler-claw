@@ -16,6 +16,7 @@ const prayerPlaceEnum = z.enum(PrayerPlace);
 export const logPrayerSchema = z
   .object({
     prayer: prayerTypeEnum,
+    local_date: z.coerce.date().optional(),
     performed_at: z.coerce.date().optional(),
     method: prayerMethodEnum.optional(),
     place: prayerPlaceEnum.optional(),
@@ -34,3 +35,64 @@ export const logPrayerSchema = z
   .openapi("PrayerLog");
 
 export type LogPrayerInput = z.infer<typeof logPrayerSchema>;
+
+const prayerDateTypeEnum = z.enum([
+  "today",
+  "this_week",
+  "this_month",
+  "this_year",
+  "7_days",
+  "30_days",
+  "1_year",
+  "all",
+  "custom",
+]);
+
+const dateRangeShape = {
+  date_type: prayerDateTypeEnum.default("all"),
+  start: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
+    .optional(),
+  end: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
+    .optional(),
+};
+
+const dateRangeSuperRefine = (
+  data: { date_type: string; start?: string | undefined; end?: string | undefined },
+  ctx: z.RefinementCtx,
+) => {
+  if (data.date_type === "custom") {
+    if (!data.start) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "start date is required when date_type is 'custom'",
+        path: ["start"],
+      });
+    }
+    if (!data.end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "end date is required when date_type is 'custom'",
+        path: ["end"],
+      });
+    }
+  }
+};
+
+export const getPrayerLogsQuerySchema = z
+  .object({
+    limit: z.coerce.number().int().min(1).max(100).default(20),
+    offset: z.coerce.number().int().min(0).default(0),
+    ...dateRangeShape,
+  })
+  .superRefine(dateRangeSuperRefine);
+
+export const getPrayerLogsSummaryQuerySchema = z
+  .object(dateRangeShape)
+  .superRefine(dateRangeSuperRefine);
+
+export type GetPrayerLogsQuery = z.infer<typeof getPrayerLogsQuerySchema>;
+export type GetPrayerLogsSummaryQuery = z.infer<typeof getPrayerLogsSummaryQuerySchema>;

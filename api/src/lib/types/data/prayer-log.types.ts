@@ -1,15 +1,26 @@
 import type { IPrayerLog } from "../domain/index.js";
 
+import type { PrayerDateType } from "../../utils/prayer-date-filter.js";
+
 export interface InsertPrayerLogResponseData {
   prayer_log: IPrayerLog;
 }
 
+export interface PrayerLogFilterData {
+  date_type: PrayerDateType;
+  start?: string | undefined;
+  end?: string | undefined;
+  filtered: {
+    date_start?: string | undefined;
+    date_end?: string | undefined;
+  };
+}
+
 export interface GetPrayerLogsResponseData {
+  filter: PrayerLogFilterData;
   prayer_logs: IPrayerLog[];
   total: number;
 }
-
-export type SummaryType = "daily" | "weekly" | "monthly" | "yearly" | "all" | "custom";
 
 export interface PrayerSummaryEntry {
   label: string;
@@ -21,10 +32,9 @@ export interface PrayerSummaryEntry {
 }
 
 export interface GetPrayerLogsSummaryResponseData {
-  type: SummaryType;
-  start_date: string | null;
-  end_date: string | null;
+  filter: PrayerLogFilterData;
   summary: PrayerSummaryEntry[];
+  count: Record<string, number>;
   grand_total: {
     total_wajib_performed: number;
     total_sunnah_performed: number;

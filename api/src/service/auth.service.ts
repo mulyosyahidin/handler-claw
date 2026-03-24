@@ -3,7 +3,11 @@ import { prisma } from "../config/index.js";
 import { createAccessToken, refreshAccessToken } from "../lib/jose.js";
 import { toUserEntity } from "../lib/mappers/index.js";
 import type { LoginRequest } from "../lib/schemas/index.js";
-import type { LoginResponseData, RefreshTokenResponseData, GetMeResponseData } from "../lib/types/data/auth.types.js";
+import type {
+  LoginResponseData,
+  RefreshTokenResponseData,
+  GetMeResponseData,
+} from "../lib/types/data/auth.types.js";
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -66,7 +70,9 @@ export class AuthService {
     }
   }
 
-  async getMe(userId: string): Promise<SuccessResponse<GetMeResponseData> | ErrorResponse<unknown>> {
+  async getMe(
+    userId: string,
+  ): Promise<SuccessResponse<GetMeResponseData> | ErrorResponse<unknown>> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });

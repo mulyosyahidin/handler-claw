@@ -2,6 +2,32 @@ import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-open
 import { loginSchema, logPrayerSchema, refreshTokenSchema } from "./schemas/index.js";
 import { z } from "zod";
 
+const prayerDateTypeEnum = z.enum([
+  "today",
+  "this_week",
+  "this_month",
+  "this_year",
+  "7_days",
+  "30_days",
+  "1_year",
+  "all",
+  "custom",
+]);
+
+const dateRangeOpenApi = {
+  date_type: prayerDateTypeEnum
+    .default("all")
+    .openapi({ param: { name: "date_type", in: "query" }, description: "Period filter type" }),
+  start: z
+    .string()
+    .optional()
+    .openapi({ param: { name: "start", in: "query" }, description: "Start date (YYYY-MM-DD)" }),
+  end: z
+    .string()
+    .optional()
+    .openapi({ param: { name: "end", in: "query" }, description: "End date (YYYY-MM-DD)" }),
+};
+
 export const registry = new OpenAPIRegistry();
 
 // Define Security Scheme
@@ -68,12 +94,28 @@ registry.registerPath({
   summary: "Get all prayer logs",
   tags: ["Prayer Logs"],
   security: [{ [bearerAuth.name]: [] }],
+  request: {
+    query: z.object({
+      limit: z
+        .number()
+        .default(20)
+        .openapi({ param: { name: "limit", in: "query" }, description: "Pagination limit" }),
+      offset: z
+        .number()
+        .default(0)
+        .openapi({ param: { name: "offset", in: "query" }, description: "Pagination offset" }),
+      ...dateRangeOpenApi,
+    }),
+  },
   responses: {
     200: {
       description: "Success",
     },
     401: {
       description: "Unauthorized",
+    },
+    422: {
+      description: "Validation error",
     },
   },
 });
@@ -113,21 +155,7 @@ registry.registerPath({
   tags: ["Prayer Logs"],
   security: [{ [bearerAuth.name]: [] }],
   request: {
-    query: z.object({
-      type: z
-        .enum(["daily", "weekly", "monthly", "yearly", "all", "custom"])
-        .optional()
-        .default("all")
-        .openapi({ description: "Type of summary" }),
-      start_date: z.string().optional().openapi({
-        description: "Start date (YYYY-MM-DD). Required if type is custom",
-        example: "2024-03-01",
-      }),
-      end_date: z.string().optional().openapi({
-        description: "End date (YYYY-MM-DD). Required if type is custom",
-        example: "2024-03-31",
-      }),
-    }),
+    query: z.object(dateRangeOpenApi),
   },
   responses: {
     200: {

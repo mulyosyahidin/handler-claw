@@ -54,9 +54,11 @@ export class AuthController {
 
   getMe = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.userId;
-    
+
     if (!userId) {
-      res.status(401).json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
       return;
     }
 
