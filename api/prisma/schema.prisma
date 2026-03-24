@@ -84,3 +84,49 @@ model PrayerLog {
   @@index([userId, date])
   @@map("prayer_logs")
 }
+
+model WhatsappLog {
+  id          Int      @id @default(autoincrement())
+  receivedAt  DateTime @default(now())
+
+  // Device & routing
+  device      String   @db.VarChar(30)
+  mode        String   @db.VarChar(10)
+
+  // Sender info
+  sender      String   @db.VarChar(50)
+  senderLid   String?  @db.VarChar(60)
+  senderName  String?  @db.VarChar(100)
+
+  // Group info
+  isGroup     Boolean  @default(false)
+  groupId     String?  @db.VarChar(60)
+  memberPhone String?  @db.VarChar(30)
+  memberLid   String?  @db.VarChar(60)
+
+  // Message
+  messageText String?  @db.Text
+  messageType String   @db.VarChar(20)   // text, image, document, dll
+  isForwarded Boolean  @default(false)
+  isQuick     Boolean  @default(false)
+  inboxId     Int      @default(0)
+
+  // Media (null kalau plain text)
+  extension   String?  @db.VarChar(20)
+  filename    String?  @db.VarChar(255)
+  url         String?  @db.VarChar(500)
+  location    String?  @db.VarChar(255)
+
+  // Poll
+  pollName    String?  @db.VarChar(255)
+  pollChoices Json?
+
+  // Original timestamp dari WA
+  waTimestamp BigInt
+
+  @@index([sender])
+  @@index([device])
+  @@index([receivedAt])
+  @@index([isGroup])
+  @@map("whatsapp_logs")
+}

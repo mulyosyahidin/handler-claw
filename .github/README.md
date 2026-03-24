@@ -40,6 +40,8 @@ To run these workflows, ensure the following are set in GitHub Repository **Sett
 | `DB_PASSWORD` | Password for the PostgreSQL database container. |
 | `JWT_SECRET` | Secret key for JWT signing. |
 | `DOCS_PASSWORD` | Password for API Documentation Basic Auth. |
+| `DEFAULT_USER_EMAIL` | Email for the default user created during seeding. |
+| `DEFAULT_USER_PASSWORD` | Password for the default user created during seeding. |
 | `SSH_HOST` | VPS IP address or hostname. |
 | `SSH_USER` | SSH username for the VPS (e.g., `root`, `ubuntu`). |
 | `SSH_PRIVATE_KEY` | Private key for SSH access. |
@@ -52,6 +54,7 @@ To run these workflows, ensure the following are set in GitHub Repository **Sett
 | `DB_USER` | PostgreSQL username. |
 | `DB_NAME` | PostgreSQL database name. |
 | `DOCS_USERNAME` | Username for API Documentation Basic Auth (default: `admin`). |
+| `DEFAULT_USER_NAME` | Full name for the default user created during seeding (default: `Administrator`). |
 | `APP_PORT` | Port the application listens on (default: `3000`). |
 | `LOG_LEVEL` | Logging level for Winston (default: `info`). |
 

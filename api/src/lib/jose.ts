@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify, type JWTPayload } from "jose";
+import { SignJWT, jwtVerify, errors, type JWTPayload } from "jose";
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "secret");
 
@@ -22,4 +22,25 @@ export async function createAccessToken(payload: TokenPayload): Promise<string> 
 export async function verifyAccessToken(token: string): Promise<TokenPayload> {
   const { payload } = await jwtVerify(token, JWT_SECRET);
   return payload as TokenPayload;
+}
+
+export async function refreshAccessToken(oldToken: string): Promise<string> {
+  let payload: TokenPayload;
+
+  try {
+    const result = await jwtVerify(oldToken, JWT_SECRET);
+
+    payload = result.payload as TokenPayload;
+  } catch (err) {
+    if (err instanceof errors.JWTExpired) {
+      payload = err.payload as TokenPayload;
+    } else {
+      throw new Error("INVALID_TOKEN", { cause: err });
+    }
+  }
+
+  return createAccessToken({
+    userId: payload.userId,
+    email: payload.email,
+  });
 }

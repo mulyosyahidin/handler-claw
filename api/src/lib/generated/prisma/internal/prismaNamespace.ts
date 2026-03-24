@@ -391,7 +391,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  PrayerLog: 'PrayerLog'
+  PrayerLog: 'PrayerLog',
+  WhatsappLog: 'WhatsappLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "prayerLog"
+    modelProps: "user" | "prayerLog" | "whatsappLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,6 +560,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WhatsappLog: {
+      payload: Prisma.$WhatsappLogPayload<ExtArgs>
+      fields: Prisma.WhatsappLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WhatsappLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WhatsappLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        findFirst: {
+          args: Prisma.WhatsappLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WhatsappLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        findMany: {
+          args: Prisma.WhatsappLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>[]
+        }
+        create: {
+          args: Prisma.WhatsappLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        createMany: {
+          args: Prisma.WhatsappLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WhatsappLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>[]
+        }
+        delete: {
+          args: Prisma.WhatsappLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        update: {
+          args: Prisma.WhatsappLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.WhatsappLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WhatsappLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WhatsappLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.WhatsappLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappLogPayload>
+        }
+        aggregate: {
+          args: Prisma.WhatsappLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWhatsappLog>
+        }
+        groupBy: {
+          args: Prisma.WhatsappLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsappLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WhatsappLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsappLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -630,12 +705,49 @@ export const PrayerLogScalarFieldEnum = {
 export type PrayerLogScalarFieldEnum = (typeof PrayerLogScalarFieldEnum)[keyof typeof PrayerLogScalarFieldEnum]
 
 
+export const WhatsappLogScalarFieldEnum = {
+  id: 'id',
+  receivedAt: 'receivedAt',
+  device: 'device',
+  mode: 'mode',
+  sender: 'sender',
+  senderLid: 'senderLid',
+  senderName: 'senderName',
+  isGroup: 'isGroup',
+  groupId: 'groupId',
+  memberPhone: 'memberPhone',
+  memberLid: 'memberLid',
+  messageText: 'messageText',
+  messageType: 'messageType',
+  isForwarded: 'isForwarded',
+  isQuick: 'isQuick',
+  inboxId: 'inboxId',
+  extension: 'extension',
+  filename: 'filename',
+  url: 'url',
+  location: 'location',
+  pollName: 'pollName',
+  pollChoices: 'pollChoices',
+  waTimestamp: 'waTimestamp'
+} as const
+
+export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -652,6 +764,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -764,6 +885,48 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -853,6 +1016,7 @@ export interface PrismaClientOptions {
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   prayerLog?: Prisma.PrayerLogOmit
+  whatsappLog?: Prisma.WhatsappLogOmit
 }
 
 /* Types for Logging */

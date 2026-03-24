@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../config/index.js";
-import { createAccessToken } from "../lib/jose.js";
+import { createAccessToken, refreshAccessToken } from "../lib/jose.js";
 import { toUserEntity } from "../lib/mappers/index.js";
 import type { LoginRequest } from "../lib/schemas/index.js";
-import type { LoginResponseData } from "../lib/types/data/auth.types.js";
+import type { LoginResponseData, RefreshTokenResponseData } from "../lib/types/data/auth.types.js";
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -49,5 +49,20 @@ export class AuthService {
       user: toUserEntity(user),
       access_token: token,
     });
+  }
+
+  async refreshToken(
+    oldToken: string,
+  ): Promise<SuccessResponse<RefreshTokenResponseData> | ErrorResponse<unknown>> {
+    try {
+      const newToken = await refreshAccessToken(oldToken);
+      return createSuccessResponse("Access token berhasil diperbarui", {
+        access_token: newToken,
+      });
+    } catch {
+      return createErrorResponse("Gagal refresh token", {
+        token: "Token tidak valid atau tidak dapat diverifikasi",
+      });
+    }
   }
 }

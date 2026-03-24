@@ -180,25 +180,30 @@ This project uses GitHub Actions for automated Blue-Green deployment. Ensure the
 
 ### GitHub Actions Secrets
 
-| Secret Name       | Description                                                                    |
-| :---------------- | :----------------------------------------------------------------------------- |
-| `DATABASE_URL`    | Full PostgreSQL connection string (e.g. `postgresql://user:pass@host:5432/db`) |
-| `DB_PASSWORD`     | PostgreSQL password for the `db` container                                     |
-| `JWT_SECRET`      | Secret key for signing JWT tokens                                              |
-| `SSH_HOST`        | Remote server IP or Hostname                                                   |
-| `SSH_USER`        | Remote server SSH username (e.g. `root` or `ubuntu`)                           |
-| `SSH_PRIVATE_KEY` | SSH Private Key used to connect to the server                                  |
+| Secret Name             | Description                                                                    |
+| :---------------------- | :----------------------------------------------------------------------------- |
+| `DATABASE_URL`          | Full PostgreSQL connection string (e.g. `postgresql://user:pass@host:5432/db`) |
+| `DB_PASSWORD`           | PostgreSQL password for the `db` container                                     |
+| `JWT_SECRET`            | Secret key for signing JWT tokens                                              |
+| `DOCS_PASSWORD`         | Password for API Documentation Basic Auth.                                     |
+| `DEFAULT_USER_EMAIL`    | Email for the default user created during seeding.                             |
+| `DEFAULT_USER_PASSWORD` | Password for the default user created during seeding.                          |
+| `SSH_HOST`              | Remote server IP or Hostname                                                   |
+| `SSH_USER`              | Remote server SSH username (e.g. `root` or `ubuntu`)                           |
+| `SSH_PRIVATE_KEY`       | SSH Private Key used to connect to the server                                  |
 
 ### GitHub Actions Variables
 
-| Variable Name | Description                                                                     |
-| :------------ | :------------------------------------------------------------------------------ |
-| `IMAGE_NAME`  | Name of the Docker image (e.g. `handler-claw-api`)                              |
-| `DB_USER`     | PostgreSQL username                                                             |
-| `DB_NAME`     | PostgreSQL database name                                                        |
-| `DEPLOY_PATH` | Absolute path on the server where the project is deployed (e.g. `/var/www/api`) |
-| `APP_PORT`    | (Optional) Application port (Default: `3000`)                                   |
-| `LOG_LEVEL`   | (Optional) Winston log level (Default: `info`)                                  |
+| Variable Name       | Description                                                                     |
+| :------------------ | :------------------------------------------------------------------------------ |
+| `IMAGE_NAME`        | Name of the Docker image (e.g. `handler-claw-api`)                              |
+| `DB_USER`           | PostgreSQL username                                                             |
+| `DB_NAME`           | PostgreSQL database name                                                        |
+| `DEPLOY_PATH`       | Absolute path on the server where the project is deployed (e.g. `/var/www/api`) |
+| `DOCS_USERNAME`     | Username for API Documentation Basic Auth (default: `admin`).                   |
+| `DEFAULT_USER_NAME` | Full name for the default user created during seeding.                          |
+| `APP_PORT`          | (Optional) Application port (Default: `3000`)                                   |
+| `LOG_LEVEL`         | (Optional) Winston log level (Default: `info`)                                  |
 
 ---
 

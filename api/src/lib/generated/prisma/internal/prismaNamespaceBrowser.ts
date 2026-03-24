@@ -50,7 +50,8 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 export const ModelName = {
   User: 'User',
-  PrayerLog: 'PrayerLog'
+  PrayerLog: 'PrayerLog',
+  WhatsappLog: 'WhatsappLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -101,12 +102,49 @@ export const PrayerLogScalarFieldEnum = {
 export type PrayerLogScalarFieldEnum = (typeof PrayerLogScalarFieldEnum)[keyof typeof PrayerLogScalarFieldEnum]
 
 
+export const WhatsappLogScalarFieldEnum = {
+  id: 'id',
+  receivedAt: 'receivedAt',
+  device: 'device',
+  mode: 'mode',
+  sender: 'sender',
+  senderLid: 'senderLid',
+  senderName: 'senderName',
+  isGroup: 'isGroup',
+  groupId: 'groupId',
+  memberPhone: 'memberPhone',
+  memberLid: 'memberLid',
+  messageText: 'messageText',
+  messageType: 'messageType',
+  isForwarded: 'isForwarded',
+  isQuick: 'isQuick',
+  inboxId: 'inboxId',
+  extension: 'extension',
+  filename: 'filename',
+  url: 'url',
+  location: 'location',
+  pollName: 'pollName',
+  pollChoices: 'pollChoices',
+  waTimestamp: 'waTimestamp'
+} as const
+
+export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -123,4 +161,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -34,6 +34,8 @@ COPY src ./src
 # Generate Prisma Client & Build TypeScript
 RUN pnpm prisma generate
 RUN pnpm build
+# Build Prisma Seeder explicitly to dist/prisma/seed.js
+RUN npx tsc -p prisma/tsconfig.json
 
 # ============================================================
 # Stage 3: runner — Minimal production image

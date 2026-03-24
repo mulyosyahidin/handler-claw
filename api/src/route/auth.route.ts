@@ -7,5 +7,6 @@ const authService = new AuthService();
 const authController = new AuthController(authService);
 
 authRouter.post("/login", authController.login);
+authRouter.post("/refresh-access-token", authController.refreshToken);
 
 export default authRouter;

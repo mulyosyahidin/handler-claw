@@ -54,3 +54,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type PrayerLog = Prisma.PrayerLogModel
+/**
+ * Model WhatsappLog
+ * 
+ */
+export type WhatsappLog = Prisma.WhatsappLogModel

@@ -69,11 +69,14 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DOCKER_IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          DEFAULT_USER_EMAIL: ${{ secrets.DEFAULT_USER_EMAIL }}
+          DEFAULT_USER_NAME: ${{ vars.DEFAULT_USER_NAME || 'Administrator' }}
+          DEFAULT_USER_PASSWORD: ${{ secrets.DEFAULT_USER_PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
@@ -96,6 +99,9 @@ jobs:
             printf "POSTGRES_USER=%s\n" "${{ vars.DB_USER }}" >> .env.production
             printf "POSTGRES_PASSWORD=%s\n" "$DB_PASSWORD" >> .env.production
             printf "POSTGRES_DB=%s\n" "${{ vars.DB_NAME }}" >> .env.production
+            printf "DEFAULT_USER_EMAIL=%s\n" "$DEFAULT_USER_EMAIL" >> .env.production
+            printf "DEFAULT_USER_NAME=%s\n" "$DEFAULT_USER_NAME" >> .env.production
+            printf "DEFAULT_USER_PASSWORD=%s\n" "$DEFAULT_USER_PASSWORD" >> .env.production
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env.production
@@ -109,10 +115,12 @@ jobs:
             # 3. Pull Image Terbaru
             docker pull $DOCKER_IMAGE
 
-            # 4. Database Migration (Prisma)
-            # Urutan: docker compose [global-flags] [command] [args]
+            # 4. Database Migration & Seeding (Prisma)
             echo "🔄 Running Migrations..."
             docker compose --env-file .env.production run --rm handler_claw_api_blue npx prisma migrate deploy
+            
+            echo "🌱 Seeding Database..."
+            docker compose --env-file .env.production run --rm handler_claw_api_blue node dist/prisma/seed.js
 
             # 5. Update Green Instance
             echo "🚀 Starting handler_claw_api_green..."

@@ -1,21 +1,7 @@
-import prisma from "../src/config/prisma";
+import prisma from "../src/config/prisma.js";
 import bcrypt from "bcrypt";
 
 const SALT_ROUNDS = 12;
-
-interface SeedUser {
-  email: string;
-  name: string;
-  password: string;
-}
-
-const users: SeedUser[] = [
-  {
-    email: "admin@handlerclaw.local",
-    name: "Administrator",
-    password: "admin123",
-  },
-];
 
 async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, SALT_ROUNDS);
@@ -24,25 +10,31 @@ async function hashPassword(password: string): Promise<string> {
 async function main(): Promise<void> {
   console.log("🌱 Starting seed...");
 
-  for (const user of users) {
-    const hashedPassword = await hashPassword(user.password);
+  const defaultEmail = process.env.DEFAULT_USER_EMAIL;
+  const defaultName = process.env.DEFAULT_USER_NAME;
+  const defaultPassword = process.env.DEFAULT_USER_PASSWORD;
 
-    const created = await prisma.user.upsert({
-      where: { email: user.email },
-      update: {
-        name: user.name,
-        password: hashedPassword,
-      },
-      create: {
-        email: user.email,
-        name: user.name,
-        password: hashedPassword,
-      },
-    });
-
-    console.log(`✅ User created/updated: ${created.email}`);
+  if (!defaultEmail || !defaultName || !defaultPassword) {
+    console.log("⚠️ Skipping default user seeding: Missing environment variables.");
+    return;
   }
 
+  const hashedPassword = await hashPassword(defaultPassword);
+
+  const created = await prisma.user.upsert({
+    where: { email: defaultEmail },
+    update: {
+      name: defaultName,
+      password: hashedPassword,
+    },
+    create: {
+      email: defaultEmail,
+      name: defaultName,
+      password: hashedPassword,
+    },
+  });
+
+  console.log(`✅ Default user created/updated: ${created.email}`);
   console.log("🎉 Seed completed successfully");
 }
 
