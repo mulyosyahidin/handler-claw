@@ -1,11 +1,11 @@
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: db_handler_claw
+    container_name: db_handler_claw_dev
     environment:
       POSTGRES_USER: uclaw
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db_handler_claw
+      POSTGRES_PASSWORD: FXywBb3ehGmz1Alj
+      POSTGRES_DB: db_handler_claw_dev
       POSTGRES_SCHEMA: public
     ports:
       - "5432:5432"
