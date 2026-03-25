@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 import 'package:handlerclaw/shared/themes/app_theme.dart';
+
 
 class AppDrawer extends StatefulWidget {
   final String name;
@@ -122,14 +124,9 @@ class _AppDrawerState extends State<AppDrawer>
                           child: Center(
                             child: Text(
                               initials.toUpperCase(),
-                              style: TextStyle(
-                                fontFamily: 'Georgia',
-                                color: primary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 1,
-                              ),
+                              style: AppTextStyles.title(color: primary),
                             ),
+
                           ),
                         ),
                       ],
@@ -142,16 +139,11 @@ class _AppDrawerState extends State<AppDrawer>
                 // Name
                 Text(
                   widget.name,
-                  style: TextStyle(
-                    fontFamily: 'Georgia',
-                    color: textPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.4,
-                  ),
+                  style: AppTextStyles.title(color: textPrimary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+
 
                 const SizedBox(height: 6),
 
@@ -304,13 +296,9 @@ class _SectionLabel extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: 10,
-          color: color.withValues(alpha: 0.5),
-          letterSpacing: 2.0,
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppTextStyles.label(color: color.withValues(alpha: 0.5)),
       ),
+
     );
   }
 }

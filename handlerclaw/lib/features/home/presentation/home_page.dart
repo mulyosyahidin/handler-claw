@@ -4,6 +4,8 @@ import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/features/auth/presentation/login_controller.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/app_drawer.dart';
 
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -14,15 +16,11 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'HandlerClaw',
-          style: TextStyle(
-            fontFamily: 'Georgia',
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.8,
-          ),
+          style: AppTextStyles.title(),
         ),
+
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
       drawer: AppDrawer(

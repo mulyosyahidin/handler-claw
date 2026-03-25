@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -128,17 +130,11 @@ class _SplashPageState extends State<SplashPage>
                     opacity: _fadeTitle,
                     child: Text(
                       'HandlerClaw',
-                      style: TextStyle(
-                        fontFamily: 'Georgia',
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
-                        color: textPrimary,
-                        letterSpacing: 1.2,
-                        height: 1.0,
-                      ),
+                      style: AppTextStyles.hero(color: textPrimary),
                     ),
                   ),
                 ),
+
 
                 const SizedBox(height: 10),
 

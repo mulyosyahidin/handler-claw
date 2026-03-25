@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 import 'package:handlerclaw/shared/themes/app_theme.dart';
 
 class EmailLoginForm extends StatefulWidget {
@@ -115,13 +116,11 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       color: Colors.white,
                     ),
                   )
-                : const Text(
+                : Text(
                     'Masuk',
-                    style: TextStyle(
-                      fontFamily: 'Georgia',
+                    style: AppTextStyles.body(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
-                      letterSpacing: 0.6,
                     ),
                   ),
           ),

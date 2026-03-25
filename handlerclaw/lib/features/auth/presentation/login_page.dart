@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/auth/presentation/login_controller.dart';
 import 'package:handlerclaw/features/auth/presentation/widgets/email_login_form.dart';
 import 'package:handlerclaw/shared/themes/app_theme.dart';
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 import 'package:handlerclaw/shared/utils/toast_utils.dart';
+
+
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -177,16 +180,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 opacity: _fadeTitle,
                                 child: Text(
                                   'HandlerClaw',
-                                  style: TextStyle(
-                                    fontFamily: 'Georgia',
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w400,
-                                    color: textPrimary,
-                                    letterSpacing: 1.0,
-                                  ),
+                                  style: AppTextStyles.hero(color: textPrimary),
                                 ),
                               ),
                             ),
+
                             const SizedBox(height: 8),
                             FadeTransition(
                               opacity: _fadeTitle,
@@ -206,14 +204,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 children: [
                                   Text(
                                     'Selamat Datang',
-                                    style: TextStyle(
-                                      fontFamily: 'Georgia',
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w400,
-                                      color: textPrimary,
-                                      letterSpacing: 0.4,
-                                    ),
+                                    style: AppTextStyles.heading(color: textPrimary),
                                   ),
+
                                   const SizedBox(height: 8),
                                   Text(
                                     'Masuk untuk mulai mengelola\npengingat harianmu.',

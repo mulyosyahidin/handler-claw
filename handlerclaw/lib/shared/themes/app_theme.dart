@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class AppColors {
   // Primary Red Palette
@@ -44,7 +46,9 @@ class AppTheme {
       onSurface: AppColors.textPrimaryLight,
       onError: Colors.white,
     ),
+    textTheme: GoogleFonts.lexendTextTheme(),
     scaffoldBackgroundColor: AppColors.backgroundLight,
+
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       elevation: 0,
@@ -93,7 +97,9 @@ class AppTheme {
       onSurface: AppColors.textPrimaryDark,
       onError: Colors.white,
     ),
+    textTheme: GoogleFonts.lexendTextTheme(ThemeData.dark().textTheme),
     scaffoldBackgroundColor: AppColors.backgroundDark,
+
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       elevation: 0,

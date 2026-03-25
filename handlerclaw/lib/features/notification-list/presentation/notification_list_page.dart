@@ -5,7 +5,9 @@ import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 import 'package:handlerclaw/features/notification-list/presentation/notification_list_controller.dart';
 import 'package:handlerclaw/shared/presentation/widgets/error_full_page.dart';
+import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 import 'package:intl/intl.dart';
+
 
 class NotificationListPage extends ConsumerStatefulWidget {
   const NotificationListPage({super.key});
@@ -43,18 +45,17 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final notificationState = ref.watch(notificationListControllerProvider);
+
+
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Notifikasi',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontFamily: 'Georgia',
-            fontWeight: FontWeight.w400,
-          ),
+          style: AppTextStyles.title(),
         ),
+
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _refresh),
         ],
@@ -181,11 +182,9 @@ class _ReminderItemCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 item.payloadJson.title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontFamily: 'Georgia',
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.body(fontWeight: FontWeight.w600, fontSize: 16),
               ),
+
               const SizedBox(height: 4),
               Text(
                 item.payloadJson.message.length > 40
