@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/core/model/pagination_meta_dto.dart';
-import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
+import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
+import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 import 'package:handlerclaw/features/notification-list/data/notification_api.dart';
 
 class NotificationListState {
@@ -30,8 +30,12 @@ class NotificationListState {
 
 class NotificationListController extends AsyncNotifier<NotificationListState> {
   @override
-  FutureOr<NotificationListState> build() async {
-    return _fetchPage(1);
+  Future<NotificationListState> build() async {
+    try {
+      return await _fetchPage(1);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<NotificationListState> _fetchPage(int page) async {

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
-import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
-import 'package:handlerclaw/features/notification-list/data/notification_api.dart';
+import 'package:handlerclaw/core/models/dto/notification_dto.dart';
+import 'package:handlerclaw/features/notification-detail/data/notification_detail_api.dart';
+import 'package:handlerclaw/shared/presentation/widgets/error_full_page.dart';
 import 'package:handlerclaw/shared/utils/toast_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,7 +34,7 @@ class _NotificationDetailPageState
   }
 
   Future<NotificationDto> _fetchData() async {
-    final api = ref.read(notificationApiProvider);
+    final api = ref.read(notificationDetailApiProvider);
     final response = await api.getNotificationDetail(widget.id);
     if (response.data == null) {
       throw Exception('Data not found');
@@ -59,7 +60,14 @@ class _NotificationDetailPageState
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: const Text('Detail Notifikasi')),
-            body: Center(child: Text('Error: ${snapshot.error}')),
+            body: ErrorFullPage(
+              message: snapshot.error.toString(),
+              onRefresh: () {
+                setState(() {
+                  _fetchFuture = _fetchData();
+                });
+              },
+            ),
           );
         }
 

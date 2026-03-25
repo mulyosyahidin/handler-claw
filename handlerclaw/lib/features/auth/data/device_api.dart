@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/core/network/dio_client.dart';
-import 'package:handlerclaw/shared/provider/firebase_messaging_provider.dart';
-import 'package:handlerclaw/shared/service/device_service.dart';
+import 'package:handlerclaw/core/networks/dio_client.dart';
+import 'package:handlerclaw/core/providers/firebase_messaging_provider.dart';
+import 'package:handlerclaw/shared/services/device_service.dart';
 
 class DeviceApi {
   final Dio dio;

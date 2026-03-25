@@ -2,9 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
-import 'package:handlerclaw/core/notification/pending_notification_provider.dart';
+import 'package:handlerclaw/features/notification-detail/presentation/pending_notification_provider.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/shared/provider/firebase_messaging_provider.dart';
+import 'package:handlerclaw/core/providers/firebase_messaging_provider.dart';
 import 'package:handlerclaw/shared/utils/toast_utils.dart';
 
 class FcmHandler {

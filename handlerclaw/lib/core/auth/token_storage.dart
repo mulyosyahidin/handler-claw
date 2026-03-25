@@ -5,7 +5,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:handlerclaw/features/auth/data/dto/user_dto.dart';
 
 class TokenStorage {
-  final _storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
 
   static const _tokenKey = "auth_token";
   static const _userKey = "user_data";

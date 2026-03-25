@@ -1,6 +1,6 @@
-import 'package:handlerclaw/core/model/api_response_dto.dart';
-import 'package:handlerclaw/core/model/pagination_meta_dto.dart';
-import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
+import 'package:handlerclaw/core/models/api_response_dto.dart';
+import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
+import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 
 class NotificationListData {
   final List<NotificationDto> notifications;

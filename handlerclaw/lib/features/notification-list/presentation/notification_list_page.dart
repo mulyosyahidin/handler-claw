@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
-import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
+import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 import 'package:handlerclaw/features/notification-list/presentation/notification_list_controller.dart';
+import 'package:handlerclaw/shared/presentation/widgets/error_full_page.dart';
 import 'package:intl/intl.dart';
 
 class NotificationListPage extends ConsumerStatefulWidget {
@@ -94,7 +95,10 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(child: Text('Error: $error')),
+        error: (error, _) => ErrorFullPage(
+          message: error.toString(),
+          onRefresh: _refresh,
+        ),
       ),
     );
   }

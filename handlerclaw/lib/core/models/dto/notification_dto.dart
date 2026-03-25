@@ -1,4 +1,4 @@
-import 'package:handlerclaw/features/notification-list/data/dto/notification_item_dto.dart';
+import 'package:handlerclaw/core/models/dto/notification_item_dto.dart';
 
 class NotificationDto {
   final String id;

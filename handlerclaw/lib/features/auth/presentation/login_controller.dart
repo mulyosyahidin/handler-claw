@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/core/error/api_exception.dart';
-import 'package:handlerclaw/core/provider/auth_session_provider.dart';
+import 'package:handlerclaw/core/errors/api_exception.dart';
+import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/features/auth/data/auth_api.dart';
 import 'package:handlerclaw/features/auth/data/device_api.dart';
 

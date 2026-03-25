@@ -1,4 +1,4 @@
-import 'package:handlerclaw/core/model/api_response_dto.dart';
+import 'package:handlerclaw/core/models/api_response_dto.dart';
 import 'package:handlerclaw/features/auth/data/dto/user_dto.dart';
 
 class LoginData {

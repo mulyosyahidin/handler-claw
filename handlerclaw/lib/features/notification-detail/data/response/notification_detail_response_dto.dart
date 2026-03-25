@@ -1,5 +1,5 @@
-import 'package:handlerclaw/core/model/api_response_dto.dart';
-import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
+import 'package:handlerclaw/core/models/api_response_dto.dart';
+import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 
 class NotificationDetailData {
   final NotificationDto notification;

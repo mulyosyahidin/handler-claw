@@ -3,28 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/features/notification-list/data/response/notification_list_response_dto.dart';
+import 'package:handlerclaw/features/notification-detail/data/response/notification_detail_response_dto.dart';
 
-class NotificationApi {
+class NotificationDetailApi {
   final Dio dio;
 
-  NotificationApi(this.dio);
+  NotificationDetailApi(this.dio);
 
-  Future<NotificationListResponseDto> getNotifications({
-    int page = 1,
-    int limit = 10,
-  }) async {
-    const endpoint = ApiEndpoint.notificationList;
+  Future<NotificationDetailResponseDto> getNotificationDetail(String id) async {
+    final endpoint = ApiEndpoint.notificationDetail.replaceAll('{id}', id);
 
     try {
       Logger.api("GET", endpoint);
 
-      final response = await dio.get(
-        endpoint,
-        queryParameters: {"page": page, "limit": limit},
-      );
+      final response = await dio.get(endpoint);
 
-      return NotificationListResponseDto.fromJson(response.data);
+      return NotificationDetailResponseDto.fromJson(response.data);
     } on DioException catch (e) {
       Logger.error("Api Error on endpoint $endpoint");
 
@@ -43,8 +37,8 @@ class NotificationApi {
   }
 }
 
-final notificationApiProvider = Provider<NotificationApi>((ref) {
+final notificationDetailApiProvider = Provider<NotificationDetailApi>((ref) {
   final dio = ref.read(dioProvider);
 
-  return NotificationApi(dio);
+  return NotificationDetailApi(dio);
 });
