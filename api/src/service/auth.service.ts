@@ -26,7 +26,7 @@ export class AuthService {
     });
 
     if (!user) {
-      return createErrorResponse("Gagal login", {
+      return createErrorResponse("Periksa kembali kredensial Anda", {
         email: "Email atau password salah",
       });
     }
@@ -34,7 +34,7 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return createErrorResponse("Gagal login", {
+      return createErrorResponse("Periksa kembali kredensial Anda", {
         password: "Email atau password salah",
       });
     }
