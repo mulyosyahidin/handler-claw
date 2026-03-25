@@ -52,7 +52,8 @@ export const ModelName = {
   User: 'User',
   PrayerLog: 'PrayerLog',
   WhatsappLog: 'WhatsappLog',
-  ReminderHook: 'ReminderHook'
+  ReminderHook: 'ReminderHook',
+  UserDevice: 'UserDevice'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -146,6 +147,24 @@ export const ReminderHookScalarFieldEnum = {
 } as const
 
 export type ReminderHookScalarFieldEnum = (typeof ReminderHookScalarFieldEnum)[keyof typeof ReminderHookScalarFieldEnum]
+
+
+export const UserDeviceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  deviceId: 'deviceId',
+  deviceBrand: 'deviceBrand',
+  deviceModel: 'deviceModel',
+  osVersion: 'osVersion',
+  fcmToken: 'fcmToken',
+  platform: 'platform',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -12,7 +12,7 @@
             "program": "lib/main.dart",
             "args": [
                 "--dart-define",
-                "API_BASE_URL=https://handler-claw.martinss.me/api"
+                "API_BASE_URL=https://6bd0-182-1-228-38.ngrok-free.app/api"
             ]
         },
         {

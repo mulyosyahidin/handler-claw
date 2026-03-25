@@ -3,3 +3,4 @@ export * from "./auth.controller.js";
 export * from "./prayer-log.controller.js";
 export * from "./whatsapp-log.controller.js";
 export * from "./reminder-hook.controller.js";
+export * from "./user-device.controller.js";

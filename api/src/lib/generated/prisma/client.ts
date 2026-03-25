@@ -64,3 +64,8 @@ export type WhatsappLog = Prisma.WhatsappLogModel
  * 
  */
 export type ReminderHook = Prisma.ReminderHookModel
+/**
+ * Model UserDevice
+ * 
+ */
+export type UserDevice = Prisma.UserDeviceModel

@@ -51,6 +51,19 @@ enum ReminderHookStatus {
   FAILED
 }
 
+enum UserDevicePlatform {
+  ANDROID
+  IOS
+  WEB
+  WINDOWS
+}
+
+enum UserDeviceStatus {
+  ACTIVE
+  LOGGED_OUT
+  INVALID_TOKEN
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -62,6 +75,7 @@ model User {
 
   prayerLogs PrayerLog[]
   reminderHooks ReminderHook[]
+  userDevices   UserDevice[]
 
   @@map("users")
 }
@@ -161,4 +175,29 @@ model ReminderHook {
   @@index([userId])
   @@index([createdAt])
   @@map("reminder_hooks")
+}
+
+model UserDevice {
+  id     String           @id @default(uuid())
+  userId String           @map("user_id")
+  status UserDeviceStatus @default(ACTIVE)
+
+  deviceId    String  @unique @map("device_id")
+  deviceBrand String? @map("device_brand")
+  deviceModel String? @map("device_model")
+  osVersion   String? @map("os_version")
+
+  fcmToken String             @map("fcm_token")
+  platform UserDevicePlatform @default(ANDROID)
+
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId])
+  @@index([userId])
+  @@map("user_devices")
 }

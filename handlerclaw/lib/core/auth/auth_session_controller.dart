@@ -52,12 +52,14 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
 
     try {
       Logger.debug("AuthSession: No cached user found. Fetching from NETWORK.");
-      
+
       final authApi = ref.read(authApiProvider);
       final apiResponse = await authApi.getMe();
 
       if (apiResponse.data == null) {
-        Logger.warning("AuthSession: Invalid token from NETWORK. Clearing session.");
+        Logger.warning(
+          "AuthSession: Invalid token from NETWORK. Clearing session.",
+        );
         await sessionStorage.clear();
         return AuthSession.unauthenticated();
       }

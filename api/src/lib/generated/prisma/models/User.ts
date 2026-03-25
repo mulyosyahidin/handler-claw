@@ -200,6 +200,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   prayerLogs?: Prisma.PrayerLogListRelationFilter
   reminderHooks?: Prisma.ReminderHookListRelationFilter
+  userDevices?: Prisma.UserDeviceListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -212,6 +213,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   prayerLogs?: Prisma.PrayerLogOrderByRelationAggregateInput
   reminderHooks?: Prisma.ReminderHookOrderByRelationAggregateInput
+  userDevices?: Prisma.UserDeviceOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -227,6 +229,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   prayerLogs?: Prisma.PrayerLogListRelationFilter
   reminderHooks?: Prisma.ReminderHookListRelationFilter
+  userDevices?: Prisma.UserDeviceListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -265,6 +268,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
   reminderHooks?: Prisma.ReminderHookCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -277,6 +281,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
   reminderHooks?: Prisma.ReminderHookUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -289,6 +294,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
   reminderHooks?: Prisma.ReminderHookUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -301,6 +307,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
   reminderHooks?: Prisma.ReminderHookUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -408,6 +415,20 @@ export type UserUpdateOneRequiredWithoutReminderHooksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReminderHooksInput, Prisma.UserUpdateWithoutReminderHooksInput>, Prisma.UserUncheckedUpdateWithoutReminderHooksInput>
 }
 
+export type UserCreateNestedOneWithoutUserDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserDevicesInput
+  upsert?: Prisma.UserUpsertWithoutUserDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserDevicesInput, Prisma.UserUpdateWithoutUserDevicesInput>, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+}
+
 export type UserCreateWithoutPrayerLogsInput = {
   id?: string
   email: string
@@ -417,6 +438,7 @@ export type UserCreateWithoutPrayerLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reminderHooks?: Prisma.ReminderHookCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPrayerLogsInput = {
@@ -428,6 +450,7 @@ export type UserUncheckedCreateWithoutPrayerLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reminderHooks?: Prisma.ReminderHookUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPrayerLogsInput = {
@@ -455,6 +478,7 @@ export type UserUpdateWithoutPrayerLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reminderHooks?: Prisma.ReminderHookUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPrayerLogsInput = {
@@ -466,6 +490,7 @@ export type UserUncheckedUpdateWithoutPrayerLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reminderHooks?: Prisma.ReminderHookUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReminderHooksInput = {
@@ -477,6 +502,7 @@ export type UserCreateWithoutReminderHooksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReminderHooksInput = {
@@ -488,6 +514,7 @@ export type UserUncheckedCreateWithoutReminderHooksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReminderHooksInput = {
@@ -515,6 +542,7 @@ export type UserUpdateWithoutReminderHooksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReminderHooksInput = {
@@ -526,6 +554,71 @@ export type UserUncheckedUpdateWithoutReminderHooksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserDevicesInput = {
+  id?: string
+  email: string
+  name: string
+  password: string
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
+  reminderHooks?: Prisma.ReminderHookCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserDevicesInput = {
+  id?: string
+  email: string
+  name: string
+  password: string
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
+  reminderHooks?: Prisma.ReminderHookUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+}
+
+export type UserUpsertWithoutUserDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserDevicesInput, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserDevicesInput, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+}
+
+export type UserUpdateWithoutUserDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
+  reminderHooks?: Prisma.ReminderHookUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
+  reminderHooks?: Prisma.ReminderHookUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -536,11 +629,13 @@ export type UserUncheckedUpdateWithoutReminderHooksInput = {
 export type UserCountOutputType = {
   prayerLogs: number
   reminderHooks: number
+  userDevices: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prayerLogs?: boolean | UserCountOutputTypeCountPrayerLogsArgs
   reminderHooks?: boolean | UserCountOutputTypeCountReminderHooksArgs
+  userDevices?: boolean | UserCountOutputTypeCountUserDevicesArgs
 }
 
 /**
@@ -567,6 +662,13 @@ export type UserCountOutputTypeCountReminderHooksArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ReminderHookWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserDeviceWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -578,6 +680,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>
   reminderHooks?: boolean | Prisma.User$reminderHooksArgs<ExtArgs>
+  userDevices?: boolean | Prisma.User$userDevicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -615,6 +718,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>
   reminderHooks?: boolean | Prisma.User$reminderHooksArgs<ExtArgs>
+  userDevices?: boolean | Prisma.User$userDevicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -625,6 +729,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     prayerLogs: Prisma.$PrayerLogPayload<ExtArgs>[]
     reminderHooks: Prisma.$ReminderHookPayload<ExtArgs>[]
+    userDevices: Prisma.$UserDevicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1030,6 +1135,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   prayerLogs<T extends Prisma.User$prayerLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$prayerLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrayerLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reminderHooks<T extends Prisma.User$reminderHooksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reminderHooksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReminderHookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userDevices<T extends Prisma.User$userDevicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1499,6 +1605,30 @@ export type User$reminderHooksArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ReminderHookScalarFieldEnum | Prisma.ReminderHookScalarFieldEnum[]
+}
+
+/**
+ * User.userDevices
+ */
+export type User$userDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserDevice
+   */
+  select?: Prisma.UserDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserDevice
+   */
+  omit?: Prisma.UserDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserDeviceInclude<ExtArgs> | null
+  where?: Prisma.UserDeviceWhereInput
+  orderBy?: Prisma.UserDeviceOrderByWithRelationInput | Prisma.UserDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.UserDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserDeviceScalarFieldEnum | Prisma.UserDeviceScalarFieldEnum[]
 }
 
 /**

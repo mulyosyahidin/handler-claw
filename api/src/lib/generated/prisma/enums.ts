@@ -57,3 +57,22 @@ export const ReminderHookStatus = {
 } as const
 
 export type ReminderHookStatus = (typeof ReminderHookStatus)[keyof typeof ReminderHookStatus]
+
+
+export const UserDevicePlatform = {
+  ANDROID: 'ANDROID',
+  IOS: 'IOS',
+  WEB: 'WEB',
+  WINDOWS: 'WINDOWS'
+} as const
+
+export type UserDevicePlatform = (typeof UserDevicePlatform)[keyof typeof UserDevicePlatform]
+
+
+export const UserDeviceStatus = {
+  ACTIVE: 'ACTIVE',
+  LOGGED_OUT: 'LOGGED_OUT',
+  INVALID_TOKEN: 'INVALID_TOKEN'
+} as const
+
+export type UserDeviceStatus = (typeof UserDeviceStatus)[keyof typeof UserDeviceStatus]

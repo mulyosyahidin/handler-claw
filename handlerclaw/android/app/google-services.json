@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "706273898592",
+    "project_id": "handler-claw",
+    "storage_bucket": "handler-claw.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706273898592:android:943893cf54319c8ff9d305",
+        "android_client_info": {
+          "package_name": "com.martin.handlerclaw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX2MLz_uQVjwiPLByAfuSs6eKmcf8oYXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

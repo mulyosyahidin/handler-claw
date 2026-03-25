@@ -1,0 +1,23 @@
+import type {
+  UserDevicePlatform,
+  UserDeviceStatus,
+} from "../../generated/prisma/enums.js";
+
+/**
+ * Domain Entities
+ * Representasi data dari database
+ */
+export interface IUserDevice {
+  id: string;
+  user_id: string;
+  status: UserDeviceStatus;
+  device_id: string;
+  device_brand: string | null;
+  device_model: string | null;
+  os_version: string | null;
+  fcm_token: string;
+  platform: UserDevicePlatform;
+  last_seen_at: Date | null;
+  created_at: Date;
+  updated_at: Date;
+}
