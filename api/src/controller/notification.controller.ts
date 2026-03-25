@@ -152,13 +152,11 @@ export class NotificationController {
         res.status(404).json(error);
         return;
       }
-      res
-        .status(500)
-        .json(
-          createErrorResponse("Internal server error", {
-            error: "Gagal mengambil detail notifikasi",
-          }),
-        );
+      res.status(500).json(
+        createErrorResponse("Internal server error", {
+          error: "Gagal mengambil detail notifikasi",
+        }),
+      );
     }
   };
 }

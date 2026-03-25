@@ -19,16 +19,14 @@ export class UserDeviceService {
   ): Promise<SuccessResponse<CreateUserDeviceResponseData>> {
     const device = await prisma.userDevice.upsert({
       where: {
-        userId_deviceId: {
-          userId,
-          deviceId: data.device_id,
-        },
+        fcmToken: data.fcm_token,
       },
       update: {
+        userId,
+        deviceId: data.device_id,
         deviceBrand: data.device_brand ?? null,
         deviceModel: data.device_model ?? null,
         osVersion: data.os_version ?? null,
-        fcmToken: data.fcm_token,
         platform: data.platform,
         lastSeenAt: new Date(),
         status: "ACTIVE",
@@ -87,15 +85,13 @@ export class UserDeviceService {
   }
 
   async updateDeviceStatus(
-    userId: string,
+    userId: string, // currently not strictly needed for fcmToken unique lookup, but good for security
     data: UpdateUserDeviceStatusInput,
   ): Promise<SuccessResponse<CreateUserDeviceResponseData>> {
     const device = await prisma.userDevice.update({
       where: {
-        userId_deviceId: {
-          userId,
-          deviceId: data.device_id,
-        },
+        fcmToken: data.fcm_token,
+        userId: userId, // Ensure user owns this device
       },
       data: {
         status: data.status,

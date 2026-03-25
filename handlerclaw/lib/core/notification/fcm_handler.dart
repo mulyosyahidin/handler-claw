@@ -1,5 +1,3 @@
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +5,7 @@ import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/core/notification/pending_notification_provider.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
 import 'package:handlerclaw/shared/provider/firebase_messaging_provider.dart';
+import 'package:handlerclaw/shared/utils/toast_utils.dart';
 
 class FcmHandler {
   final Ref ref;
@@ -38,15 +37,10 @@ class FcmHandler {
 
       final context = rootNavigatorKey.currentContext;
       if (context != null && context.mounted && message.notification != null) {
-        CherryToast.success(
-          title: Text(
-            message.notification?.title ?? "Notifikasi",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          description: Text(message.notification?.body ?? ""),
-          animationType: AnimationType.fromTop,
-          toastPosition: Position.top,
-          autoDismiss: true,
+        ToastUtils.showSuccess(
+          context,
+          title: message.notification?.title ?? "Notifikasi",
+          description: message.notification?.body ?? "",
           action: const Text(
             "LIHAT",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
@@ -54,8 +48,8 @@ class FcmHandler {
           actionHandler: () {
             _handleMessage(message);
           },
-          toastDuration: Duration(seconds: 5),
-        ).show(context);
+          toastDuration: const Duration(seconds: 5),
+        );
       }
     });
 

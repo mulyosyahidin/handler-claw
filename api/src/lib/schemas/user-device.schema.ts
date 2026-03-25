@@ -17,7 +17,7 @@ export const createUserDeviceSchema = z
 
 export const updateUserDeviceStatusSchema = z
   .object({
-    device_id: z.string().min(1, "device_id tidak boleh kosong"),
+    fcm_token: z.string().min(1, "fcm_token tidak boleh kosong"),
     status: z.nativeEnum(UserDeviceStatus),
   })
   .openapi("UpdateUserDeviceStatus");

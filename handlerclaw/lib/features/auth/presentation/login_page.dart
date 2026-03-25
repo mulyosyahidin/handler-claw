@@ -1,10 +1,9 @@
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/auth/presentation/login_controller.dart';
 import 'package:handlerclaw/features/auth/presentation/widgets/email_login_form.dart';
 import 'package:handlerclaw/shared/theme/app_theme.dart';
+import 'package:handlerclaw/shared/utils/toast_utils.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -65,14 +64,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
 
   Future<void> _handleLogin(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      CherryToast.warning(
-        title: const Text(
-          'Perhatian',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        description: const Text('Email dan password tidak boleh kosong.'),
-        animationType: AnimationType.fromTop,
-      ).show(context);
+      ToastUtils.showWarning(
+        context,
+        title: 'Perhatian',
+        description: 'Email dan password tidak boleh kosong.',
+      );
       return;
     }
 
@@ -83,27 +79,19 @@ class _LoginPageState extends ConsumerState<LoginPage>
           .loginWithEmailAndPassword(email, password);
 
       if (mounted) {
-        CherryToast.success(
-          title: const Text(
-            'Berhasil',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          description: Text(successMessage),
-          animationType: AnimationType.fromTop,
-          toastPosition: Position.top,
-        ).show(context);
+        ToastUtils.showSuccess(
+          context,
+          title: 'Berhasil',
+          description: successMessage,
+        );
       }
     } catch (e) {
       if (mounted) {
-        CherryToast.error(
-          title: const Text(
-            'Ooops..',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          description: Text(e.toString()),
-          animationType: AnimationType.fromTop,
-          toastPosition: Position.top,
-        ).show(context);
+        ToastUtils.showError(
+          context,
+          title: 'Ooops..',
+          description: e.toString(),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

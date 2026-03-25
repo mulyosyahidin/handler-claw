@@ -1,29 +1,25 @@
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/features/notification-list/data/dto/notification_dto.dart';
 import 'package:handlerclaw/features/notification-list/data/notification_api.dart';
+import 'package:handlerclaw/shared/utils/toast_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationDetailPage extends ConsumerStatefulWidget {
   final String id;
   final NotificationDto? data;
 
-  const NotificationDetailPage({
-    super.key,
-    required this.id,
-    this.data,
-  });
+  const NotificationDetailPage({super.key, required this.id, this.data});
 
   @override
   ConsumerState<NotificationDetailPage> createState() =>
       _NotificationDetailPageState();
 }
 
-class _NotificationDetailPageState extends ConsumerState<NotificationDetailPage> {
+class _NotificationDetailPageState
+    extends ConsumerState<NotificationDetailPage> {
   late Future<NotificationDto> _fetchFuture;
 
   @override
@@ -158,7 +154,9 @@ class _NotificationDetailPageState extends ConsumerState<NotificationDetailPage>
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        payload.message.isNotEmpty ? payload.message : 'Tidak ada pesan',
+                        payload.message.isNotEmpty
+                            ? payload.message
+                            : 'Tidak ada pesan',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: colorScheme.onSurface,
                           height: 1.6,
@@ -237,32 +235,21 @@ class _NotificationDetailPageState extends ConsumerState<NotificationDetailPage>
                             );
                           } else {
                             if (context.mounted) {
-                              CherryToast.error(
-                                title: const Text(
-                                  'Gagal membuka link',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                description: const Text(
-                                  'URL tidak valid atau tidak didukung oleh perangkat ini.',
-                                ),
-                                animationType: AnimationType.fromTop,
-                                toastPosition: Position.top,
-                              ).show(context);
+                              ToastUtils.showError(
+                                context,
+                                title: 'Gagal membuka link',
+                                description:
+                                    'URL tidak valid atau tidak didukung oleh perangkat ini.',
+                              );
                             }
                           }
                         } catch (e) {
                           if (context.mounted) {
-                            CherryToast.error(
-                              title: const Text(
-                                'Gagal membuka link',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              description: Text(
-                                'Terjadi kesalahan: ${e.toString()}',
-                              ),
-                              animationType: AnimationType.fromTop,
-                              toastPosition: Position.top,
-                            ).show(context);
+                            ToastUtils.showError(
+                              context,
+                              title: 'Gagal membuka link',
+                              description: 'Terjadi kesalahan: ${e.toString()}',
+                            );
                           }
                         }
                       },
@@ -309,7 +296,7 @@ class _NotificationDetailPageState extends ConsumerState<NotificationDetailPage>
         'Sep',
         'Okt',
         'Nov',
-        'Des'
+        'Des',
       ];
       return '${local.day} ${months[local.month - 1]} ${local.year}, ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
     } catch (e) {

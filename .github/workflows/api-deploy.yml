@@ -6,7 +6,7 @@ on:
       - development
     paths:
       - 'api/**'
-      - '.github/workflows/**'
+      - '.github/workflows/api-deploy.yml'
 
 env:
   REGISTRY: ghcr.io
