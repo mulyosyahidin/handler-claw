@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:handlerclaw/app/app_router.dart';
+import 'package:handlerclaw/core/notification/pending_notification_provider.dart';
 import 'package:handlerclaw/core/provider/auth_session_provider.dart';
-import 'package:handlerclaw/features/home/presentation/widgets/handler_claw_drawer.dart';
-import 'package:handlerclaw/features/login/application/login_controller_provider.dart';
+import 'package:handlerclaw/features/auth/presentation/login_controller.dart';
+import 'package:handlerclaw/features/home/presentation/widgets/app_drawer.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -11,6 +14,18 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authSessionProvider);
     final user = session.value?.userDto;
+
+    // Check for pending notification
+    final pendingId = ref.watch(pendingNotificationProvider);
+    if (pendingId != null && session.value?.isAuthenticated == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          context.push(Routes.notificationDetail.replaceAll(':id', pendingId));
+          // Clear it
+          ref.read(pendingNotificationProvider.notifier).setNotification(null);
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +40,7 @@ class HomePage extends ConsumerWidget {
         ),
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
       ),
-      drawer: HandlerClawDrawer(
+      drawer: AppDrawer(
         name: user?.name ?? 'User',
         email: user?.email ?? '',
         onLogout: () => ref.read(loginControllerProvider).logout(),

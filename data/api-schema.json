@@ -360,6 +360,63 @@
           "title",
           "message"
         ]
+      },
+      "CreateUserDevice": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "device_brand": {
+            "type": "string"
+          },
+          "device_model": {
+            "type": "string"
+          },
+          "os_version": {
+            "type": "string"
+          },
+          "fcm_token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "ANDROID",
+              "IOS",
+              "WEB",
+              "WINDOWS"
+            ],
+            "default": "ANDROID"
+          }
+        },
+        "required": [
+          "device_id",
+          "fcm_token"
+        ]
+      },
+      "UpdateUserDeviceStatus": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "LOGGED_OUT",
+              "INVALID_TOKEN"
+            ]
+          }
+        },
+        "required": [
+          "device_id",
+          "status"
+        ]
       }
     },
     "parameters": {}
@@ -736,7 +793,7 @@
     "/api/whatsapp-logs/summary": {
       "get": {
         "summary": "Get WhatsApp logs summary",
-        "description": "Mengambil ringkasan statistik WhatsApp log (jumlah, berdasarkan device, tipe pesan, dll).",
+        "description": "Mengambil ringkasan statistik WhatsApp log (jumlah, berdasarkan device, tipe pesan, dll) serta daftar pesan yang dikelompokkan per hari dan per pengirim (di dalam field `messages`).",
         "tags": [
           "WhatsApp Logs"
         ],
@@ -895,6 +952,127 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user-devices": {
+      "post": {
+        "summary": "Register / Update a User Device",
+        "description": "Mendaftarkan perangkat pengguna untuk push notification. Jika device_id sudah ada, data akan di-update (upsert).",
+        "tags": [
+          "User Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDevice"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Perangkat berhasil didaftarkan"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get User Devices (offset pagination)",
+        "description": "Mengambil daftar perangkat milik pengguna saat ini.",
+        "tags": [
+          "User Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "default": 1,
+              "description": "Nomor halaman (1-based), default: 1",
+              "example": 1
+            },
+            "required": false,
+            "description": "Nomor halaman (1-based), default: 1",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 10,
+              "description": "Jumlah data per halaman (max 200), default: 10",
+              "example": 10
+            },
+            "required": false,
+            "description": "Jumlah data per halaman (max 200), default: 10",
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/user-devices/status": {
+      "patch": {
+        "summary": "Update User Device Status",
+        "description": "Memperbarui status perangkat (misal: LOGGED_OUT, ACTIVE).",
+        "tags": [
+          "User Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDeviceStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status berhasil diperbarui"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
           }
         }
       }

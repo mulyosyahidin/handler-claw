@@ -1,24 +1,33 @@
 import type { Prisma } from "../lib/generated/prisma/client.js";
 
+/**
+ * Mengekstrak header spesifik dari objek Headers Web API atau Record standar.
+ * @param headers - Objek header yang akan diperiksa.
+ * @returns Objek yang hanya berisi header yang ditentukan dalam daftar 'important'.
+ */
 export function extractImportantHeaders(headers: Headers | Record<string, any>) {
   const important = ["user-agent", "content-type", "x-api-key", "x-forwarded-for"];
-
   const result: Record<string, string> = {};
 
-  for (const key of important) {
-    let value: any;
+  // Proteksi jika headers null atau undefined
+  if (!headers) return result;
 
-    // Check if `headers` is a Web API Headers object with a .get() method
-    if (headers && typeof headers.get === "function") {
-      value = headers.get(key);
-    } else if (headers) {
-      // Otherwise, assume it's a plain object (e.g. Express req.headers)
-      // Express headers are typically lowercased
+  for (const key of important) {
+    let value: any = null;
+
+    // 1. Cek jika menggunakan Web API Headers (.get())
+    if (typeof (headers as Headers).get === "function") {
+      value = (headers as Headers).get(key);
+    }
+    // 2. Cek jika menggunakan plain object (Express/Node)
+    else {
       const rawHeaders = headers as Record<string, any>;
-      value = rawHeaders[key] || rawHeaders[key.toLowerCase()];
+      // Cari dengan kunci asli atau versi huruf kecil
+      value = rawHeaders[key] ?? rawHeaders[key.toLowerCase()];
     }
 
-    if (value) {
+    // Hanya masukkan ke result jika value benar-benar ada
+    if (value !== null && value !== undefined) {
       result[key] = Array.isArray(value) ? value.join(", ") : String(value);
     }
   }

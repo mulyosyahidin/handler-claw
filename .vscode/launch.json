@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "handlerclaw",
+            "name": "HandlerClaw (Dev)",
             "cwd": "handlerclaw",
             "request": "launch",
             "type": "dart",
@@ -13,6 +13,17 @@
             "args": [
                 "--dart-define",
                 "API_BASE_URL=https://6bd0-182-1-228-38.ngrok-free.app/api"
+            ]
+        },
+        {
+            "name": "HandlerClaw (Prod)",
+            "cwd": "handlerclaw",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define",
+                "API_BASE_URL=https://handler-claw.martinss.me/api"
             ]
         },
         {

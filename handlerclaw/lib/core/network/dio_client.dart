@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/env.dart';
-import 'package:handlerclaw/core/network/interceptors/auth_interceptor.dart';
+import 'package:handlerclaw/core/network/auth_interceptor.dart';
 
 class DioClient {
   static Dio create(Ref ref) {
@@ -29,3 +29,7 @@ class DioClient {
     return dio;
   }
 }
+
+final dioProvider = Provider<Dio>((ref) {
+  return DioClient.create(ref);
+});
