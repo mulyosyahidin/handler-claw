@@ -72,15 +72,18 @@ jobs:
           DEFAULT_USER_EMAIL: ${{ secrets.DEFAULT_USER_EMAIL }}
           DEFAULT_USER_NAME: ${{ vars.DEFAULT_USER_NAME || 'Administrator' }}
           DEFAULT_USER_PASSWORD: ${{ secrets.DEFAULT_USER_PASSWORD }}
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_CLIENT_EMAIL: ${{ vars.FIREBASE_CLIENT_EMAIL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
-            # 1. Create .env.production secara aman (Anti-Korupsi karakter $)
+            # 1. Create .env.production
             cat <<'EOF' > .env.production
             INSTANCE_NAME=mura-vps
             NODE_ENV=production
@@ -102,6 +105,9 @@ jobs:
             printf "DEFAULT_USER_EMAIL=%s\n" "$DEFAULT_USER_EMAIL" >> .env.production
             printf "DEFAULT_USER_NAME=%s\n" "$DEFAULT_USER_NAME" >> .env.production
             printf "DEFAULT_USER_PASSWORD=%s\n" "$DEFAULT_USER_PASSWORD" >> .env.production
+            printf "FIREBASE_PROJECT_ID=%s\n" "$FIREBASE_PROJECT_ID" >> .env.production
+            printf "FIREBASE_PRIVATE_KEY=%s\n" "$FIREBASE_PRIVATE_KEY" >> .env.production
+            printf "FIREBASE_CLIENT_EMAIL=%s\n" "$FIREBASE_CLIENT_EMAIL" >> .env.production
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env.production

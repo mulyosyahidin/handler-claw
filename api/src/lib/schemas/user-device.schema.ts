@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { UserDevicePlatform, UserDeviceStatus } from '../generated/prisma/enums.js';
+import { UserDevicePlatform, UserDeviceStatus } from "../generated/prisma/enums.js";
 
 extendZodWithOpenApi(z);
 

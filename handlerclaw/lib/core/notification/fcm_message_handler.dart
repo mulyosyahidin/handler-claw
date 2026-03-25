@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/app/routes.dart';
+import 'package:handlerclaw/core/data/dto/notification_dto.dart';
 import 'package:handlerclaw/core/provider/local_notification_service_provider.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
@@ -85,17 +87,17 @@ class FcmMessageHandler {
         return;
       }
 
-      // final data = NotificationData(
-      //   title: message.notification?.title ?? message.data['title'],
-      //   body: message.notification?.body ?? message.data['body'],
-      //   eventId: message.data['event_id'],
-      //   type: message.data['type'],
-      //   linkTo: message.data['link_to'],
-      //   triggeredAt: message.data['triggered_at'],
-      //   rawData: message.data,
-      // );
+      final data = NotificationDto(
+        title: message.notification?.title ?? message.data['title'],
+        body: message.notification?.body ?? message.data['body'],
+        eventId: message.data['event_id'],
+        type: message.data['type'],
+        linkTo: message.data['link_to'],
+        triggeredAt: message.data['triggered_at'],
+        rawData: message.data,
+      );
 
-      // context.push(Routes.notificationDetail, extra: data);
+      context.push(Routes.notificationDetail, extra: data);
     });
   }
 
@@ -112,11 +114,11 @@ class FcmMessageHandler {
 
     debugPrint('[FCM] Membuka halaman detail notifikasi');
 
-    // final data = NotificationData.fromMap(payload);
-    // navigator.pushNamed(
-    //   Routes.notificationDetail,
-    //   arguments: data,
-    // );
+    final data = NotificationDto.fromMap(payload);
+    navigator.context.push(
+      Routes.notificationDetail,
+      extra: data,
+    );
   }
 
   /// Generate unique notification ID

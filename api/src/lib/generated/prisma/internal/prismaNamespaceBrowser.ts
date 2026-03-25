@@ -53,7 +53,8 @@ export const ModelName = {
   PrayerLog: 'PrayerLog',
   WhatsappLog: 'WhatsappLog',
   ReminderHook: 'ReminderHook',
-  UserDevice: 'UserDevice'
+  UserDevice: 'UserDevice',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -165,6 +166,28 @@ export const UserDeviceScalarFieldEnum = {
 } as const
 
 export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  reminderHookId: 'reminderHookId',
+  userId: 'userId',
+  userDeviceId: 'userDeviceId',
+  title: 'title',
+  body: 'body',
+  data: 'data',
+  triggeredAt: 'triggeredAt',
+  status: 'status',
+  fcmMessageId: 'fcmMessageId',
+  sentAt: 'sentAt',
+  failedAt: 'failedAt',
+  retryCount: 'retryCount',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {

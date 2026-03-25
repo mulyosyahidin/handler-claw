@@ -42,3 +42,8 @@ export type ReminderHook = Prisma.ReminderHookModel
  * 
  */
 export type UserDevice = Prisma.UserDeviceModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel

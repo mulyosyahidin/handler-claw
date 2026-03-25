@@ -10,6 +10,7 @@ import type {
   GetUserDevicesQuery,
 } from "../lib/schemas/user-device.schema.js";
 import { toUserDeviceEntity } from "../lib/mappers/index.js";
+import { UserDeviceStatus, type UserDevice } from "../lib/generated/prisma/client.js";
 
 export class UserDeviceService {
   async createDevice(
@@ -76,6 +77,12 @@ export class UserDeviceService {
         total,
         total_pages: Math.ceil(total / per_page),
       },
+    });
+  }
+
+  async findAllUserDevices(userId: string): Promise<UserDevice[]> {
+    return await prisma.userDevice.findMany({
+      where: { userId, status: UserDeviceStatus.ACTIVE },
     });
   }
 

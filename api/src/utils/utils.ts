@@ -1,3 +1,5 @@
+import type { Prisma } from "../lib/generated/prisma/client.js";
+
 export function extractImportantHeaders(headers: Headers | Record<string, any>) {
   const important = ["user-agent", "content-type", "x-api-key", "x-forwarded-for"];
 
@@ -27,4 +29,18 @@ export function extractImportantHeaders(headers: Headers | Record<string, any>) 
 export function formatDateToLocalISO(d: Date): string {
   const pad = (n: number) => n.toString().padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+export function toFcmData(data: Prisma.InputJsonValue | null | undefined): Record<string, string> {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return {};
+  }
+
+  const result: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(data)) {
+    result[key] = typeof value === "string" ? value : JSON.stringify(value);
+  }
+
+  return result;
 }

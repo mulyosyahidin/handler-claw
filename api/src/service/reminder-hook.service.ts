@@ -1,7 +1,6 @@
 import prisma from "../config/prisma.js";
 import { createSuccessResponse, type SuccessResponse } from "../lib/types/response.js";
 import type {
-  CreateReminderHookResponseData,
   GetReminderHooksResponseData,
   ReminderHooksSummaryData,
 } from "../lib/types/data/index.js";
@@ -10,7 +9,7 @@ import type {
   GetReminderHooksQuery,
 } from "../lib/schemas/reminder-hook.schema.js";
 import { toReminderHookEntity } from "../lib/mappers/index.js";
-import { Prisma } from "../lib/generated/prisma/client.js";
+import { Prisma, type ReminderHook } from "../lib/generated/prisma/client.js";
 import { extractImportantHeaders } from "../utils/utils.js";
 
 export class ReminderHookService {
@@ -18,10 +17,10 @@ export class ReminderHookService {
     userId: string,
     data: createReminderHookInput,
     headers: Record<string, any>,
-  ): Promise<SuccessResponse<CreateReminderHookResponseData>> {
+  ): Promise<ReminderHook> {
     const headersObject = extractImportantHeaders(headers);
 
-    const hook = await prisma.reminderHook.upsert({
+    return await prisma.reminderHook.upsert({
       where: {
         userId_eventId: {
           userId,
@@ -41,10 +40,6 @@ export class ReminderHookService {
         headersJson: headers as unknown as Prisma.InputJsonValue,
         status: "RECEIVED",
       },
-    });
-
-    return createSuccessResponse("Berhasil menyimpan reminder hook", {
-      reminder_hook: toReminderHookEntity(hook),
     });
   }
 

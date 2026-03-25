@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/app/routes.dart';
 import 'package:handlerclaw/core/provider/auth_session_provider.dart';
-import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:handlerclaw/features/home/presentation/home_page.dart';
 import 'package:handlerclaw/features/login/presentation/login_page.dart';
+import 'package:handlerclaw/features/notification-detail/presentation/notification_detail_page.dart';
+import 'package:handlerclaw/core/data/dto/notification_dto.dart';
 import 'package:handlerclaw/features/splash/presentation/splash_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -26,6 +27,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.home,
         builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: Routes.notificationDetail,
+        builder: (context, state) {
+          final data = state.extra as NotificationDto;
+          return NotificationDetailPage(data: data);
+        },
       ),
     ],
     redirect: (context, state) {

@@ -1,7 +1,4 @@
-import type {
-  UserDevicePlatform,
-  UserDeviceStatus,
-} from "../../generated/prisma/enums.js";
+import type { UserDevicePlatform, UserDeviceStatus } from "../../generated/prisma/enums.js";
 
 /**
  * Domain Entities

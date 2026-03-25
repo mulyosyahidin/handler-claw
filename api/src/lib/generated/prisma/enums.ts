@@ -76,3 +76,12 @@ export const UserDeviceStatus = {
 } as const
 
 export type UserDeviceStatus = (typeof UserDeviceStatus)[keyof typeof UserDeviceStatus]
+
+
+export const NotificationStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type NotificationStatus = (typeof NotificationStatus)[keyof typeof NotificationStatus]

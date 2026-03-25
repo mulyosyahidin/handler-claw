@@ -64,6 +64,12 @@ enum UserDeviceStatus {
   INVALID_TOKEN
 }
 
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 model User {
   id          String    @id @default(uuid())
   email       String    @unique
@@ -73,9 +79,10 @@ model User {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
-  prayerLogs PrayerLog[]
+  prayerLogs    PrayerLog[]
   reminderHooks ReminderHook[]
   userDevices   UserDevice[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -86,7 +93,7 @@ model PrayerLog {
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
 
-  date     DateTime @db.Date
+  date     DateTime       @db.Date
   prayer   PrayerType
   category PrayerCategory
 
@@ -108,39 +115,39 @@ model PrayerLog {
 }
 
 model WhatsappLog {
-  id          Int      @id @default(autoincrement())
-  receivedAt  DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  receivedAt DateTime @default(now())
 
   // Device & routing
-  device      String   @db.VarChar(30)
-  mode        String   @db.VarChar(10)
+  device String @db.VarChar(30)
+  mode   String @db.VarChar(10)
 
   // Sender info
-  sender      String   @db.VarChar(50)
-  senderLid   String?  @db.VarChar(60)
-  senderName  String?  @db.VarChar(100)
+  sender     String  @db.VarChar(50)
+  senderLid  String? @db.VarChar(60)
+  senderName String? @db.VarChar(100)
 
   // Group info
-  isGroup     Boolean  @default(false)
-  groupId     String?  @db.VarChar(60)
-  memberPhone String?  @db.VarChar(30)
-  memberLid   String?  @db.VarChar(60)
+  isGroup     Boolean @default(false)
+  groupId     String? @db.VarChar(60)
+  memberPhone String? @db.VarChar(30)
+  memberLid   String? @db.VarChar(60)
 
   // Message
-  messageText String?  @db.Text
-  messageType String   @db.VarChar(20)   // text, image, document, dll
-  isForwarded Boolean  @default(false)
-  isQuick     Boolean  @default(false)
-  inboxId     Int      @default(0)
+  messageText String? @db.Text
+  messageType String  @db.VarChar(20) // text, image, document, dll
+  isForwarded Boolean @default(false)
+  isQuick     Boolean @default(false)
+  inboxId     Int     @default(0)
 
   // Media (null kalau plain text)
-  extension   String?  @db.VarChar(20)
-  filename    String?  @db.VarChar(255)
-  url         String?  @db.VarChar(500)
-  location    String?  @db.VarChar(255)
+  extension String? @db.VarChar(20)
+  filename  String? @db.VarChar(255)
+  url       String? @db.VarChar(500)
+  location  String? @db.VarChar(255)
 
   // Poll
-  pollName    String?  @db.VarChar(255)
+  pollName    String? @db.VarChar(255)
   pollChoices Json?
 
   // Original timestamp dari WA
@@ -170,6 +177,7 @@ model ReminderHook {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
 
   @@unique([userId, eventId])
   @@index([userId])
@@ -195,9 +203,45 @@ model UserDevice {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
 
   @@unique([userId, deviceId])
   @@index([userId])
   @@map("user_devices")
+}
+
+model Notification {
+  id           String @id @default(uuid())
+  reminderHookId String @map("reminder_hook_id")
+
+  userId       String @map("user_id")
+  userDeviceId String @map("user_device_id")
+
+  title String
+  body  String
+  data  Json?
+
+  triggeredAt DateTime? @map("triggered_at")
+
+  status       NotificationStatus @default(PENDING)
+  fcmMessageId String?            @map("fcm_message_id")
+
+  sentAt   DateTime? @map("sent_at")
+  failedAt DateTime? @map("failed_at")
+
+  retryCount   Int     @default(0)
+  errorMessage String? @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  reminderHook ReminderHook @relation(fields: [reminderHookId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userDevice UserDevice @relation(fields: [userDeviceId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([userId])
+  @@index([userDeviceId])
+  @@map("notifications")
 }
