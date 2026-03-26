@@ -96,14 +96,14 @@ registry.registerPath({
   security: [{ [bearerAuth.name]: [] }],
   request: {
     query: z.object({
-      limit: z
+      page: z
         .number()
-        .default(20)
-        .openapi({ param: { name: "limit", in: "query" }, description: "Pagination limit" }),
-      offset: z
+        .default(1)
+        .openapi({ param: { name: "page", in: "query" }, description: "Page number" }),
+      per_page: z
         .number()
-        .default(0)
-        .openapi({ param: { name: "offset", in: "query" }, description: "Pagination offset" }),
+        .default(10)
+        .openapi({ param: { name: "per_page", in: "query" }, description: "Items per page" }),
       ...dateRangeOpenApi,
     }),
   },

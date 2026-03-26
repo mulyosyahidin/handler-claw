@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
-import 'package:handlerclaw/features/devices/data/response/user_device_list_response_dto.dart';
-import 'package:handlerclaw/features/devices/data/response/user_device_detail_response_dto.dart';
+import 'package:handlerclaw/features/devices/data/responses/user_device_list_response_dto.dart';
+import 'package:handlerclaw/features/devices/data/responses/user_device_detail_response_dto.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
 
 final userDeviceApiProvider = Provider<UserDeviceApi>((ref) {

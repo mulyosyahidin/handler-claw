@@ -131,8 +131,11 @@ export class PrayerLogService {
     userId: string,
     query: GetPrayerLogsQuery,
   ): Promise<SuccessResponse<GetPrayerLogsResponseData>> {
-    const { date_type, start, end, limit, offset } = query;
+    const { date_type, start, end, page, per_page } = query;
     const { filter: dateFilter, date_start, date_end } = getPrayerDateFilter(date_type, start, end);
+
+    const limit = per_page;
+    const offset = (page - 1) * per_page;
 
     const [logs, total] = await Promise.all([
       prisma.prayerLog.findMany({
@@ -156,7 +159,12 @@ export class PrayerLogService {
         },
       },
       prayer_logs: logs.map(toPrayerLogEntity),
-      total,
+      meta: {
+        page,
+        per_page,
+        total,
+        total_pages: Math.ceil(total / per_page),
+      },
     });
   }
 
@@ -204,6 +212,12 @@ export class PrayerLogService {
     // Build summary entries
     const summary: PrayerSummaryEntry[] = [];
     const grandCount: Record<string, number> = {};
+
+    // Pre-fill grandCount with all valid PrayerTypes so they show up even if 0
+    for (const p of Object.values(PrayerType)) {
+      grandCount[p] = 0;
+    }
+
     let grandWajib = 0;
     let grandSunnah = 0;
     let grandTotal = 0;
@@ -253,6 +267,17 @@ export class PrayerLogService {
       });
     }
 
+    // Calculate performances (count and percentage)
+    const totalDays = grouped.size || 1;
+    const performances: Record<string, { count: number; percentage: number }> = {};
+    for (const p of Object.values(PrayerType)) {
+      const count = grandCount[p] || 0;
+      performances[p] = {
+        count,
+        percentage: Number(((count / totalDays) * 100).toFixed(2)),
+      };
+    }
+
     return createSuccessResponse("Berhasil mengambil ringkasan jurnal solat", {
       filter: {
         date_type,
@@ -264,6 +289,7 @@ export class PrayerLogService {
       },
       summary,
       count: grandCount,
+      performances,
       grand_total: {
         total_wajib_performed: grandWajib,
         total_sunnah_performed: grandSunnah,

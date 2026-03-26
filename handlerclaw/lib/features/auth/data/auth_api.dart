@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/features/auth/data/response/login_response_dto.dart';
-import 'package:handlerclaw/features/auth/data/response/me_response_dto.dart';
+import 'package:handlerclaw/features/auth/data/responses/login_response_dto.dart';
+import 'package:handlerclaw/features/auth/data/responses/me_response_dto.dart';
 
 class AuthApi {
   final Dio dio;

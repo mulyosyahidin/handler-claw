@@ -11,6 +11,7 @@ import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -18,6 +19,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -54,7 +56,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         if (session.value?.isAuthenticated == true) {
           final context = rootNavigatorKey.currentContext;
           if (context != null && context.mounted) {
-            Logger.info("Global Navigating to pending notification afterdetail: $next");
+            Logger.info(
+              "Global Navigating to pending notification afterdetail: $next",
+            );
             context.push(Routes.notificationDetail.replaceAll(':id', next));
             ref
                 .read(pendingNotificationProvider.notifier)

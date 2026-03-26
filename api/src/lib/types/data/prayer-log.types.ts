@@ -19,7 +19,12 @@ export interface PrayerLogFilterData {
 export interface GetPrayerLogsResponseData {
   filter: PrayerLogFilterData;
   prayer_logs: IPrayerLog[];
-  total: number;
+  meta: {
+    page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+  };
 }
 
 export interface PrayerSummaryEntry {
@@ -35,6 +40,7 @@ export interface GetPrayerLogsSummaryResponseData {
   filter: PrayerLogFilterData;
   summary: PrayerSummaryEntry[];
   count: Record<string, number>;
+  performances: Record<string, { count: number; percentage: number }>;
   grand_total: {
     total_wajib_performed: number;
     total_sunnah_performed: number;

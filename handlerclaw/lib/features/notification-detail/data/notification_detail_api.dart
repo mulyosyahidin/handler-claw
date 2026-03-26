@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/features/notification-detail/data/response/notification_detail_response_dto.dart';
+import 'package:handlerclaw/features/notification-detail/data/responses/notification_detail_response_dto.dart';
 
 class NotificationDetailApi {
   final Dio dio;

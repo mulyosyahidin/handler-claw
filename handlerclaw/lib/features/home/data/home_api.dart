@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/features/home/data/response/overview_response_dto.dart';
+import 'package:handlerclaw/features/home/data/responses/overview_response_dto.dart';
 
 class HomeApi {
   final Dio dio;

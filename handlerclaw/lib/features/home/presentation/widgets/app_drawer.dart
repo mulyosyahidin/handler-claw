@@ -279,6 +279,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                     },
                   ),
                   _DrawerNavItem(
+                    icon: Icons.history_rounded,
+                    label: 'Jurnal Solat',
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.prayerLogs,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.prayerLogs);
+                    },
+                  ),
+                  _DrawerNavItem(
                     icon: Icons.devices_other_rounded,
                     label: 'Devices',
                     isActive:
