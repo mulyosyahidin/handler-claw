@@ -11,8 +11,8 @@ class AppTextStyles {
       );
 
   // Title: for app bar and main titles
-  static TextStyle title({Color? color}) => GoogleFonts.lexend(
-        fontSize: 20,
+  static TextStyle title({Color? color, double? fontSize}) => GoogleFonts.lexend(
+        fontSize: fontSize ?? 20,
         fontWeight: FontWeight.w400,
         color: color,
         letterSpacing: 0.8,

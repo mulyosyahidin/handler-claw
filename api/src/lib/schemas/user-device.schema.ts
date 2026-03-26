@@ -32,9 +32,23 @@ export const getUserDevicesQuerySchema = z
       description: "Jumlah data per halaman (max 200), default: 10",
       example: 10,
     }),
+    search: z.string().optional().openapi({
+      description: "Cari berdasarkan device_brand, device_model, atau device_id",
+      example: "Samsung",
+    }),
   })
   .openapi("GetUserDevicesQuery");
+
+export const getUserDeviceParamsSchema = z
+  .object({
+    id: z.string().uuid().openapi({
+      description: "UUID dari perangkat",
+      example: "550e8400-e29b-41d4-a716-446655440000",
+    }),
+  })
+  .openapi("GetUserDeviceParams");
 
 export type CreateUserDeviceInput = z.infer<typeof createUserDeviceSchema>;
 export type UpdateUserDeviceStatusInput = z.infer<typeof updateUserDeviceStatusSchema>;
 export type GetUserDevicesQuery = z.infer<typeof getUserDevicesQuerySchema>;
+export type GetUserDeviceParams = z.infer<typeof getUserDeviceParamsSchema>;

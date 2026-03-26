@@ -62,6 +62,24 @@ export class UserDeviceController {
     res.status(200).json(result);
   };
 
+  // GET /api/user-devices/:id
+  getDeviceById = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+    const id = req.params.id as string;
+
+    if (!userId) {
+      res.status(401).json(createErrorResponse("Unauthorized", { token: "Token tidak valid" }));
+      return;
+    }
+
+    try {
+      const result = await this.userDeviceService.getDeviceById(userId, id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(404).json(createErrorResponse("Device tidak ditemukan", { id: "ID tidak valid atau bukan milik Anda" }));
+    }
+  };
+
   // PATCH /api/user-devices/status
   updateDeviceStatus = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.userId;

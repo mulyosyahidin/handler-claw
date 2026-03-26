@@ -45,8 +45,8 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
     final response = await api.getLogs(cursor: cursor, search: search);
     
     return WhatsappLogListState(
-      items: response.whatsappLogs,
-      nextCursor: response.nextCursor,
+      items: response.data?.whatsappLogs ?? [],
+      nextCursor: response.data?.nextCursor,
       search: search,
     );
   }
@@ -65,9 +65,9 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
       );
       
       state = AsyncData(currentState.copyWith(
-        items: [...currentState.items, ...response.whatsappLogs],
-        nextCursor: response.nextCursor,
-        clearNextCursor: response.nextCursor == null,
+        items: [...currentState.items, ...response.data?.whatsappLogs ?? []],
+        nextCursor: response.data?.nextCursor,
+        clearNextCursor: response.data?.nextCursor == null,
         isLoadingMore: false,
       ));
     } catch (e) {

@@ -278,6 +278,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                       context.push(Routes.whatsappLogs);
                     },
                   ),
+                  _DrawerNavItem(
+                    icon: Icons.devices_other_rounded,
+                    label: 'Devices',
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.devices,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.devices);
+                    },
+                  ),
                   const SizedBox(height: 20),
                   _SectionLabel('ACCOUNT', textMuted),
                   const SizedBox(height: 8),

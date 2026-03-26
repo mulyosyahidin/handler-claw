@@ -19,3 +19,8 @@ class DeviceService {
 final deviceServiceProvider = Provider<DeviceService>((ref) {
   return DeviceService();
 });
+
+final currentDeviceIdProvider = FutureProvider<String?>((ref) async {
+  final info = await ref.read(deviceServiceProvider).getDeviceInfo();
+  return info["device_id"];
+});

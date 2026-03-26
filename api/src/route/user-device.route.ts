@@ -7,6 +7,7 @@ import {
   createUserDeviceSchema,
   updateUserDeviceStatusSchema,
   getUserDevicesQuerySchema,
+  getUserDeviceParamsSchema,
 } from "../lib/schemas/user-device.schema.js";
 
 const userDeviceRouter: Router = Router();
@@ -78,10 +79,28 @@ registry.registerPath({
   },
 });
 
+registry.registerPath({
+  method: "get",
+  path: "/api/user-devices/{id}",
+  summary: "Get User Device Detail",
+  description: "Mengambil detail perangkat berdasarkan ID.",
+  tags: ["User Devices"],
+  security: [{ bearerAuth: [] }],
+  request: {
+    params: getUserDeviceParamsSchema,
+  },
+  responses: {
+    200: { description: "Berhasil" },
+    401: { description: "Unauthorized" },
+    404: { description: "Device tidak ditemukan" },
+  },
+});
+
 // ─── ROUTES ────────────────────────────────────────────────────────────────
 
 userDeviceRouter.post("/", authMiddleware, userDeviceController.createDevice);
 userDeviceRouter.patch("/status", authMiddleware, userDeviceController.updateDeviceStatus);
 userDeviceRouter.get("/", authMiddleware, userDeviceController.getDevices);
+userDeviceRouter.get("/:id", authMiddleware, userDeviceController.getDeviceById);
 
 export default userDeviceRouter;

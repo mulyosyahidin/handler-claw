@@ -13,7 +13,8 @@ class NotificationDetailData {
   }
 }
 
-class NotificationDetailResponseDto extends ApiResponseDto<NotificationDetailData> {
+class NotificationDetailResponseDto
+    extends ApiResponseDto<NotificationDetailData> {
   NotificationDetailResponseDto({
     required super.success,
     required super.message,

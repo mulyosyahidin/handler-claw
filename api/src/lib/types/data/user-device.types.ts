@@ -13,3 +13,7 @@ export interface GetUserDevicesResponseData {
     total_pages: number;
   };
 }
+
+export interface GetUserDeviceDetailResponseData {
+  user_device: IUserDevice;
+}
