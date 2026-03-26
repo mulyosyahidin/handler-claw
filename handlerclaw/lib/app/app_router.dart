@@ -10,6 +10,7 @@ import 'package:handlerclaw/features/notification-detail/presentation/notificati
 import 'package:handlerclaw/features/notification-list/presentation/notification_list_page.dart';
 import 'package:handlerclaw/features/profile/presentation/profile_page.dart';
 import 'package:handlerclaw/features/splash/presentation/splash_page.dart';
+import 'package:handlerclaw/features/whatsapp-logs/presentation/whatsapp_logs_page.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
  
 class Routes {
@@ -21,6 +22,7 @@ class Routes {
  
   static const notificationDetail = "/notification-detail/:id";
   static const notificationList = "/notifications";
+  static const whatsappLogs = "/whatsapp-logs";
 }
  
 final routerProvider = Provider<GoRouter>((ref) {
@@ -55,6 +57,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           final data = state.extra as NotificationDto?;
           return NotificationDetailPage(id: id, data: data);
         },
+      ),
+      GoRoute(
+        path: Routes.whatsappLogs,
+        builder: (context, state) => const WhatsAppLogsPage(),
       ),
     ],
     redirect: notifier.redirect,

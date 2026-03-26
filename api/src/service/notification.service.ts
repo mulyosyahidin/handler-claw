@@ -23,7 +23,7 @@ import {
   type SuccessResponse,
 } from "../lib/types/response.js";
 import { type IReminderHook } from "../lib/types/domain/index.js";
-import { toNotificationEntity } from "../lib/mappers/index.js";
+import { toReminderHookEntity } from "../lib/mappers/index.js";
 import { extractImportantHeaders, toFcmData } from "../utils/utils.js";
 
 export class NotificationService {
@@ -91,7 +91,7 @@ export class NotificationService {
     ]);
 
     return createSuccessResponse("Berhasil mengambil daftar notifikasi", {
-      notifications: hooks.map(toNotificationEntity),
+      notifications: hooks.map(toReminderHookEntity),
       meta: {
         page,
         per_page,
@@ -148,7 +148,7 @@ export class NotificationService {
     }
 
     return createSuccessResponse("Berhasil mengambil detail notifikasi", {
-      notification: toNotificationEntity(hook),
+      notification: toReminderHookEntity(hook),
     });
   }
 

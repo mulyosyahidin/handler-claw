@@ -1,12 +1,7 @@
 import type { ReminderHook } from "../generated/prisma/client.js";
-import type { INotificationHook } from "../types/domain/index.js";
+import type { IReminderHook } from "../types/domain/index.js";
 
-/**
- * Maps ReminderHook PRISMA model to the IReminderHook domain entity (Notification).
- * Note: Even though the endpoint is renamed to /notifications,
- * we still use the ReminderHook model for the incoming event data.
- */
-export function toNotificationEntity(p: ReminderHook): INotificationHook {
+export function toReminderHookEntity(p: ReminderHook): IReminderHook {
   return {
     id: p.id,
     user_id: p.userId,

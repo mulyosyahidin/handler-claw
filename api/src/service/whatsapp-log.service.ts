@@ -65,27 +65,41 @@ export class WhatsappLogService {
   async getLogs(
     query: GetWhatsappLogsQuery,
   ): Promise<SuccessResponse<GetWhatsappLogsResponseData>> {
-    const { cursor, take, date_type, start, end } = query;
+    const { cursor, take, date_type, start, end, search } = query;
     const {
       filter: dateFilter,
       date_start,
       date_end,
     } = getWhatsappDateFilter(date_type, start, end);
 
+    const searchFilter: Prisma.WhatsappLogWhereInput = search
+      ? {
+          OR: [
+            { senderName: { contains: search, mode: "insensitive" } },
+            { sender: { contains: search, mode: "insensitive" } },
+            { senderLid: { contains: search, mode: "insensitive" } },
+            { messageText: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {};
+
+    const where: Prisma.WhatsappLogWhereInput = {
+      AND: [dateFilter, searchFilter],
+    };
+
     const logs = await prisma.whatsappLog.findMany({
-      where: dateFilter,
-      take: take + 1, // Ambil satu ekstra untuk menentukan apakah ada halaman berikutnya
+      where,
+      take: take + 1,
       ...(cursor !== undefined && {
         cursor: { id: cursor },
-        skip: 1, // Lewati item yang menjadi cursor
+        skip: 1,
       }),
       orderBy: { id: "desc" },
     });
 
-    // Tentukan cursor berikutnya
     let nextCursor: number | null = null;
     if (logs.length > take) {
-      const nextItem = logs.pop(); // Hapus item ekstra
+      const nextItem = logs.pop();
       nextCursor = nextItem!.id;
     }
 

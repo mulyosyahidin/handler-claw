@@ -267,6 +267,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                       context.push(Routes.notificationList);
                     },
                   ),
+                  _DrawerNavItem(
+                    icon: Icons.chat_rounded,
+                    label: 'WhatsApp Logs',
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.whatsappLogs,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.whatsappLogs);
+                    },
+                  ),
                   const SizedBox(height: 20),
                   _SectionLabel('ACCOUNT', textMuted),
                   const SizedBox(height: 8),

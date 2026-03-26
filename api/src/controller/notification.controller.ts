@@ -8,7 +8,7 @@ import {
 } from "../lib/schemas/notification.schema.js";
 import { zodErrorMapper } from "../utils/zod.js";
 import { createErrorResponse, createSuccessResponse } from "../lib/types/response.js";
-import { toNotificationEntity } from "../lib/mappers/notification.mapper.js";
+import { toReminderHookEntity } from "../lib/mappers/notification.mapper.js";
 
 export class NotificationController {
   private notificationService: NotificationService;
@@ -65,7 +65,7 @@ export class NotificationController {
       }
       res.status(201).json(
         createSuccessResponse("Berhasil memproses notifikasi", {
-          notification: toNotificationEntity(reminderHook),
+          notification: toReminderHookEntity(reminderHook),
         }),
       );
     } catch (error) {

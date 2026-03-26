@@ -1,5 +1,5 @@
 import type { Prisma } from "../../generated/prisma/client.js";
-import type { INotificationHook } from "../domain/index.js";
+import type { IReminderHook } from "../domain/index.js";
 
 export interface CreateNotificationPayload {
   reminder_hook_id: string;
@@ -13,11 +13,11 @@ export interface CreateNotificationPayload {
 }
 
 export interface CreateNotificationResponseData {
-  notification: INotificationHook;
+  notification: IReminderHook;
 }
 
 export interface GetNotificationsResponseData {
-  notifications: INotificationHook[];
+  notifications: IReminderHook[];
   meta: {
     page: number;
     per_page: number;

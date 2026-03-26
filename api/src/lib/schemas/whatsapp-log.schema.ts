@@ -117,9 +117,13 @@ export const getWhatsappLogsQuerySchema = z
       description: "ID of the last item from the previous page",
       example: 100,
     }),
-    take: z.coerce.number().int().min(1).max(200).default(50).openapi({
+    take: z.coerce.number().int().min(1).max(200).default(10).openapi({
       description: "Number of items to return (max 200)",
       example: 50,
+    }),
+    search: z.string().optional().openapi({
+      description: "Search in senderName, sender, senderLid, and messageText",
+      example: "martin",
     }),
     ...dateRangeShape,
   })
