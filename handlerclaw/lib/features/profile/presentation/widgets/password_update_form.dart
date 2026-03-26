@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/features/profile/data/profile_api.dart';
-import 'package:handlerclaw/shared/utils/toast_utils.dart';
+import 'package:handlerclaw/features/profile/application/profile_controller.dart';
+import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/shared/widgets/app_password_field.dart';
 import 'package:handlerclaw/shared/widgets/app_submit_button.dart';
 
@@ -17,27 +17,19 @@ class _PasswordUpdateFormState extends ConsumerState<PasswordUpdateForm> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
   Map<String, String> _fieldErrors = {};
 
   Future<void> _handleSubmit() async {
-    setState(() {
-      _fieldErrors = {};
-    });
+    setState(() => _fieldErrors = {});
 
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
-
     try {
-      final api = ref.read(profileApiProvider);
-      final response = await api.updatePassword(
-        currentPassword: _currentPasswordController.text,
-        newPassword: _newPasswordController.text,
-        confirmNewPassword: _confirmPasswordController.text,
-      );
+      final response = await ref.read(profileControllerProvider.notifier).updatePassword(
+            currentPassword: _currentPasswordController.text,
+            newPassword: _newPasswordController.text,
+            confirmNewPassword: _confirmPasswordController.text,
+          );
 
       if (response.success) {
         if (mounted) {
@@ -78,12 +70,6 @@ class _PasswordUpdateFormState extends ConsumerState<PasswordUpdateForm> {
           description: 'Terjadi kesalahan saat memperbarui password',
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
     }
   }
 
@@ -97,6 +83,8 @@ class _PasswordUpdateFormState extends ConsumerState<PasswordUpdateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(profileControllerProvider).isLoading;
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -171,7 +159,7 @@ class _PasswordUpdateFormState extends ConsumerState<PasswordUpdateForm> {
             const SizedBox(height: 32),
             AppSubmitButton(
               text: 'Simpan',
-              isLoading: _isLoading,
+              isLoading: isLoading,
               loadingText: 'Menyimpan...',
               onPressed: _handleSubmit,
             ),

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:handlerclaw/features/auth/data/dto/user_dto.dart';
+import 'package:handlerclaw/core/data/dto/user_dto.dart';
+import 'package:handlerclaw/core/domain/entities/user_entity.dart';
+import 'package:handlerclaw/core/data/mappers/user_mapper.dart';
 
 class TokenStorage {
   final _storage = const FlutterSecureStorage(
@@ -22,20 +24,22 @@ class TokenStorage {
     return await _storage.read(key: _tokenKey);
   }
 
-  Future<void> saveUser(UserDto userDto) async {
+  Future<void> saveUser(UserEntity user) async {
+    final userDto = UserMapper.toDto(user);
     final jsonString = jsonEncode(userDto.toJson());
 
     await _storage.write(key: _userKey, value: jsonString);
   }
 
-  Future<UserDto?> getUser() async {
+  Future<UserEntity?> getUser() async {
     final jsonString = await _storage.read(key: _userKey);
 
     if (jsonString == null) return null;
 
     final Map<String, dynamic> json = jsonDecode(jsonString);
 
-    return UserDto.fromJson(json);
+    final dto = UserDto.fromJson(json);
+    return UserMapper.fromDto(dto);
   }
 
   Future<void> clear() async {

@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class EmptyStatePage extends StatefulWidget {
   const EmptyStatePage({super.key});
@@ -266,13 +266,6 @@ class _IllustrationPainter extends CustomPainter {
       final xEnd = cx - 10 + i;
       canvas.drawLine(Offset(xStart, y), Offset(xEnd, y), linePaint);
     }
-
-    // Question mark on right page (nothing written yet)
-    final qPaint = Paint()
-      ..color = primaryColor.withValues(alpha: 0.5)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
-      ..strokeCap = StrokeCap.round;
 
     final qTextPainter = TextPainter(
       text: TextSpan(

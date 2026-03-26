@@ -1,5 +1,5 @@
 import 'package:handlerclaw/core/models/api_response_dto.dart';
-import 'package:handlerclaw/core/models/dto/user_device_dto.dart';
+import 'package:handlerclaw/features/devices/data/dto/user_device_dto.dart';
 import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 
 class UserDeviceListData {

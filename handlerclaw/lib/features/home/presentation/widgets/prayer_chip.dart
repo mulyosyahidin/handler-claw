@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/features/prayer-logs/applications/today_prayer_controller.dart';
-import 'package:handlerclaw/features/prayer-logs/data/dto/prayer_log_create_request_dto.dart';
-import 'package:handlerclaw/features/prayer-logs/data/dto/summary_item_dto.dart';
-import 'package:handlerclaw/features/prayer-logs/data/prayer_log_api.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
-import 'package:intl/intl.dart';
+import 'package:handlerclaw/features/prayer-logs/domain/entities/prayer_log_summary_entity.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
+import 'package:go_router/go_router.dart';
+import 'package:handlerclaw/app/app_router.dart';
+import 'package:handlerclaw/core/utils/toast_utils.dart';
 
 class PrayerChip extends ConsumerWidget {
   final String prayerName;
-  final PrayerDetailDto detail;
+  final PrayerDetailEntity detail;
 
   const PrayerChip({super.key, required this.prayerName, required this.detail});
 
@@ -64,184 +63,16 @@ class PrayerChip extends ConsumerWidget {
       ),
       onPressed: () {
         if (isPerformed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Alhamdulillah! Kamu keren sudah solat $label! Berkahi harimu! 🌟',
-                style: AppTextStyles.body(color: Colors.white),
-              ),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              backgroundColor: Colors.green,
-            ),
+          ToastUtils.showSuccess(
+            context,
+            title: 'Alhamdulillah!',
+            description: 'Kamu keren sudah solat $label! Berkahi harimu! 🌟',
           );
         } else {
-          _showPrayerCreationDialog(context, ref, prayerName);
+          context.push(Routes.addLog, extra: prayerName);
         }
       },
     );
-  }
-
-  Future<void> _showPrayerCreationDialog(
-    BuildContext context,
-    WidgetRef ref,
-    String prayer,
-  ) async {
-    final now = DateTime.now();
-    TimeOfDay? selectedTime = TimeOfDay.fromDateTime(now);
-    String method = 'SENDIRI';
-    String place = 'RUMAH';
-
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Selesaikan Solat $prayer', style: AppTextStyles.title()),
-        content: StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Sudah selesai solat $prayer? Pilih jam kamu solat tadi:',
-                  style: AppTextStyles.body(),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(Icons.access_time),
-                  title: Text(
-                    selectedTime?.format(context) ?? 'Pilih Jam',
-                    style: AppTextStyles.body(fontWeight: FontWeight.bold),
-                  ),
-                  trailing: const Icon(Icons.edit),
-                  onTap: () async {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: selectedTime ?? TimeOfDay.now(),
-                    );
-                    if (time != null) {
-                      setState(() => selectedTime = time);
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text('Method:', style: AppTextStyles.label()),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ChoiceChip(
-                      label: Text('SENDIRI', style: AppTextStyles.label()),
-                      selected: method == 'SENDIRI',
-                      onSelected: (val) {
-                        if (val) setState(() => method = 'SENDIRI');
-                      },
-                    ),
-                    ChoiceChip(
-                      label: Text('JAMAAH', style: AppTextStyles.label()),
-                      selected: method == 'JAMAAH',
-                      onSelected: (val) {
-                        if (val) setState(() => method = 'JAMAAH');
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text('Tempat:', style: AppTextStyles.label()),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ChoiceChip(
-                      label: Text('RUMAH', style: AppTextStyles.label()),
-                      selected: place == 'RUMAH',
-                      onSelected: (val) {
-                        if (val) setState(() => place = 'RUMAH');
-                      },
-                    ),
-                    ChoiceChip(
-                      label: Text('MASJID', style: AppTextStyles.label()),
-                      selected: place == 'MASJID',
-                      onSelected: (val) {
-                        if (val) setState(() => place = 'MASJID');
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Batal', style: AppTextStyles.label()),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Simpan', style: AppTextStyles.label()),
-          ),
-        ],
-      ),
-    );
-
-    if (result == true && selectedTime != null) {
-      try {
-        final prayerDateTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          selectedTime!.hour,
-          selectedTime!.minute,
-        );
-
-        final offset = prayerDateTime.timeZoneOffset;
-        final hours = offset.inHours.abs().toString().padLeft(2, '0');
-        final minutes = (offset.inMinutes.abs() % 60).toString().padLeft(
-          2,
-          '0',
-        );
-        final sign = offset.isNegative ? '-' : '+';
-        final timezone = '$sign$hours:$minutes';
-
-        final performedAt =
-            '${DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(prayerDateTime)}$timezone';
-        final localDate = DateFormat('yyyy-MM-dd').format(prayerDateTime);
-
-        await ref.read(prayerLogApiProvider).create(
-          PrayerLogCreateRequestDto(
-            prayer: prayer,
-            performedAt: performedAt,
-            localDate: localDate,
-            method: method,
-            place: place,
-          ),
-        );
-
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Alhamdulillah! Solat $prayer berhasil dicatat.',
-                style: AppTextStyles.body(color: Colors.white),
-              ),
-              backgroundColor: Colors.green,
-            ),
-          );
-          ref.read(todayPrayerControllerProvider.notifier).refresh();
-        }
-      } catch (e) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Gagal menyimpan: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    }
   }
 }
 

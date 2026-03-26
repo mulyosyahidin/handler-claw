@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/features/prayer-logs/applications/prayer_log_summary_controller.dart';
+import 'package:handlerclaw/features/prayer-logs/application/prayer_log_summary_controller.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/widgets/date_type_filter.dart';
-import 'package:handlerclaw/shared/presentation/widgets/error_full_page.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/shared/widgets/error_full_page.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class SummaryTab extends ConsumerWidget {
   final Future<void> Function() selectDateRange;
@@ -107,9 +107,11 @@ class SummaryTab extends ConsumerWidget {
       );
     }
 
-    if (summaryState == null) {
+    if (summaryState == null || summaryState.entity == null) {
       return const SizedBox.shrink();
     }
+
+    final entity = summaryState.entity!;
 
     return RefreshIndicator(
       onRefresh: () =>
@@ -141,72 +143,72 @@ class SummaryTab extends ConsumerWidget {
               children: [
                 _buildSummaryCard(
                   title: 'Subuh',
-                  count: summaryState.count.subuh,
-                  percentage: summaryState.performance.subuh.percentage,
+                  count: entity.performance.count.subuh,
+                  percentage: entity.performance.individual['SUBUH']?.percentage,
                   isLoading: isLoading,
                   color: Colors.blue,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Dzuhur',
-                  count: summaryState.count.dzuhur,
-                  percentage: summaryState.performance.dzuhur.percentage,
+                  count: entity.performance.count.dzuhur,
+                  percentage: entity.performance.individual['DZUHUR']?.percentage,
                   isLoading: isLoading,
                   color: Colors.orange,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Ashar',
-                  count: summaryState.count.ashar,
-                  percentage: summaryState.performance.ashar.percentage,
+                  count: entity.performance.count.ashar,
+                  percentage: entity.performance.individual['ASHAR']?.percentage,
                   isLoading: isLoading,
                   color: Colors.amber,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Maghrib',
-                  count: summaryState.count.maghrib,
-                  percentage: summaryState.performance.maghrib.percentage,
+                  count: entity.performance.count.maghrib,
+                  percentage: entity.performance.individual['MAGHRIB']?.percentage,
                   isLoading: isLoading,
                   color: Colors.redAccent,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Isya',
-                  count: summaryState.count.isya,
-                  percentage: summaryState.performance.isya.percentage,
+                  count: entity.performance.count.isya,
+                  percentage: entity.performance.individual['ISYA']?.percentage,
                   isLoading: isLoading,
                   color: Colors.indigo,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Jumat',
-                  count: summaryState.count.jumat,
-                  percentage: summaryState.performance.jumat.percentage,
+                  count: entity.performance.count.jumat,
+                  percentage: entity.performance.individual['JUMAT']?.percentage,
                   isLoading: isLoading,
                   color: Colors.teal,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Dhuha',
-                  count: summaryState.count.dhuha,
-                  percentage: summaryState.performance.dhuha.percentage,
+                  count: entity.performance.count.dhuha,
+                  percentage: entity.performance.individual['DHUHA']?.percentage,
                   isLoading: isLoading,
                   color: Colors.pinkAccent,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Tahajud',
-                  count: summaryState.count.tahajud,
-                  percentage: summaryState.performance.tahajud.percentage,
+                  count: entity.performance.count.tahajud,
+                  percentage: entity.performance.individual['TAHAJUD']?.percentage,
                   isLoading: isLoading,
                   color: Colors.deepPurple,
                   context: context,
                 ),
                 _buildSummaryCard(
                   title: 'Witir',
-                  count: summaryState.count.witir,
-                  percentage: summaryState.performance.witir.percentage,
+                  count: entity.performance.count.witir,
+                  percentage: entity.performance.individual['WITIR']?.percentage,
                   isLoading: isLoading,
                   color: Colors.cyan,
                   context: context,
@@ -255,7 +257,7 @@ class SummaryTab extends ConsumerWidget {
                         DataColumn(label: Text('Maghrib')),
                         DataColumn(label: Text('Isya')),
                       ],
-                      rows: summaryState.summary.map((item) {
+                      rows: entity.summaryList.map((item) {
                         return DataRow(
                           cells: [
                             DataCell(Text(item.label)),

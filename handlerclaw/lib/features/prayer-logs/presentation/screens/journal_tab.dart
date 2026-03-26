@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/features/prayer-logs/data/dto/prayer_log_dto.dart';
-import 'package:handlerclaw/features/prayer-logs/applications/prayer_log_list_controller.dart';
+import 'package:handlerclaw/features/prayer-logs/domain/entities/prayer_log_entity.dart';
+import 'package:handlerclaw/features/prayer-logs/application/prayer_log_list_controller.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/widgets/date_type_filter.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/widgets/empty_state_page.dart';
-import 'package:handlerclaw/shared/presentation/widgets/error_full_page.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/shared/widgets/error_full_page.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:intl/intl.dart';
 
 class JournalTab extends ConsumerWidget {
@@ -23,8 +23,6 @@ class JournalTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(prayerLogListControllerProvider);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return state.when(
       data: (logsState) {
@@ -52,8 +50,7 @@ class JournalTab extends ConsumerWidget {
                       child: ListView.builder(
                         controller: scrollController,
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                        itemCount:
-                            logsState.items.length +
+                        itemCount: logsState.items.length +
                             (logsState.isLoadingMore ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index == logsState.items.length) {
@@ -81,7 +78,7 @@ class JournalTab extends ConsumerWidget {
 }
 
 class _PrayerLogCard extends StatelessWidget {
-  final PrayerLogDto log;
+  final PrayerLogEntity log;
 
   const _PrayerLogCard({required this.log});
 
@@ -233,7 +230,7 @@ class _PrayerLogCard extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  final PrayerLogDto log;
+  final PrayerLogEntity log;
 
   const _StatusBadge({required this.log});
 
@@ -297,3 +294,4 @@ class _InfoChip extends StatelessWidget {
     );
   }
 }
+

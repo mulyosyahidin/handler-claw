@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
-import 'package:handlerclaw/features/profile/data/profile_api.dart';
-import 'package:handlerclaw/shared/utils/toast_utils.dart';
+import 'package:handlerclaw/features/profile/application/profile_controller.dart';
+import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/shared/widgets/app_submit_button.dart';
 import 'package:handlerclaw/shared/widgets/app_text_field.dart';
 
@@ -17,7 +17,6 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  bool _isLoading = false;
   Map<String, String> _fieldErrors = {};
 
   @override
@@ -25,40 +24,25 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final session = ref.read(authSessionProvider).value;
-      if (session != null && session.userDto != null) {
-        _nameController.text = session.userDto!.name;
-        _emailController.text = session.userDto!.email;
+      if (session?.user != null) {
+        _nameController.text = session!.user!.name;
+        _emailController.text = session.user!.email;
       }
     });
   }
 
   Future<void> _handleSubmit() async {
-    setState(() {
-      _fieldErrors = {};
-    });
+    setState(() => _fieldErrors = {});
 
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
-
     try {
-      final api = ref.read(profileApiProvider);
-      final response = await api.updateProfile(
-        name: _nameController.text,
-        email: _emailController.text,
-      );
+      final response = await ref.read(profileControllerProvider.notifier).updateProfile(
+            name: _nameController.text,
+            email: _emailController.text,
+          );
 
-      if (response.success && response.data != null) {
-        // Update session
-        await ref
-            .read(authSessionProvider.notifier)
-            .setSession(
-              ref.read(authSessionProvider).value!.token!,
-              response.data!.user,
-            );
-
+      if (response.success) {
         if (mounted) {
           ToastUtils.showSuccess(
             context,
@@ -93,12 +77,6 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
           description: 'Terjadi kesalahan saat memperbarui profil',
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
     }
   }
 
@@ -111,6 +89,8 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(profileControllerProvider).isLoading;
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -165,7 +145,7 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
             const SizedBox(height: 32),
             AppSubmitButton(
               text: 'Simpan',
-              isLoading: _isLoading,
+              isLoading: isLoading,
               loadingText: 'Menyimpan...',
               onPressed: _handleSubmit,
             ),

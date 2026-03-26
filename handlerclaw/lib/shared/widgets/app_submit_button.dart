@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class AppSubmitButton extends StatelessWidget {
   final VoidCallback? onPressed;

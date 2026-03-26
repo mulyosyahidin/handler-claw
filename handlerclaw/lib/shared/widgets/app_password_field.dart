@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class AppPasswordField extends StatefulWidget {
   final String label;
@@ -8,6 +8,9 @@ class AppPasswordField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final Widget? prefixIcon;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
  
   const AppPasswordField({
     super.key,
@@ -17,6 +20,9 @@ class AppPasswordField extends StatefulWidget {
     this.validator,
     this.autofocus = false,
     this.onChanged,
+    this.prefixIcon = const Icon(Icons.lock_outline_rounded),
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -42,9 +48,11 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
           obscureText: _obscureText,
           autofocus: widget.autofocus,
           onChanged: widget.onChanged,
+          textInputAction: widget.textInputAction,
+          onFieldSubmitted: widget.onFieldSubmitted,
           decoration: InputDecoration(
             hintText: widget.hint,
-            prefixIcon: const Icon(Icons.lock_outline_rounded),
+            prefixIcon: widget.prefixIcon,
             suffixIcon: IconButton(
               icon: Icon(
                 _obscureText

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class AppTextField extends StatelessWidget {
   final String label;
@@ -11,6 +11,8 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const AppTextField({
     super.key,
@@ -23,6 +25,8 @@ class AppTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.autofocus = false,
     this.onChanged,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -42,6 +46,8 @@ class AppTextField extends StatelessWidget {
           textCapitalization: textCapitalization,
           autofocus: autofocus,
           onChanged: onChanged,
+          textInputAction: textInputAction,
+          onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: prefixIcon,

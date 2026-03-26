@@ -1,27 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/auth/token_storage.dart';
-import 'package:handlerclaw/shared/utils/logger.dart';
-import 'package:handlerclaw/features/auth/data/auth_api.dart';
-import 'package:handlerclaw/features/auth/data/dto/user_dto.dart';
+import 'package:handlerclaw/core/utils/logger.dart';
+import 'package:handlerclaw/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:handlerclaw/core/domain/entities/user_entity.dart';
+import 'package:handlerclaw/core/data/mappers/user_mapper.dart';
 
 class AuthSession {
   final String? token;
-  final UserDto? userDto;
+  final UserEntity? user;
 
-  const AuthSession({this.token, this.userDto});
+  const AuthSession({this.token, this.user});
 
   factory AuthSession.unauthenticated() {
     return const AuthSession();
   }
 
-  factory AuthSession.authenticated(String token, UserDto userDto) {
-    
-    return AuthSession(token: token, userDto: userDto);
+  factory AuthSession.authenticated(String token, UserEntity user) {
+    return AuthSession(token: token, user: user);
   }
 
-  bool get isAuthenticated => token != null && userDto != null;
-  bool get isUserDataReady => token != null && userDto != null;
+  bool get isAuthenticated => token != null && user != null;
+  bool get isUserDataReady => token != null && user != null;
 }
 
 class AuthSessionController extends AsyncNotifier<AuthSession> {
@@ -40,8 +40,8 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
       Logger.debug("AuthSession: Loading user from CACHE.");
       Future.microtask(() async {
         try {
-          final authApi = ref.read(authApiProvider);
-          final apiResponse = await authApi.getMe();
+          final authRemoteDataSource = ref.read(authRemoteDataSourceProvider);
+          final apiResponse = await authRemoteDataSource.getMe();
 
           if (apiResponse.data == null) {
             Logger.warning(
@@ -53,8 +53,9 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
           }
 
           Logger.debug("AuthSession: User refreshed from NETWORK.");
+          final userEntity = UserMapper.fromDto(apiResponse.data!.user);
           state = AsyncData(
-            AuthSession.authenticated(token, apiResponse.data!.user),
+            AuthSession.authenticated(token, userEntity),
           );
         } on DioException catch (e) {
           final statusCode = e.response?.statusCode;
@@ -82,8 +83,8 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
     try {
       Logger.debug("AuthSession: No cached user found. Fetching from NETWORK.");
 
-      final authApi = ref.read(authApiProvider);
-      final apiResponse = await authApi.getMe();
+      final authRemoteDataSource = ref.read(authRemoteDataSourceProvider);
+      final apiResponse = await authRemoteDataSource.getMe();
 
       if (apiResponse.data == null) {
         Logger.warning(
@@ -94,7 +95,8 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
       }
 
       Logger.debug("AuthSession: User loaded from NETWORK.");
-      return AuthSession.authenticated(token, apiResponse.data!.user);
+      final userEntity = UserMapper.fromDto(apiResponse.data!.user);
+      return AuthSession.authenticated(token, userEntity);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         Logger.warning(
@@ -115,7 +117,7 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
     }
   }
 
-  Future<void> setSession(String token, UserDto user) async {
+  Future<void> setSession(String token, UserEntity user) async {
     final tokenStorage = ref.read(tokenStorageProvider);
 
     await tokenStorage.saveToken(token);
@@ -125,10 +127,6 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
   }
 
   Future<void> logout() async {
-    final tokenStorage = ref.read(tokenStorageProvider);
-
-    await tokenStorage.clear();
-
     state = AsyncData(AuthSession.unauthenticated());
   }
 }

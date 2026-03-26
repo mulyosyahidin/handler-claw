@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:intl/intl.dart';
 
 const Map<String, String> dateTypeFilters = {
@@ -19,7 +19,7 @@ class DateTypeFilter extends StatelessWidget {
   final DateTime? endDate;
   final Function(String) onTypeChanged;
 
-  const DateTypeFilter({
+  const DateTypeFilter({super.key, 
     required this.selectedType,
     required this.onTypeChanged,
     this.startDate,

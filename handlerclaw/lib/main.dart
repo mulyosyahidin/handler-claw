@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/firebase_options.dart';
-import 'package:handlerclaw/shared/themes/app_theme.dart';
-import 'package:handlerclaw/core/notifications/fcm_handler.dart';
-import 'package:handlerclaw/features/notification-detail/presentation/pending_notification_provider.dart';
+import 'package:handlerclaw/core/theme/app_theme.dart';
+import 'package:handlerclaw/core/services/fcm_handler.dart';
+import 'package:handlerclaw/features/notifications/application/pending_notification_provider.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
-import 'package:handlerclaw/shared/utils/logger.dart';
+import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:home_widget/home_widget.dart';
+import 'dart:async';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -23,7 +25,6 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Register background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const ProviderScope(child: MyApp()));
@@ -37,12 +38,47 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  StreamSubscription? _widgetClickSubscription;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(fcmHandlerProvider).init();
+      _checkInitialWidgetClick();
     });
+
+    _widgetClickSubscription = HomeWidget.widgetClicked.listen((uri) {
+      _handleWidgetClick(uri);
+    });
+  }
+
+  @override
+  void dispose() {
+    _widgetClickSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _checkInitialWidgetClick() async {
+    final uri = await HomeWidget.initiallyLaunchedFromHomeWidget();
+    if (uri != null) {
+      _handleWidgetClick(uri);
+    }
+  }
+
+  void _handleWidgetClick(Uri? uri) {
+    if (uri == null) return;
+    Logger.info("HomeWidget clicked with URI: $uri");
+    if (uri.scheme == 'handlerclaw' && (uri.host == 'add-log' || uri.path == '/add-log')) {
+      final context = rootNavigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            context.push(Routes.addLog);
+          }
+        });
+      }
+    }
   }
 
   @override

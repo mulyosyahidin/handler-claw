@@ -1,5 +1,3 @@
-import 'package:handlerclaw/features/home/domain/overview.dart';
-
 class OverviewCountDto {
   final int totalWhatsappLogs;
   final int totalPrayerLogs;
@@ -19,15 +17,6 @@ class OverviewCountDto {
       totalPrayerLogs: json['total_prayer_logs'] ?? 0,
       totalReminderHooks: json['total_reminder_hooks'] ?? 0,
       totalDevices: json['total_devices'] ?? 0,
-    );
-  }
-
-  Overview toEntity() {
-    return Overview(
-      totalWhatsappLogs: totalWhatsappLogs,
-      totalPrayerLogs: totalPrayerLogs,
-      totalReminderHooks: totalReminderHooks,
-      totalDevices: totalDevices,
     );
   }
 }

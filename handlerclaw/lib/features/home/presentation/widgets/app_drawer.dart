@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
-import 'package:handlerclaw/shared/themes/app_text_styles.dart';
-import 'package:handlerclaw/shared/themes/app_theme.dart';
+import 'package:handlerclaw/core/theme/app_text_styles.dart';
+import 'package:handlerclaw/core/theme/app_theme.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
   final Future<void> Function() onLogout;
@@ -112,7 +112,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authSessionProvider);
-    final user = session.value?.userDto;
+    final user = session.value?.user;
     final name = user?.name ?? 'User';
     final email = user?.email ?? '';
 
