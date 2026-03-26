@@ -153,7 +153,9 @@ class _PrayerLogCard extends StatelessWidget {
                         children: [
                           _InfoChip(
                             icon: Icons.access_time_rounded,
-                            label: DateFormat('HH:mm').format(log.performedAt),
+                            label: DateFormat(
+                              'HH:mm',
+                            ).format(log.performedAt.toLocal()),
                             color: colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 12),

@@ -40,7 +40,7 @@ export interface GetPrayerLogsSummaryResponseData {
   filter: PrayerLogFilterData;
   summary: PrayerSummaryEntry[];
   count: Record<string, number>;
-  performances: Record<string, { count: number; percentage: number }>;
+  performances: Record<string, { count: number; percentage?: number }>;
   grand_total: {
     total_wajib_performed: number;
     total_sunnah_performed: number;

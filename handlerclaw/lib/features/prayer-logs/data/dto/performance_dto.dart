@@ -1,23 +1,23 @@
 class PerformanceItemDto {
   final int count;
-  final double percentage;
+  final double? percentage;
 
   PerformanceItemDto({
     required this.count,
-    required this.percentage,
+    this.percentage,
   });
 
   factory PerformanceItemDto.fromJson(Map<String, dynamic> json) {
     return PerformanceItemDto(
       count: json["count"] ?? 0,
-      percentage: (json["percentage"] as num?)?.toDouble() ?? 0.0,
+      percentage: (json["percentage"] as num?)?.toDouble(),
     );
   }
 
   factory PerformanceItemDto.empty() {
     return PerformanceItemDto(
       count: 0,
-      percentage: 0.0,
+      percentage: null,
     );
   }
 }

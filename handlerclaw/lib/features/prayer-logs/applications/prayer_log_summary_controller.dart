@@ -135,11 +135,7 @@ class PrayerLogSummaryController extends AsyncNotifier<PrayerLogSummaryState> {
   }
 
   Future<void> refresh() async {
-    final currentState = state.asData?.value;
-
-    if (currentState != null) {
-      // Keep current state to preserve filters
-    }
+    state = const AsyncLoading<PrayerLogSummaryState>().copyWithPrevious(state);
 
     final newState = await AsyncValue.guard(() => _fetchSummary());
     state = newState;

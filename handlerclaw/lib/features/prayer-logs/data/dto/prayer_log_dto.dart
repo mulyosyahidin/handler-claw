@@ -28,15 +28,15 @@ class PrayerLogDto {
   factory PrayerLogDto.fromJson(Map<String, dynamic> json) {
     return PrayerLogDto(
       id: json['id'] ?? '',
-      userId: json['userId'] ?? '',
+      userId: json['user_id'] ?? '',
       date: DateTime.parse(json['date'] ?? DateTime.now().toIso8601String()),
       prayer: json['prayer'] ?? '',
       category: json['category'] ?? '',
       performed: json['performed'] ?? false,
       performedAt: DateTime.parse(
-        json['performedAt'] ?? DateTime.now().toIso8601String(),
+        json['performed_at'] ?? DateTime.now().toIso8601String(),
       ),
-      isQadha: json['isQadha'] ?? false,
+      isQadha: json['is_qadha'] ?? false,
       method: json['method'] ?? 'SENDIRI',
       place: json['place'] ?? 'RUMAH',
       notes: json['notes'],
@@ -46,13 +46,13 @@ class PrayerLogDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userId': userId,
+      'user_id': userId,
       'date': date.toIso8601String(),
       'prayer': prayer,
       'category': category,
       'performed': performed,
-      'performedAt': performedAt.toIso8601String(),
-      'isQadha': isQadha,
+      'performed_at': performedAt.toIso8601String(),
+      'is_qadha': isQadha,
       'method': method,
       'place': place,
       'notes': notes,

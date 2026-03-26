@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
+import 'package:handlerclaw/features/prayer-logs/data/dto/prayer_log_create_request_dto.dart';
 import 'package:handlerclaw/features/prayer-logs/data/responses/prayer_log_list_response_dto.dart';
 import 'package:handlerclaw/features/prayer-logs/data/responses/prayer_log_summary_response_dto.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
@@ -52,7 +53,7 @@ class PrayerLogApi {
     }
   }
 
-Future<PrayerLogSummaryResponseDto> getSummary({
+  Future<PrayerLogSummaryResponseDto> getSummary({
     String? dateType,
     String? start,
     String? end,
@@ -64,14 +65,37 @@ Future<PrayerLogSummaryResponseDto> getSummary({
 
       final response = await dio.get(
         endpoint,
-        queryParameters: {
-          "date_type": ?dateType,
-          "start": ?start,
-          "end": ?end,
-        },
+        queryParameters: {"date_type": ?dateType, "start": ?start, "end": ?end},
       );
 
       return PrayerLogSummaryResponseDto.fromJson(response.data);
+    } on DioException catch (e) {
+      Logger.error("Api Error on endpoint $endpoint");
+
+      if (e.response != null) {
+        Logger.error("Status code: ${e.response?.statusCode}");
+        Logger.error("Response body: ${e.response?.data}");
+      } else {
+        Logger.error("Network error: ${e.message}");
+      }
+
+      rethrow;
+    } catch (e) {
+      Logger.error("Unexpected error: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> create(PrayerLogCreateRequestDto data) async {
+    const endpoint = ApiEndpoint.prayerLogList;
+
+    try {
+      Logger.api("POST", endpoint);
+
+      await dio.post(
+        endpoint,
+        data: data.toJson(),
+      );
     } on DioException catch (e) {
       Logger.error("Api Error on endpoint $endpoint");
 

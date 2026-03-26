@@ -26,15 +26,12 @@ export class PrayerLogService {
     userId: string,
     data: LogPrayerInput,
   ): Promise<SuccessResponse<InsertPrayerLogResponseData>> {
-    const {
-      prayer,
-      performed_at,
-      local_date,
-      method = PrayerMethod.SENDIRI,
-      place = PrayerPlace.RUMAH,
-      is_qadha = false,
-      notes,
-    } = data;
+    const { prayer, performed_at, local_date, is_qadha = false, notes } = data;
+
+    const method =
+      data.method ?? (prayer === PrayerType.JUMAT ? PrayerMethod.JAMAAH : PrayerMethod.SENDIRI);
+    const place =
+      data.place ?? (prayer === PrayerType.JUMAT ? PrayerPlace.MASJID : PrayerPlace.RUMAH);
 
     // `date` field: simpan sebagai kalender lokal user.
     // Gunakan timezone spesifik agar mendapatkan hari ini berdasarkan timezone (bukan UTC).
@@ -51,14 +48,20 @@ export class PrayerLogService {
 
     const wajibPrayers: PrayerType[] = [
       PrayerType.SUBUH,
-      PrayerType.DZUHUR,
       PrayerType.ASHAR,
       PrayerType.MAGHRIB,
       PrayerType.ISYA,
-      PrayerType.JUMAT,
     ];
 
-    const category = wajibPrayers.includes(prayer) ? PrayerCategory.WAJIB : PrayerCategory.SUNNAH;
+    const isFriday = jakartaDate.getDay() === 5;
+    let category: PrayerCategory;
+    if (prayer === PrayerType.JUMAT) {
+      category = isFriday ? PrayerCategory.WAJIB : PrayerCategory.SUNNAH;
+    } else if (prayer === PrayerType.DZUHUR) {
+      category = isFriday ? PrayerCategory.SUNNAH : PrayerCategory.WAJIB;
+    } else {
+      category = wajibPrayers.includes(prayer) ? PrayerCategory.WAJIB : PrayerCategory.SUNNAH;
+    }
 
     const prayerLog = await prisma.$transaction(async (tx) => {
       // 1. Ambil data eksisting pada HARI KALENDER yang sama
@@ -73,7 +76,7 @@ export class PrayerLogService {
       });
 
       // 2. Logika Eksklusivitas Jumat/Dzuhur
-      if (category === PrayerCategory.WAJIB) {
+      if (category === PrayerCategory.WAJIB || prayer === PrayerType.JUMAT) {
         if (prayer === PrayerType.JUMAT && existing.some((p) => p.prayer === PrayerType.DZUHUR)) {
           throw new Error("CONFLICT_JUMAT_DZUHUR");
         }
@@ -140,7 +143,7 @@ export class PrayerLogService {
     const [logs, total] = await Promise.all([
       prisma.prayerLog.findMany({
         where: { userId, ...dateFilter },
-        orderBy: [{ date: "desc" }, { prayer: "asc" }],
+        orderBy: [{ date: "desc" }, { performedAt: "desc" }],
         take: limit,
         skip: offset,
       }),
@@ -226,8 +229,15 @@ export class PrayerLogService {
     for (const [label, entries] of grouped.entries()) {
       const byPrayer: PrayerSummaryEntry["by_prayer"] = {};
 
+      const curDate = new Date(label);
+      const isFriday = curDate.getUTCDay() === 5;
+
       // Pre-fill by_prayer with all valid PrayerTypes so they show up even if 0
       for (const p of Object.values(PrayerType)) {
+        // Skip JUMAT if not Friday, and DZUHUR if Friday
+        if (p === PrayerType.JUMAT && !isFriday) continue;
+        if (p === PrayerType.DZUHUR && isFriday) continue;
+
         byPrayer[p] = { performed: 0, qadha: 0, jamaah: 0 };
       }
 
@@ -269,12 +279,35 @@ export class PrayerLogService {
 
     // Calculate performances (count and percentage)
     const totalDays = grouped.size || 1;
-    const performances: Record<string, { count: number; percentage: number }> = {};
+    let totalFridays = 0;
+    for (const label of grouped.keys()) {
+      const d = new Date(label);
+      if (d.getUTCDay() === 5) totalFridays++;
+    }
+    const totalNonFridays = totalDays - totalFridays;
+
+    const performances: Record<string, { count: number; percentage?: number }> = {};
     for (const p of Object.values(PrayerType)) {
       const count = grandCount[p] || 0;
+      let denominator = totalDays;
+
+      if (p === PrayerType.JUMAT) {
+        denominator = totalFridays;
+      } else if (p === PrayerType.DZUHUR) {
+        denominator = totalNonFridays;
+      }
+
+      const isSunnah = (
+        [PrayerType.DHUHA, PrayerType.TAHAJUD, PrayerType.WITIR] as PrayerType[]
+      ).includes(p as PrayerType);
+
       performances[p] = {
         count,
-        percentage: Number(((count / totalDays) * 100).toFixed(2)),
+        ...(isSunnah
+          ? {}
+          : {
+              percentage: Number(((count / (denominator || 1)) * 100).toFixed(2)),
+            }),
       };
     }
 

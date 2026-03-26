@@ -76,13 +76,11 @@ export class UserDeviceController {
       const result = await this.userDeviceService.getDeviceById(userId, id);
       res.status(200).json(result);
     } catch (error) {
-      res
-        .status(404)
-        .json(
-          createErrorResponse("Device tidak ditemukan", {
-            id: "ID tidak valid atau bukan milik Anda",
-          }),
-        );
+      res.status(404).json(
+        createErrorResponse("Device tidak ditemukan", {
+          id: "ID tidak valid atau bukan milik Anda",
+        }),
+      );
     }
   };
 

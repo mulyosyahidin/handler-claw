@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/prayer-logs/applications/prayer_log_list_controller.dart';
-import 'package:handlerclaw/features/prayer-logs/presentation/widgets/journal_tab.dart';
-import 'package:handlerclaw/features/prayer-logs/presentation/widgets/summary_tab.dart';
+import 'package:handlerclaw/features/prayer-logs/applications/prayer_log_summary_controller.dart';
+import 'package:handlerclaw/features/prayer-logs/presentation/screens/journal_tab.dart';
+import 'package:handlerclaw/features/prayer-logs/presentation/screens/summary_tab.dart';
 import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 
 class PrayerLogPage extends ConsumerStatefulWidget {
@@ -35,7 +36,13 @@ class _PrayerLogPageState extends ConsumerState<PrayerLogPage> {
   }
 
   Future<void> _refresh() async {
-    await ref.read(prayerLogListControllerProvider.notifier).refresh();
+    final listRefresh = ref
+        .read(prayerLogListControllerProvider.notifier)
+        .refresh();
+    final summaryRefresh = ref
+        .read(prayerLogSummaryControllerProvider.notifier)
+        .refresh();
+    await Future.wait([listRefresh, summaryRefresh]);
   }
 
   Future<void> _selectDateRange(BuildContext context) async {
@@ -104,9 +111,7 @@ class _PrayerLogPageState extends ConsumerState<PrayerLogPage> {
               onRefresh: _refresh,
               selectDateRange: () => _selectDateRange(context),
             ),
-            SummaryTab(
-              selectDateRange: () => _selectDateRange(context),
-            ),
+            SummaryTab(selectDateRange: () => _selectDateRange(context)),
           ],
         ),
       ),
