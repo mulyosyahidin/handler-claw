@@ -6,7 +6,7 @@ import type { Prisma } from "../lib/generated/prisma/client.js";
  * @returns Objek yang hanya berisi header yang ditentukan dalam daftar 'important'.
  */
 export function extractImportantHeaders(headers: Headers | Record<string, any>) {
-  const important = ["user-agent", "content-type", "x-api-key", "x-forwarded-for"];
+  const important = ["user-agent", "content-type", "x-forwarded-for"];
   const result: Record<string, string> = {};
 
   // Proteksi jika headers null atau undefined

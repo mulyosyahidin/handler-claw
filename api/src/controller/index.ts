@@ -4,3 +4,4 @@ export * from "./prayer-log.controller.js";
 export * from "./whatsapp-log.controller.js";
 export * from "./notification.controller.js";
 export * from "./user-device.controller.js";
+export * from "./overview.controller.js";

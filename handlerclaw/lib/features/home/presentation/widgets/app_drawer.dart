@@ -9,10 +9,7 @@ import 'package:handlerclaw/shared/themes/app_theme.dart';
 class AppDrawer extends ConsumerStatefulWidget {
   final Future<void> Function() onLogout;
 
-  const AppDrawer({
-    super.key,
-    required this.onLogout,
-  });
+  const AppDrawer({super.key, required this.onLogout});
 
   @override
   ConsumerState<AppDrawer> createState() => _AppDrawerState();
@@ -269,11 +266,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                       Navigator.pop(context);
                       context.push(Routes.notificationList);
                     },
-                  ),
-                  _DrawerNavItem(
-                    icon: Icons.settings_rounded,
-                    label: 'Settings',
-                    onTap: () => Navigator.pop(context),
                   ),
                   const SizedBox(height: 20),
                   _SectionLabel('ACCOUNT', textMuted),

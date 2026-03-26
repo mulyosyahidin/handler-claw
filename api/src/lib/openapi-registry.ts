@@ -170,6 +170,23 @@ registry.registerPath({
   },
 });
 
+// REGISTER OVERVIEW ROUTES
+registry.registerPath({
+  method: "get",
+  path: "/api/overview",
+  summary: "Get system overview/summary",
+  tags: ["Overview"],
+  security: [{ [bearerAuth.name]: [] }],
+  responses: {
+    200: {
+      description: "Success",
+    },
+    401: {
+      description: "Unauthorized",
+    },
+  },
+});
+
 export const getOpenApiDocumentation = (): any => {
   const generator = new OpenApiGeneratorV3(registry.definitions);
   return generator.generateDocument({

@@ -5,6 +5,7 @@ import prayerLogRouter from "./prayer-log.route.js";
 import whatsappLogRouter from "./whatsapp-log.route.js";
 import notificationRouter from "./notification.route.js";
 import userDeviceRouter from "./user-device.route.js";
+import overviewRouter from "./overview.route.js";
 
 const router: Router = Router();
 
@@ -14,5 +15,6 @@ router.use("/prayer-logs", prayerLogRouter);
 router.use("/whatsapp-logs", whatsappLogRouter);
 router.use("/notifications", notificationRouter);
 router.use("/user-devices", userDeviceRouter);
+router.use("/overview", overviewRouter);
 
 export default router;

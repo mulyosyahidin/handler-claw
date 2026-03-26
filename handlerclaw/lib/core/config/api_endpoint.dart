@@ -6,4 +6,5 @@ class ApiEndpoint {
 
   static const String notificationList = "/notifications";
   static const String notificationDetail = "/notifications/{id}";
+  static const String overview = "/overview";
 }

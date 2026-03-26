@@ -4,3 +4,4 @@ export * from "./prayer-log.service.js";
 export * from "./whatsapp-log.service.js";
 export * from "./user-device.service.js";
 export * from "./notification.service.js";
+export * from "./overview.service.js";

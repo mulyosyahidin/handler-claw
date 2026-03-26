@@ -22,7 +22,7 @@ import {
   createSuccessResponse,
   type SuccessResponse,
 } from "../lib/types/response.js";
-import { type INotificationHook } from "../lib/types/domain/index.js";
+import { type IReminderHook } from "../lib/types/domain/index.js";
 import { toNotificationEntity } from "../lib/mappers/index.js";
 import { extractImportantHeaders, toFcmData } from "../utils/utils.js";
 
@@ -66,7 +66,7 @@ export class NotificationService {
         userId,
         eventId: data.event_id,
         payloadJson: data as unknown as Prisma.InputJsonValue,
-        headersJson: headers as unknown as Prisma.InputJsonValue,
+        headersJson: headersObject,
         status: "RECEIVED",
       },
     });
@@ -138,7 +138,7 @@ export class NotificationService {
   async getNotificationDetails(
     userId: string,
     id: string,
-  ): Promise<SuccessResponse<{ notification: INotificationHook }>> {
+  ): Promise<SuccessResponse<{ notification: IReminderHook }>> {
     const hook = await prisma.reminderHook.findFirst({
       where: { id, userId },
     });
@@ -164,6 +164,15 @@ export class NotificationService {
         },
       });
 
+      await prisma.reminderHook.update({
+        where: {
+          id: notification.reminderHookId,
+        },
+        data: {
+          status: "PROCESSING",
+        },
+      });
+
       const userDevice = await prisma.userDevice.findUnique({
         where: {
           id: notification.userDeviceId,
@@ -185,6 +194,16 @@ export class NotificationService {
         data: {
           status: NotificationStatus.FAILED,
           failedAt: new Date(),
+          errorMessage: message,
+        },
+      });
+
+      await prisma.reminderHook.update({
+        where: {
+          id: notification.reminderHookId,
+        },
+        data: {
+          status: "FAILED",
           errorMessage: message,
         },
       });
@@ -235,12 +254,23 @@ export class NotificationService {
           sentAt: new Date(),
         },
       });
+
+      await prisma.reminderHook.update({
+        where: {
+          id: notification.reminderHookId,
+        },
+        data: {
+          status: "PROCESSED",
+          processedAt: new Date(),
+        },
+      });
     } catch (error: any) {
       if (
         error.code === "messaging/registration-token-not-registered" ||
         error.code === "messaging/invalid-registration-token"
       ) {
         logger.warn(`[Notification] Token invalid, menghapus device ${userDevice.id}`);
+
         await prisma.userDevice.update({
           where: {
             id: userDevice.id,
@@ -250,7 +280,27 @@ export class NotificationService {
           },
         });
       }
-      throw error;
+
+      await prisma.notification.update({
+        where: {
+          id: notification.id,
+        },
+        data: {
+          status: NotificationStatus.FAILED,
+          failedAt: new Date(),
+          errorMessage: error.message,
+        },
+      });
+
+      await prisma.reminderHook.update({
+        where: {
+          id: notification.reminderHookId,
+        },
+        data: {
+          status: "FAILED",
+          errorMessage: error.message,
+        },
+      });
     }
   }
 }
