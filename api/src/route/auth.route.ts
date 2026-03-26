@@ -10,7 +10,7 @@ const authController = new AuthController(authService);
 
 registry.registerPath({
   method: "get",
-  path: "/api/auth/me",
+  path: "/api/auth/profile",
   summary: "Get Current User Profile",
   description: "Mengambil data profil pengguna yang sedang login.",
   tags: ["Auth"],
@@ -22,8 +22,38 @@ registry.registerPath({
   },
 });
 
+registry.registerPath({
+  method: "patch",
+  path: "/api/auth/profile",
+  summary: "Update Profile",
+  description: "Memperbarui data profil (nama dan email) pengguna yang sedang login.",
+  tags: ["Auth"],
+  security: [{ bearerAuth: [] }],
+  responses: {
+    200: { description: "Profil berhasil diperbarui" },
+    400: { description: "Validasi gagal atau email sudah digunakan" },
+    401: { description: "Unauthorized" },
+  },
+});
+
+registry.registerPath({
+  method: "patch",
+  path: "/api/auth/profile/password",
+  summary: "Update Password",
+  description: "Memperbarui password pengguna yang sedang login.",
+  tags: ["Auth"],
+  security: [{ bearerAuth: [] }],
+  responses: {
+    200: { description: "Password berhasil diperbarui" },
+    400: { description: "Validasi gagal atau password saat ini salah" },
+    401: { description: "Unauthorized" },
+  },
+});
+
 authRouter.post("/login", authController.login);
 authRouter.post("/refresh-access-token", authController.refreshToken);
-authRouter.get("/me", authMiddleware, authController.getMe);
+authRouter.get("/profile", authMiddleware, authController.getMe);
+authRouter.patch("/profile", authMiddleware, authController.updateProfile);
+authRouter.patch("/profile/password", authMiddleware, authController.updatePassword);
 
 export default authRouter;

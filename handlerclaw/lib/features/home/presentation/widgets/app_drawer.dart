@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
+import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/shared/themes/app_text_styles.dart';
 import 'package:handlerclaw/shared/themes/app_theme.dart';
 
-
-class AppDrawer extends StatefulWidget {
-  final String name;
-  final String email;
-  final VoidCallback onLogout;
+class AppDrawer extends ConsumerStatefulWidget {
+  final Future<void> Function() onLogout;
 
   const AppDrawer({
     super.key,
-    required this.name,
-    required this.email,
     required this.onLogout,
   });
 
   @override
-  State<AppDrawer> createState() => _AppDrawerState();
+  ConsumerState<AppDrawer> createState() => _AppDrawerState();
 }
 
-class _AppDrawerState extends State<AppDrawer>
+class _AppDrawerState extends ConsumerState<AppDrawer>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulse;
   late final Animation<double> _ringScale;
   late final Animation<double> _ringOpacity;
+  bool _isLoggingOut = false;
 
   @override
   void initState() {
@@ -51,8 +49,76 @@ class _AppDrawerState extends State<AppDrawer>
     super.dispose();
   }
 
+  Future<void> _showLogoutConfirmation() async {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Konfirmasi Logout',
+          style: AppTextStyles.title(color: colorScheme.onSurface),
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin keluar dari akun?',
+          style: AppTextStyles.body(
+            color: colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
+        ),
+        actionsPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Batal',
+              style: TextStyle(
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.error,
+              foregroundColor: colorScheme.onError,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && mounted) {
+      setState(() => _isLoggingOut = true);
+      try {
+        await widget.onLogout();
+      } catch (e) {
+        if (mounted) {
+          setState(() => _isLoggingOut = false);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final session = ref.watch(authSessionProvider);
+    final user = session.value?.userDto;
+    final name = user?.name ?? 'User';
+    final email = user?.email ?? '';
+
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -67,8 +133,8 @@ class _AppDrawerState extends State<AppDrawer>
         : AppColors.backgroundLight;
     final Color divider = isDark ? AppColors.borderDark : AppColors.borderLight;
 
-    final initials = widget.name.isNotEmpty
-        ? widget.name.trim().split(' ').map((w) => w[0]).take(2).join()
+    final initials = name.isNotEmpty
+        ? name.trim().split(' ').map((w) => w[0]).take(2).join()
         : '?';
 
     return Drawer(
@@ -87,7 +153,6 @@ class _AppDrawerState extends State<AppDrawer>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Avatar with pulsing ring
                 AnimatedBuilder(
                   animation: _pulse,
                   builder: (context, _) {
@@ -126,7 +191,6 @@ class _AppDrawerState extends State<AppDrawer>
                               initials.toUpperCase(),
                               style: AppTextStyles.title(color: primary),
                             ),
-
                           ),
                         ),
                       ],
@@ -138,12 +202,11 @@ class _AppDrawerState extends State<AppDrawer>
 
                 // Name
                 Text(
-                  widget.name,
+                  name,
                   style: AppTextStyles.title(color: textPrimary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-
 
                 const SizedBox(height: 6),
 
@@ -162,7 +225,7 @@ class _AppDrawerState extends State<AppDrawer>
                     ),
                   ),
                   child: Text(
-                    widget.email.isNotEmpty ? widget.email : 'no email',
+                    email.isNotEmpty ? email : 'no email',
                     style: TextStyle(
                       fontSize: 11,
                       color: primary,
@@ -188,7 +251,9 @@ class _AppDrawerState extends State<AppDrawer>
                   _DrawerNavItem(
                     icon: Icons.home_rounded,
                     label: 'Home',
-                    isActive: GoRouterState.of(context).matchedLocation == Routes.home,
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.home,
                     onTap: () {
                       Navigator.pop(context);
                       context.go(Routes.home);
@@ -197,7 +262,8 @@ class _AppDrawerState extends State<AppDrawer>
                   _DrawerNavItem(
                     icon: Icons.notifications_rounded,
                     label: 'Notifikasi',
-                    isActive: GoRouterState.of(context).matchedLocation ==
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
                         Routes.notificationList,
                     onTap: () {
                       Navigator.pop(context);
@@ -215,23 +281,32 @@ class _AppDrawerState extends State<AppDrawer>
                   _DrawerNavItem(
                     icon: Icons.person_outline_rounded,
                     label: 'Profile',
-                    onTap: () => Navigator.pop(context),
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.profile,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.profile);
+                    },
                   ),
                 ],
               ),
             ),
           ),
 
-          // ── Logout ──
           Container(
             margin: const EdgeInsets.fromLTRB(16, 0, 16, 32),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: colorScheme.error.withValues(alpha: 0.25),
+                color: _isLoggingOut
+                    ? colorScheme.outline.withValues(alpha: 0.1)
+                    : colorScheme.error.withValues(alpha: 0.25),
                 width: 1,
               ),
-              color: colorScheme.error.withValues(alpha: 0.05),
+              color: _isLoggingOut
+                  ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
+                  : colorScheme.error.withValues(alpha: 0.05),
             ),
             child: Material(
               color: Colors.transparent,
@@ -240,10 +315,7 @@ class _AppDrawerState extends State<AppDrawer>
                 borderRadius: BorderRadius.circular(12),
                 splashColor: colorScheme.error.withValues(alpha: 0.12),
                 highlightColor: colorScheme.error.withValues(alpha: 0.06),
-                onTap: () {
-                  Navigator.pop(context);
-                  widget.onLogout();
-                },
+                onTap: _isLoggingOut ? null : _showLogoutConfirmation,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -251,27 +323,42 @@ class _AppDrawerState extends State<AppDrawer>
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.logout_rounded,
-                        color: colorScheme.error,
-                        size: 20,
-                      ),
+                      if (_isLoggingOut)
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              colorScheme.outline,
+                            ),
+                          ),
+                        )
+                      else
+                        Icon(
+                          Icons.logout_rounded,
+                          color: colorScheme.error,
+                          size: 20,
+                        ),
                       const SizedBox(width: 12),
                       Text(
-                        'Logout',
+                        _isLoggingOut ? 'Logging out...' : 'Logout',
                         style: TextStyle(
-                          color: colorScheme.error,
+                          color: _isLoggingOut
+                              ? colorScheme.outline
+                              : colorScheme.error,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.3,
                         ),
                       ),
                       const Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: colorScheme.error.withValues(alpha: 0.4),
-                        size: 12,
-                      ),
+                      if (!_isLoggingOut)
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: colorScheme.error.withValues(alpha: 0.4),
+                          size: 12,
+                        ),
                     ],
                   ),
                 ),
@@ -298,7 +385,6 @@ class _SectionLabel extends StatelessWidget {
         text,
         style: AppTextStyles.label(color: color.withValues(alpha: 0.5)),
       ),
-
     );
   }
 }

@@ -8,22 +8,24 @@ import 'package:handlerclaw/features/home/presentation/home_page.dart';
 import 'package:handlerclaw/core/models/dto/notification_dto.dart';
 import 'package:handlerclaw/features/notification-detail/presentation/notification_detail_page.dart';
 import 'package:handlerclaw/features/notification-list/presentation/notification_list_page.dart';
+import 'package:handlerclaw/features/profile/presentation/profile_page.dart';
 import 'package:handlerclaw/features/splash/presentation/splash_page.dart';
 import 'package:handlerclaw/shared/utils/logger.dart';
-
+ 
 class Routes {
   static const splash = "/splash";
   static const login = "/login";
-
+ 
   static const home = "/home";
-
+  static const profile = "/profile";
+ 
   static const notificationDetail = "/notification-detail/:id";
   static const notificationList = "/notifications";
 }
-
+ 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = RouterNotifier(ref);
-
+ 
   return GoRouter(
     initialLocation: Routes.splash,
     navigatorKey: rootNavigatorKey,
@@ -38,6 +40,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(path: Routes.home, builder: (context, state) => const HomePage()),
+      GoRoute(
+        path: Routes.profile,
+        builder: (context, state) => const ProfilePage(),
+      ),
       GoRoute(
         path: Routes.notificationList,
         builder: (context, state) => const NotificationListPage(),

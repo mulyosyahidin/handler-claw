@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class AppColors {
   // Primary Red Palette
   static const Color primary = Color(0xFFFF4D4D);
@@ -80,6 +79,8 @@ class AppTheme {
         borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
       ),
       hintStyle: const TextStyle(color: AppColors.textSecondaryLight),
+      errorStyle: const TextStyle(fontSize: 12, height: 1.0),
+      errorMaxLines: 2,
     ),
   );
 
@@ -131,6 +132,8 @@ class AppTheme {
         borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
       ),
       hintStyle: const TextStyle(color: AppColors.textSecondaryDark),
+      errorStyle: const TextStyle(fontSize: 12, height: 1.0),
+      errorMaxLines: 2,
     ),
   );
 }

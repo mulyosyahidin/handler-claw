@@ -87,4 +87,66 @@ export class AuthService {
       user: toUserEntity(user),
     });
   }
+
+  async updateProfile(
+    userId: string,
+    data: { name: string; email: string },
+  ): Promise<SuccessResponse<GetMeResponseData> | ErrorResponse<unknown>> {
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: data.email,
+        NOT: { id: userId },
+      },
+    });
+
+    if (existingUser) {
+      return createErrorResponse("Email sudah digunakan", {
+        email: "Email sudah digunakan oleh pengguna lain",
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: data.name,
+        email: data.email,
+      },
+    });
+
+    return createSuccessResponse("Profil berhasil diperbarui", {
+      user: toUserEntity(updatedUser),
+    });
+  }
+
+  async updatePassword(
+    userId: string,
+    data: { current_password: string; new_password: string },
+  ): Promise<SuccessResponse<null> | ErrorResponse<unknown>> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return createErrorResponse("User tidak ditemukan", {
+        user: "User tidak ditemukan",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(data.current_password, user.password);
+
+    if (!isPasswordValid) {
+      return createErrorResponse("Password saat ini salah", {
+        current_password: "Password saat ini salah",
+      });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(data.new_password, 10);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedNewPassword },
+    });
+
+    return createSuccessResponse("Password berhasil diperbarui");
+  }
 }

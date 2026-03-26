@@ -1,7 +1,12 @@
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../middleware/auth.middleware.js";
 import type { AuthService } from "../service/index.js";
-import { loginSchema, refreshTokenSchema } from "../lib/schemas/index.js";
+import {
+  loginSchema,
+  refreshTokenSchema,
+  updateProfileSchema,
+  updatePasswordSchema,
+} from "../lib/schemas/index.js";
 import { createErrorResponse } from "../lib/types/response.js";
 import { zodErrorMapper } from "../utils/zod.js";
 
@@ -68,6 +73,66 @@ export class AuthController {
       res.status(200).json(result);
     } else {
       res.status(404).json(result);
+    }
+  };
+
+  updateProfile = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    const parsed = updateProfileSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(422).json(
+        createErrorResponse("Validation failed", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    const result = await this.authService.updateProfile(userId, parsed.data);
+
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(422).json(result);
+    }
+  };
+
+  updatePassword = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    const parsed = updatePasswordSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(422).json(
+        createErrorResponse("Validation failed", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    const result = await this.authService.updatePassword(userId, parsed.data);
+
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(422).json(result);
     }
   };
 }
