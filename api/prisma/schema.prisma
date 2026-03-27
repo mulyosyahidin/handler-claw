@@ -190,12 +190,12 @@ model UserDevice {
   userId String           @map("user_id")
   status UserDeviceStatus @default(ACTIVE)
 
-  deviceId    String  @map("device_id")
+  deviceId    String  @unique @map("device_id")
   deviceBrand String? @map("device_brand")
   deviceModel String? @map("device_model")
   osVersion   String? @map("os_version")
 
-  fcmToken String             @unique @map("fcm_token")
+  fcmToken String             @map("fcm_token")
   platform UserDevicePlatform @default(ANDROID)
 
   lastSeenAt DateTime? @map("last_seen_at")

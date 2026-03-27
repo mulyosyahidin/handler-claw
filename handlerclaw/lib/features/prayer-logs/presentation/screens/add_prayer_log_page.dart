@@ -42,6 +42,12 @@ class _AddPrayerLogPageState extends ConsumerState<AddPrayerLogPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: !context.canPop()
+            ? IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () => context.go(Routes.home),
+              )
+            : null,
         title: Text(
           selectedPrayer != null
               ? 'Selesaikan Solat $selectedPrayer'
@@ -113,12 +119,14 @@ class _AddPrayerLogPageState extends ConsumerState<AddPrayerLogPage> {
         selectedTime.minute,
       );
 
-      await ref.read(prayerLogRepositoryProvider).create(
-        prayer: selectedPrayer!,
-        performedAt: prayerDateTime,
-        method: method,
-        place: place,
-      );
+      await ref
+          .read(prayerLogRepositoryProvider)
+          .create(
+            prayer: selectedPrayer!,
+            performedAt: prayerDateTime,
+            method: method,
+            place: place,
+          );
 
       if (mounted) {
         ToastUtils.showSuccess(

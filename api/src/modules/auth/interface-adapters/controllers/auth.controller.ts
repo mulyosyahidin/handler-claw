@@ -1,0 +1,144 @@
+import type { Request, Response } from "express";
+import type { AuthRequest } from "../../../../middleware/auth.middleware.js";
+import {
+  loginSchema,
+  refreshTokenSchema,
+  updateProfileSchema,
+  updatePasswordSchema,
+} from "../../infrastructure/models/auth.schema.js";
+import { createErrorResponse, createSuccessResponse } from "../../../../lib/types/response.js";
+import { zodErrorMapper } from "../../../../utils/zod.js";
+import { LoginUseCase } from "../../application/use-cases/login.use-case.js";
+import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.use-case.js";
+import { GetMeUseCase } from "../../application/use-cases/get-me.use-case.js";
+import { UpdateProfileUseCase } from "../../application/use-cases/update-profile.use-case.js";
+import { UpdatePasswordUseCase } from "../../application/use-cases/update-password.use-case.js";
+
+export class AuthController {
+  constructor(
+    private loginUseCase: LoginUseCase,
+    private refreshTokenUseCase: RefreshTokenUseCase,
+    private getMeUseCase: GetMeUseCase,
+    private updateProfileUseCase: UpdateProfileUseCase,
+    private updatePasswordUseCase: UpdatePasswordUseCase,
+  ) {}
+
+  login = async (req: Request, res: Response) => {
+    const parsed = loginSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).json(
+        createErrorResponse("Validation failed", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    try {
+      const result = await this.loginUseCase.execute(parsed.data);
+      res
+        .status(200)
+        .json(createSuccessResponse("Berhasil login dengan email dan password", result));
+    } catch (error: any) {
+      res.status(401).json(createErrorResponse(error.message, error.errors));
+    }
+  };
+
+  refreshToken = async (req: Request, res: Response) => {
+    const parsed = refreshTokenSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(422).json(
+        createErrorResponse("Validation error", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    const { refresh_token } = parsed.data;
+    try {
+      const result = await this.refreshTokenUseCase.execute(refresh_token);
+      res.status(200).json(createSuccessResponse("Access token berhasil diperbarui", result));
+    } catch (error: any) {
+      res.status(401).json(createErrorResponse(error.message, error.errors));
+    }
+  };
+
+  getMe = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    try {
+      const result = await this.getMeUseCase.execute(userId);
+      res.status(200).json(createSuccessResponse("Berhasil mengambil profil user", result));
+    } catch (error: any) {
+      res.status(404).json(createErrorResponse(error.message, error.errors));
+    }
+  };
+
+  updateProfile = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    const parsed = updateProfileSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(422).json(
+        createErrorResponse("Validation failed", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    try {
+      const result = await this.updateProfileUseCase.execute(userId, parsed.data);
+      res.status(200).json(createSuccessResponse("Profil berhasil diperbarui", result));
+    } catch (error: any) {
+      res.status(422).json(createErrorResponse(error.message, error.errors));
+    }
+  };
+
+  updatePassword = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json(createErrorResponse("Unauthorized", { token: "Token tidak valid atau kadaluarsa" }));
+      return;
+    }
+
+    const parsed = updatePasswordSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(422).json(
+        createErrorResponse("Validation failed", {
+          errors: zodErrorMapper(parsed.error),
+        }),
+      );
+      return;
+    }
+
+    try {
+      await this.updatePasswordUseCase.execute(userId, parsed.data);
+      res.status(200).json(createSuccessResponse("Password berhasil diperbarui"));
+    } catch (error: any) {
+      res.status(422).json(createErrorResponse(error.message, error.errors));
+    }
+  };
+}

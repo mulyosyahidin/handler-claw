@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/devices/domain/entities/user_device_entity.dart';
 import 'package:handlerclaw/features/devices/data/repositories/user_device_repository_impl.dart';
-import 'package:handlerclaw/core/services/device_service.dart';
+import 'package:handlerclaw/core/services/device_info_plus_service.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:intl/intl.dart';
 

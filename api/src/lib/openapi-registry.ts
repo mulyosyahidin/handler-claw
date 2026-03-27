@@ -1,5 +1,9 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-import { loginSchema, logPrayerSchema, refreshTokenSchema } from "./schemas/index.js";
+import {
+  loginSchema,
+  refreshTokenSchema,
+} from "../modules/auth/infrastructure/models/auth.schema.js";
+import { logPrayerSchema } from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
 import { z } from "zod";
 
 const prayerDateTypeEnum = z.enum([

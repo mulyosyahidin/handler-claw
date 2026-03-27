@@ -39,24 +39,25 @@ class PrayerLogSummaryState {
 class PrayerLogSummaryController extends AsyncNotifier<PrayerLogSummaryState> {
   PrayerLogRepository get _repository => ref.read(prayerLogRepositoryProvider);
 
+  String _dateType = '7_days';
+  DateTime? _startDate;
+  DateTime? _endDate;
+
   @override
   Future<PrayerLogSummaryState> build() async {
     return await _fetchSummary();
   }
 
   Future<PrayerLogSummaryState> _fetchSummary() async {
-    final currentState = state.asData?.value;
-
-    final dateType = currentState?.dateType ?? '7_days';
-    final start = currentState?.startDate != null
-        ? DateFormat('yyyy-MM-dd').format(currentState!.startDate!)
+    final start = _startDate != null
+        ? DateFormat('yyyy-MM-dd').format(_startDate!)
         : null;
-    final end = currentState?.endDate != null
-        ? DateFormat('yyyy-MM-dd').format(currentState!.endDate!)
+    final end = _endDate != null
+        ? DateFormat('yyyy-MM-dd').format(_endDate!)
         : null;
 
     final entity = await _repository.getSummary(
-      dateType: dateType,
+      dateType: _dateType,
       start: start,
       end: end,
     );
@@ -78,9 +79,9 @@ class PrayerLogSummaryController extends AsyncNotifier<PrayerLogSummaryState> {
     return PrayerLogSummaryState(
       entity: entity,
       summaryData: summaryData,
-      dateType: dateType,
-      startDate: currentState?.startDate,
-      endDate: currentState?.endDate,
+      dateType: _dateType,
+      startDate: _startDate,
+      endDate: _endDate,
     );
   }
 
@@ -89,12 +90,9 @@ class PrayerLogSummaryController extends AsyncNotifier<PrayerLogSummaryState> {
     DateTime? start,
     DateTime? end,
   }) async {
-    final currentState = state.asData?.value;
-    if (currentState == null) return;
-
-    state = AsyncData(
-      currentState.copyWith(dateType: dateType, startDate: start, endDate: end),
-    );
+    if (dateType != null) _dateType = dateType;
+    _startDate = start;
+    _endDate = end;
 
     await refresh();
   }
@@ -108,5 +106,5 @@ class PrayerLogSummaryController extends AsyncNotifier<PrayerLogSummaryState> {
 
 final prayerLogSummaryControllerProvider =
     AsyncNotifierProvider<PrayerLogSummaryController, PrayerLogSummaryState>(
-  PrayerLogSummaryController.new,
-);
+      PrayerLogSummaryController.new,
+    );

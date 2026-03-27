@@ -16,7 +16,6 @@ import 'package:handlerclaw/features/prayer-logs/presentation/screens/add_prayer
 import 'package:handlerclaw/features/whatsapp-logs/presentation/screens/whatsapp_logs_page.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
- 
 class Routes {
   static const splash = "/splash";
   static const login = "/login";

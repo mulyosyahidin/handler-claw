@@ -11,4 +11,5 @@ class ApiEndpoint {
   static const String prayerLogList = "/prayer-logs";
   static const String prayerLogSummary = "/prayer-logs/summary";
   static const String userDevice = "/user-devices";
+  static const String userDeviceStatus = "/user-devices/status";
 }

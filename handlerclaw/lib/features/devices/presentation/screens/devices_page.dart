@@ -5,7 +5,7 @@ import 'package:handlerclaw/features/devices/application/devices_controller.dart
 import 'package:handlerclaw/features/devices/presentation/widgets/device_card.dart';
 import 'package:handlerclaw/features/devices/presentation/widgets/device_detail_bottom_sheet.dart';
 import 'package:handlerclaw/shared/widgets/error_full_page.dart';
-import 'package:handlerclaw/core/services/device_service.dart';
+import 'package:handlerclaw/core/services/device_info_plus_service.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class DevicesPage extends ConsumerStatefulWidget {

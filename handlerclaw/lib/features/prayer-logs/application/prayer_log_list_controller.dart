@@ -52,32 +52,33 @@ class PrayerLogListState {
 class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
   PrayerLogRepository get _repository => ref.read(prayerLogRepositoryProvider);
 
+  String _dateType = '7_days';
+  DateTime? _startDate;
+  DateTime? _endDate;
+
   @override
   Future<PrayerLogListState> build() async {
     return await _fetchPage(1);
   }
 
   Future<PrayerLogListState> _fetchPage(int page) async {
-    final currentState = state.asData?.value;
-
-    final dateType = currentState?.dateType ?? '7_days';
-    final start = currentState?.startDate != null
-        ? DateFormat('yyyy-MM-dd').format(currentState!.startDate!)
+    final start = _startDate != null
+        ? DateFormat('yyyy-MM-dd').format(_startDate!)
         : null;
-    final end = currentState?.endDate != null
-        ? DateFormat('yyyy-MM-dd').format(currentState!.endDate!)
+    final end = _endDate != null
+        ? DateFormat('yyyy-MM-dd').format(_endDate!)
         : null;
 
     final response = await _repository.getLogs(
       page: page,
-      dateType: dateType,
+      dateType: _dateType,
       start: start,
       end: end,
     );
 
     final data = response.data;
     if (data == null) {
-      return PrayerLogListState(items: [], dateType: dateType);
+      return PrayerLogListState(items: [], dateType: _dateType);
     }
 
     return PrayerLogListState(
@@ -85,9 +86,9 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
       currentPage: data.meta.page,
       totalPages: data.meta.totalPages,
       totalItems: data.meta.total,
-      dateType: dateType,
-      startDate: currentState?.startDate,
-      endDate: currentState?.endDate,
+      dateType: _dateType,
+      startDate: _startDate,
+      endDate: _endDate,
     );
   }
 
@@ -102,16 +103,16 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
     try {
       final nextPage = currentState.currentPage + 1;
 
-      final start = currentState.startDate != null
-          ? DateFormat('yyyy-MM-dd').format(currentState.startDate!)
+      final start = _startDate != null
+          ? DateFormat('yyyy-MM-dd').format(_startDate!)
           : null;
-      final end = currentState.endDate != null
-          ? DateFormat('yyyy-MM-dd').format(currentState.endDate!)
+      final end = _endDate != null
+          ? DateFormat('yyyy-MM-dd').format(_endDate!)
           : null;
 
       final response = await _repository.getLogs(
         page: nextPage,
-        dateType: currentState.dateType,
+        dateType: _dateType,
         start: start,
         end: end,
       );
@@ -126,7 +127,7 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
         currentState.copyWith(
           items: [
             ...currentState.items,
-            ...PrayerLogMapper.fromDtos(data.prayerLogs)
+            ...PrayerLogMapper.fromDtos(data.prayerLogs),
           ],
           currentPage: data.meta.page,
           totalPages: data.meta.totalPages,
@@ -150,12 +151,9 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
     DateTime? start,
     DateTime? end,
   }) async {
-    final currentState = state.asData?.value;
-    if (currentState == null) return;
-
-    state = AsyncData(
-      currentState.copyWith(dateType: dateType, startDate: start, endDate: end),
-    );
+    if (dateType != null) _dateType = dateType;
+    _startDate = start;
+    _endDate = end;
 
     await refresh();
   }
@@ -163,5 +161,5 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
 
 final prayerLogListControllerProvider =
     AsyncNotifierProvider<PrayerLogListController, PrayerLogListState>(
-  PrayerLogListController.new,
-);
+      PrayerLogListController.new,
+    );

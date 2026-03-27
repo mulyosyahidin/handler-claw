@@ -1,7 +1,7 @@
 import express, { type Express } from "express";
 import basicAuth from "express-basic-auth";
 import { requestLogger } from "./middleware/index.js";
-import router from "./route/router.js";
+import router from "./routes/router.js";
 import { apiReference } from "@scalar/express-api-reference";
 import { getOpenApiDocumentation } from "./lib/openapi-registry.js";
 
