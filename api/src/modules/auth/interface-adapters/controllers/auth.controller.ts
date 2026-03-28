@@ -13,6 +13,7 @@ import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.u
 import { GetMeUseCase } from "../../application/use-cases/get-me.use-case.js";
 import { UpdateProfileUseCase } from "../../application/use-cases/update-profile.use-case.js";
 import { UpdatePasswordUseCase } from "../../application/use-cases/update-password.use-case.js";
+import logger from "../../../../config/logger.js";
 
 export class AuthController {
   constructor(
@@ -41,6 +42,7 @@ export class AuthController {
         .status(200)
         .json(createSuccessResponse("Berhasil login dengan email dan password", result));
     } catch (error: any) {
+      logger.error("AuthController::login() Error:", error);
       res.status(401).json(createErrorResponse(error.message, error.errors));
     }
   };
@@ -62,6 +64,7 @@ export class AuthController {
       const result = await this.refreshTokenUseCase.execute(refresh_token);
       res.status(200).json(createSuccessResponse("Access token berhasil diperbarui", result));
     } catch (error: any) {
+      logger.error("AuthController::refreshToken() Error:", error);
       res.status(401).json(createErrorResponse(error.message, error.errors));
     }
   };
@@ -80,6 +83,7 @@ export class AuthController {
       const result = await this.getMeUseCase.execute(userId);
       res.status(200).json(createSuccessResponse("Berhasil mengambil profil user", result));
     } catch (error: any) {
+      logger.error("AuthController::getMe() Error:", error);
       res.status(404).json(createErrorResponse(error.message, error.errors));
     }
   };
@@ -109,6 +113,7 @@ export class AuthController {
       const result = await this.updateProfileUseCase.execute(userId, parsed.data);
       res.status(200).json(createSuccessResponse("Profil berhasil diperbarui", result));
     } catch (error: any) {
+      logger.error("AuthController::updateProfile() Error:", error);
       res.status(422).json(createErrorResponse(error.message, error.errors));
     }
   };
@@ -138,6 +143,7 @@ export class AuthController {
       await this.updatePasswordUseCase.execute(userId, parsed.data);
       res.status(200).json(createSuccessResponse("Password berhasil diperbarui"));
     } catch (error: any) {
+      logger.error("AuthController::updatePassword() Error:", error);
       res.status(422).json(createErrorResponse(error.message, error.errors));
     }
   };

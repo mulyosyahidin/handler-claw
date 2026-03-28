@@ -5,7 +5,7 @@ import type {
   PrayerType,
 } from "../../../../lib/generated/prisma/enums.js";
 
-export type PrayerLog = {
+export type IPrayerLog = {
   id: string;
   user_id: string;
   date: Date;

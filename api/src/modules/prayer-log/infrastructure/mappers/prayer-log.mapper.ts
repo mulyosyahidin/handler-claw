@@ -1,20 +1,20 @@
 import type { PrayerLog } from "../../../../lib/generated/prisma/client.js";
-import type { PrayerLog as Entity } from "../../domain/entities/prayer-log.entity.js";
+import type { IPrayerLog } from "../../domain/entities/prayer-log.entity.js";
 
-export function toPrayerLogEntity(p: PrayerLog): Entity {
+export function toPrayerLogEntity(data: PrayerLog): IPrayerLog {
   return {
-    id: p.id,
-    user_id: p.userId,
-    date: p.date,
-    prayer: p.prayer,
-    category: p.category,
-    performed: p.performed,
-    performed_at: p.performedAt,
-    method: p.method,
-    place: p.place,
-    is_qadha: p.isQadha,
-    notes: p.notes,
-    created_at: p.createdAt,
-    updated_at: p.updatedAt,
+    id: data.id,
+    user_id: data.userId,
+    date: data.date,
+    prayer: data.prayer,
+    category: data.category,
+    performed: data.performed,
+    performed_at: data.performedAt,
+    method: data.method,
+    place: data.place,
+    is_qadha: data.isQadha,
+    notes: data.notes,
+    created_at: data.createdAt,
+    updated_at: data.updatedAt,
   };
 }

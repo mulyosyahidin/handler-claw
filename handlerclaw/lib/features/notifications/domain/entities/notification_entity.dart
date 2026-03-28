@@ -1,26 +1,36 @@
-import 'package:handlerclaw/features/notifications/domain/entities/notification_payload_entity.dart';
-
 class NotificationEntity {
   final String id;
+  final String notificationWebhookId;
   final String userId;
-  final String eventId;
+  final String userDeviceId;
+  final String title;
+  final String body;
+  final Map<String, dynamic> data;
+  final DateTime? triggeredAt;
   final String status;
-  final Map<String, dynamic> headers;
-  final NotificationPayloadEntity payload;
+  final String? fcmMessageId;
+  final DateTime? sentAt;
+  final DateTime? failedAt;
+  final int retryCount;
   final String? errorMessage;
-  final DateTime? processedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   NotificationEntity({
     required this.id,
+    required this.notificationWebhookId,
     required this.userId,
-    required this.eventId,
+    required this.userDeviceId,
+    required this.title,
+    required this.body,
+    required this.data,
+    this.triggeredAt,
     required this.status,
-    required this.headers,
-    required this.payload,
+    this.fcmMessageId,
+    this.sentAt,
+    this.failedAt,
+    required this.retryCount,
     this.errorMessage,
-    this.processedAt,
     required this.createdAt,
     required this.updatedAt,
   });

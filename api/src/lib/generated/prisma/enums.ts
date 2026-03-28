@@ -49,16 +49,6 @@ export const PrayerPlace = {
 export type PrayerPlace = (typeof PrayerPlace)[keyof typeof PrayerPlace]
 
 
-export const ReminderHookStatus = {
-  RECEIVED: 'RECEIVED',
-  PROCESSING: 'PROCESSING',
-  PROCESSED: 'PROCESSED',
-  FAILED: 'FAILED'
-} as const
-
-export type ReminderHookStatus = (typeof ReminderHookStatus)[keyof typeof ReminderHookStatus]
-
-
 export const UserDevicePlatform = {
   ANDROID: 'ANDROID',
   IOS: 'IOS',
@@ -76,6 +66,15 @@ export const UserDeviceStatus = {
 } as const
 
 export type UserDeviceStatus = (typeof UserDeviceStatus)[keyof typeof UserDeviceStatus]
+
+
+export const NotificationWebhookStatus = {
+  RECEIVED: 'RECEIVED',
+  PROCESSING: 'PROCESSING',
+  PROCESSED: 'PROCESSED'
+} as const
+
+export type NotificationWebhookStatus = (typeof NotificationWebhookStatus)[keyof typeof NotificationWebhookStatus]
 
 
 export const NotificationStatus = {

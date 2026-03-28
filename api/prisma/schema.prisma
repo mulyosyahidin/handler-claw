@@ -19,7 +19,6 @@ enum PrayerCategory {
 }
 
 enum PrayerType {
-  // wajib
   SUBUH
   DZUHUR
   ASHAR
@@ -27,7 +26,6 @@ enum PrayerType {
   ISYA
   JUMAT
 
-  // sunnah
   DHUHA
   TAHAJUD
   WITIR
@@ -44,13 +42,6 @@ enum PrayerPlace {
   LAINNYA
 }
 
-enum ReminderHookStatus {
-  RECEIVED
-  PROCESSING
-  PROCESSED
-  FAILED
-}
-
 enum UserDevicePlatform {
   ANDROID
   IOS
@@ -62,6 +53,12 @@ enum UserDeviceStatus {
   ACTIVE
   LOGGED_OUT
   INVALID_TOKEN
+}
+
+enum NotificationWebhookStatus {
+  RECEIVED
+  PROCESSING
+  PROCESSED
 }
 
 enum NotificationStatus {
@@ -79,9 +76,9 @@ model User {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
-  prayerLogs    PrayerLog[]
-  reminderHooks ReminderHook[]
-  userDevices   UserDevice[]
+  prayerLogs PrayerLog[]
+  userDevices    UserDevice[]
+  notificationWebhooks NotificationWebhook[]
   notifications Notification[]
 
   @@map("users")
@@ -115,8 +112,8 @@ model PrayerLog {
 }
 
 model WhatsappLog {
-  id         Int      @id @default(autoincrement())
-  receivedAt DateTime @default(now())
+  id String @id @default(uuid())
+  receivedAt DateTime @default(now()) @map("received_at")
 
   // Device & routing
   device String @db.VarChar(30)
@@ -124,21 +121,21 @@ model WhatsappLog {
 
   // Sender info
   sender     String  @db.VarChar(50)
-  senderLid  String? @db.VarChar(60)
-  senderName String? @db.VarChar(100)
+  senderLid  String? @map("sender_lid") @db.VarChar(60)
+  senderName String? @map("sender_name") @db.VarChar(100)
 
   // Group info
-  isGroup     Boolean @default(false)
-  groupId     String? @db.VarChar(60)
-  memberPhone String? @db.VarChar(30)
-  memberLid   String? @db.VarChar(60)
+  isGroup     Boolean @default(false) @map("is_group")
+  groupId     String? @map("group_id") @db.VarChar(60)
+  memberPhone String? @map("member_phone") @db.VarChar(30)
+  memberLid   String? @map("member_lid") @db.VarChar(60)
 
   // Message
-  messageText String? @db.Text
-  messageType String  @db.VarChar(20) // text, image, document, dll
-  isForwarded Boolean @default(false)
-  isQuick     Boolean @default(false)
-  inboxId     Int     @default(0)
+  messageText String? @map("message_text") @db.Text
+  messageType String  @map("message_type") @db.VarChar(20)
+  isForwarded Boolean @default(false) @map("is_forwarded")
+  isQuick     Boolean @default(false) @map("is_quick")
+  inboxId     Int     @default(0) @map("inbox_id")
 
   // Media (null kalau plain text)
   extension String? @db.VarChar(20)
@@ -147,42 +144,17 @@ model WhatsappLog {
   location  String? @db.VarChar(255)
 
   // Poll
-  pollName    String? @db.VarChar(255)
-  pollChoices Json?
+  pollName    String? @map("poll_name") @db.VarChar(255)
+  pollChoices Json?   @map("poll_choices")
 
   // Original timestamp dari WA
-  waTimestamp BigInt
+  waTimestamp BigInt @map("wa_timestamp")
 
   @@index([sender])
   @@index([device])
   @@index([receivedAt])
   @@index([isGroup])
   @@map("whatsapp_logs")
-}
-
-model ReminderHook {
-  id      String @id @default(uuid())
-  userId  String @map("user_id")
-  eventId String @map("event_id")
-
-  status ReminderHookStatus @default(RECEIVED)
-
-  headersJson Json @map("headers_json")
-  payloadJson Json @map("payload_json")
-
-  errorMessage String?   @map("error_message")
-  processedAt  DateTime? @map("processed_at")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  notifications Notification[]
-
-  @@unique([userId, eventId])
-  @@index([userId])
-  @@index([createdAt])
-  @@map("reminder_hooks")
 }
 
 model UserDevice {
@@ -193,6 +165,7 @@ model UserDevice {
   deviceId    String  @unique @map("device_id")
   deviceBrand String? @map("device_brand")
   deviceModel String? @map("device_model")
+  osBuildId   String? @map("os_build_id")
   osVersion   String? @map("os_version")
 
   fcmToken String             @map("fcm_token")
@@ -203,16 +176,34 @@ model UserDevice {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   notifications Notification[]
 
   @@index([userId])
   @@map("user_devices")
 }
 
+model NotificationWebhook {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+
+  status  NotificationWebhookStatus @default(RECEIVED)
+  content Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("notification_webhooks")
+}
+
 model Notification {
-  id           String @id @default(uuid())
-  reminderHookId String @map("reminder_hook_id")
+  id                    String @id @default(uuid())
+  notificationWebhookId String @map("notification_webhook_id")
 
   userId       String @map("user_id")
   userDeviceId String @map("user_device_id")
@@ -229,15 +220,15 @@ model Notification {
   sentAt   DateTime? @map("sent_at")
   failedAt DateTime? @map("failed_at")
 
-  retryCount   Int     @default(0)
+  retryCount   Int     @default(0) @map("retry_count")
   errorMessage String? @map("error_message")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  reminderHook ReminderHook @relation(fields: [reminderHookId], references: [id], onDelete: Cascade)
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userDevice UserDevice @relation(fields: [userDeviceId], references: [id], onDelete: Cascade)
+  notificationWebhook NotificationWebhook @relation(fields: [notificationWebhookId], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userDevice          UserDevice          @relation(fields: [userDeviceId], references: [id], onDelete: Cascade)
 
   @@index([status])
   @@index([userId])

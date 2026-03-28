@@ -2,16 +2,16 @@ import { Router } from "express";
 import { PrismaNotificationRepository } from "../modules/notification/infrastructure/repositories/prisma-notification.repository.js";
 import { PrismaUserDeviceRepository } from "../modules/user-device/infrastructure/repositories/prisma-user-device.repository.js";
 import { FirebaseNotificationService } from "../modules/notification/infrastructure/services/firebase-notification.service.js";
-import { CreateNotificationHookUseCase } from "../modules/notification/application/use-cases/create-notification-hook.use-case.js";
+import { CreateNotificationWebhookUseCase } from "../modules/notification/application/use-cases/create-notification-webhook.use-case.js";
 import { SendNotificationUseCase } from "../modules/notification/application/use-cases/send-notification.use-case.js";
 import { GetNotificationsUseCase } from "../modules/notification/application/use-cases/get-notifications.use-case.js";
 import { GetNotificationDetailUseCase } from "../modules/notification/application/use-cases/get-notification-detail.use-case.js";
-import { GetNotificationsSummaryUseCase } from "../modules/notification/application/use-cases/get-notifications-summary.use-case.js";
 import { NotificationController } from "../modules/notification/interface-adapters/controllers/notification.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
+import { createNotificationWebhookSchema } from "../modules/notification/infrastructure/models/notification-webhook.schema.js";
+import { PrismaNotificationWebhookRepository } from "../modules/notification/infrastructure/repositories/prisma-notification-webhook.repository.js";
 import {
-  createNotificationSchema,
   getNotificationParamsSchema,
   getNotificationsQuerySchema,
 } from "../modules/notification/infrastructure/models/notification.schema.js";
@@ -19,17 +19,20 @@ import {
 const notificationRouter: Router = Router();
 
 // Dependency Injection
+const notificationWebhookRepository = new PrismaNotificationWebhookRepository();
 const notificationRepository = new PrismaNotificationRepository();
 const userDeviceRepository = new PrismaUserDeviceRepository();
 const notificationSender = new FirebaseNotificationService();
 
 const sendNotificationUseCase = new SendNotificationUseCase(
+  notificationWebhookRepository,
   notificationRepository,
   userDeviceRepository,
   notificationSender,
 );
 
-const createNotificationHookUseCase = new CreateNotificationHookUseCase(
+const createNotificationWebhookUseCase = new CreateNotificationWebhookUseCase(
+  notificationWebhookRepository,
   notificationRepository,
   userDeviceRepository,
   sendNotificationUseCase,
@@ -37,13 +40,11 @@ const createNotificationHookUseCase = new CreateNotificationHookUseCase(
 
 const getNotificationsUseCase = new GetNotificationsUseCase(notificationRepository);
 const getNotificationDetailUseCase = new GetNotificationDetailUseCase(notificationRepository);
-const getNotificationsSummaryUseCase = new GetNotificationsSummaryUseCase(notificationRepository);
 
 const notificationController = new NotificationController(
-  createNotificationHookUseCase,
+  createNotificationWebhookUseCase,
   getNotificationsUseCase,
   getNotificationDetailUseCase,
-  getNotificationsSummaryUseCase,
 );
 
 // ─── OPENAPI DOCS ──────────────────────────────────────────────────────────
@@ -60,7 +61,7 @@ registry.registerPath({
     body: {
       content: {
         "application/json": {
-          schema: createNotificationSchema,
+          schema: createNotificationWebhookSchema,
         },
       },
     },
@@ -123,8 +124,7 @@ registry.registerPath({
 
 // ─── ROUTES ────────────────────────────────────────────────────────────────
 
-notificationRouter.post("/", authMiddleware, notificationController.createHook);
-notificationRouter.get("/summary", authMiddleware, notificationController.getNotificationsSummary);
+notificationRouter.post("/", authMiddleware, notificationController.createNotificationWebhook);
 notificationRouter.get("/:id", authMiddleware, notificationController.getNotificationDetails);
 notificationRouter.get("/", authMiddleware, notificationController.getNotifications);
 

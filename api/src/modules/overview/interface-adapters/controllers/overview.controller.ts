@@ -2,6 +2,7 @@ import type { Response } from "express";
 import type { AuthRequest } from "../../../../middleware/auth.middleware.js";
 import { GetOverviewUseCase } from "../../application/use-cases/get-overview.use-case.js";
 import { createErrorResponse, createSuccessResponse } from "../../../../lib/types/response.js";
+import logger from "../../../../config/logger.js";
 
 export class OverviewController {
   constructor(private getOverviewUseCase: GetOverviewUseCase) {}
@@ -18,7 +19,7 @@ export class OverviewController {
       const result = await this.getOverviewUseCase.execute(userId);
       res.status(200).json(createSuccessResponse("Berhasil mengambil data overview", result));
     } catch (error: any) {
-      console.error("[Overview] Gagal mengambil data overview:", error);
+      logger.error("OverviewController::getOverview() Error:", error);
       res
         .status(500)
         .json(

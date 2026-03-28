@@ -83,8 +83,8 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
-            # 1. Create .env.production
-            cat <<'EOF' > .env.production
+            # 1. Create .env
+            cat <<'EOF' > .env
             INSTANCE_NAME=mura-vps
             NODE_ENV=production
             APP_PORT=${{ vars.APP_PORT || '3000' }}
@@ -95,24 +95,24 @@ jobs:
             EOF
 
             # Injeksi variabel dinamis
-            printf "DOCS_PASSWORD=%s\n" "${{ secrets.DOCS_PASSWORD }}" >> .env.production
-            printf "DOCKER_IMAGE=%s\n" "$DOCKER_IMAGE" >> .env.production
-            printf "JWT_SECRET=%s\n" "$JWT_SECRET" >> .env.production
-            printf "DATABASE_URL=%s\n" "$DATABASE_URL" >> .env.production
-            printf "POSTGRES_USER=%s\n" "${{ vars.DB_USER }}" >> .env.production
-            printf "POSTGRES_PASSWORD=%s\n" "$DB_PASSWORD" >> .env.production
-            printf "POSTGRES_DB=%s\n" "${{ vars.DB_NAME }}" >> .env.production
-            printf "DEFAULT_USER_EMAIL=%s\n" "$DEFAULT_USER_EMAIL" >> .env.production
-            printf "DEFAULT_USER_NAME=%s\n" "$DEFAULT_USER_NAME" >> .env.production
-            printf "DEFAULT_USER_PASSWORD=%s\n" "$DEFAULT_USER_PASSWORD" >> .env.production
-            printf "FIREBASE_PROJECT_ID=%s\n" "$FIREBASE_PROJECT_ID" >> .env.production
-            printf "FIREBASE_PRIVATE_KEY=%s\n" "$FIREBASE_PRIVATE_KEY" >> .env.production
-            printf "FIREBASE_CLIENT_EMAIL=%s\n" "$FIREBASE_CLIENT_EMAIL" >> .env.production
+            printf "DOCS_PASSWORD=%s\n" "${{ secrets.DOCS_PASSWORD }}" >> .env
+            printf "DOCKER_IMAGE=%s\n" "$DOCKER_IMAGE" >> .env
+            printf "JWT_SECRET=%s\n" "$JWT_SECRET" >> .env
+            printf "DATABASE_URL=%s\n" "$DATABASE_URL" >> .env
+            printf "POSTGRES_USER=%s\n" "${{ vars.DB_USER }}" >> .env
+            printf "POSTGRES_PASSWORD=%s\n" "$DB_PASSWORD" >> .env
+            printf "POSTGRES_DB=%s\n" "${{ vars.DB_NAME }}" >> .env
+            printf "DEFAULT_USER_EMAIL=%s\n" "$DEFAULT_USER_EMAIL" >> .env
+            printf "DEFAULT_USER_NAME=%s\n" "$DEFAULT_USER_NAME" >> .env
+            printf "DEFAULT_USER_PASSWORD=%s\n" "$DEFAULT_USER_PASSWORD" >> .env
+            printf "FIREBASE_PROJECT_ID=%s\n" "$FIREBASE_PROJECT_ID" >> .env
+            printf "FIREBASE_PRIVATE_KEY=%s\n" "$FIREBASE_PRIVATE_KEY" >> .env
+            printf "FIREBASE_CLIENT_EMAIL=%s\n" "$FIREBASE_CLIENT_EMAIL" >> .env
 
             # Escape tanda $ menjadi $$
-            sed -i 's/\$/$$/g' .env.production
+            sed -i 's/\$/$$/g' .env
             
-            chmod 600 .env.production
+            chmod 600 .env
 
             # 2. Registry Login
             export GPG_TTY=$(tty)
@@ -123,14 +123,14 @@ jobs:
 
             # 4. Database Migration & Seeding (Prisma)
             echo "🔄 Running Migrations..."
-            docker compose --env-file .env.production run --rm handler_claw_api_blue npx prisma migrate deploy
+            docker compose --env-file .env run --rm handler_claw_api_blue npx prisma migrate deploy
             
             echo "🌱 Seeding Database..."
-            docker compose --env-file .env.production run --rm handler_claw_api_blue node dist/prisma/seed.js
+            docker compose --env-file .env run --rm handler_claw_api_blue node dist/prisma/seed.js
 
             # 5. Update Green Instance
             echo "🚀 Starting handler_claw_api_green..."
-            docker compose --env-file .env.production up -d handler_claw_api_green
+            docker compose --env-file .env up -d handler_claw_api_green
 
             # 6. Strict Health Check Loop
             echo "🔍 Verifying handler_claw_api_green health..."
@@ -138,7 +138,7 @@ jobs:
             while [ "$(docker inspect --format='{{.State.Health.Status}}' handler-claw-api-green)" != "healthy" ]; do
               if [ $count -gt 20 ]; then
                 echo "❌ Deployment Failed: Green instance is unhealthy."
-                docker compose --env-file .env.production stop handler_claw_api_green
+                docker compose --env-file .env stop handler_claw_api_green
                 exit 1
               fi
               echo "⏳ Waiting for health check... ($((count*5))s)"
@@ -148,7 +148,7 @@ jobs:
 
             # 7. Update Blue Instance
             echo "✅ Green is healthy! Updating handler_claw_api_blue..."
-            docker compose --env-file .env.production up -d handler_claw_api_blue
+            docker compose --env-file .env up -d handler_claw_api_blue
 
             # 8. Reload Nginx Proxy
             echo "🔄 Reloading Nginx Proxy..."

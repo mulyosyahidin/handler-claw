@@ -3,7 +3,7 @@ import {
   loginSchema,
   refreshTokenSchema,
 } from "../modules/auth/infrastructure/models/auth.schema.js";
-import { logPrayerSchema } from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
+import { insertLogPrayerSchema } from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
 import { z } from "zod";
 
 const prayerDateTypeEnum = z.enum([
@@ -134,7 +134,7 @@ registry.registerPath({
     body: {
       content: {
         "application/json": {
-          schema: logPrayerSchema,
+          schema: insertLogPrayerSchema,
         },
       },
     },

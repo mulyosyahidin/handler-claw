@@ -1,3 +1,4 @@
+import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/whatsapp-logs/domain/entities/whatsapp_log_entity.dart';
@@ -6,27 +7,27 @@ import 'package:handlerclaw/features/whatsapp-logs/data/repositories/whatsapp_lo
 
 class WhatsappLogListState {
   final List<WhatsappLogEntity> items;
-  final int? nextCursor;
+  final PaginationMetaDto? meta;
   final bool isLoadingMore;
   final String? search;
 
   WhatsappLogListState({
     required this.items,
-    this.nextCursor,
+    this.meta,
     this.isLoadingMore = false,
     this.search,
   });
 
   WhatsappLogListState copyWith({
     List<WhatsappLogEntity>? items,
-    int? nextCursor,
+    PaginationMetaDto? meta,
     bool? isLoadingMore,
     String? search,
-    bool clearNextCursor = false,
+    bool clearMeta = false,
   }) {
     return WhatsappLogListState(
       items: items ?? this.items,
-      nextCursor: clearNextCursor ? null : (nextCursor ?? this.nextCursor),
+      meta: clearMeta ? null : (meta ?? this.meta),
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       search: search ?? this.search,
     );
@@ -43,32 +44,34 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
     return await _fetchPage();
   }
 
-  Future<WhatsappLogListState> _fetchPage({int? cursor, String? search}) async {
-    final response = await _repository.getLogs(cursor: cursor, search: search);
+  Future<WhatsappLogListState> _fetchPage({int page = 1, String? search}) async {
+    final response = await _repository.getLogs(page: page, search: search);
     
     return WhatsappLogListState(
       items: response.logs,
-      nextCursor: response.nextCursor,
+      meta: response.meta,
       search: search,
     );
   }
 
   Future<void> loadMore() async {
     final currentState = state.value;
-    if (currentState == null || currentState.isLoadingMore || currentState.nextCursor == null) return;
+    if (currentState == null || currentState.isLoadingMore) return;
+    
+    final meta = currentState.meta;
+    if (meta == null || meta.page >= meta.totalPages) return;
 
     state = AsyncData(currentState.copyWith(isLoadingMore: true));
 
     try {
       final response = await _repository.getLogs(
-        cursor: currentState.nextCursor,
+        page: meta.page + 1,
         search: currentState.search,
       );
       
       state = AsyncData(currentState.copyWith(
         items: [...currentState.items, ...response.logs],
-        nextCursor: response.nextCursor,
-        clearNextCursor: response.nextCursor == null,
+        meta: response.meta,
         isLoadingMore: false,
       ));
     } catch (e) {

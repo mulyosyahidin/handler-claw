@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/env.dart';
 import 'package:handlerclaw/core/networks/auth_interceptor.dart';
+import 'package:handlerclaw/core/networks/device_id_interceptor.dart';
+
 
 class DioClient {
   static Dio create(String baseUrl, Ref ref) {
@@ -16,7 +18,9 @@ class DioClient {
     );
 
     dio.interceptors.add(AuthInterceptor(ref));
+    dio.interceptors.add(DeviceIdInterceptor(ref));
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+
 
     return dio;
   }

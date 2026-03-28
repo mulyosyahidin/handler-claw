@@ -9,7 +9,8 @@ export const createUserDeviceSchema = z
     device_id: z.string().min(1, "device_id tidak boleh kosong"),
     device_brand: z.string().min(1, "device_brand tidak boleh kosong"),
     device_model: z.string().min(1, "device_model tidak boleh kosong"),
-    os_version: z.string(),
+    os_build_id: z.string().optional(),
+    os_version: z.string().optional(),
     fcm_token: z.string().min(1, "fcm_token tidak boleh kosong"),
     platform: z.enum(UserDevicePlatform).default(UserDevicePlatform.ANDROID),
   })
@@ -32,7 +33,7 @@ export const getUserDevicesQuerySchema = z
       description: "Jumlah data per halaman (max 200), default: 10",
       example: 10,
     }),
-    search: z.string().openapi({
+    search: z.string().optional().openapi({
       description: "Cari berdasarkan device_brand, device_model, atau device_id",
       example: "Samsung",
     }),
@@ -47,3 +48,8 @@ export const getUserDeviceParamsSchema = z
     }),
   })
   .openapi("GetUserDeviceParams");
+
+export type CreateUserDeviceSchemaValues = z.infer<typeof createUserDeviceSchema>;
+export type UpdateUserDeviceStatusSchemaValues = z.infer<typeof updateUserDeviceStatusSchema>;
+export type GetUserDevicesQuerySchemaValues = z.infer<typeof getUserDevicesQuerySchema>;
+export type GetUserDeviceParamsSchemaValues = z.infer<typeof getUserDeviceParamsSchema>;

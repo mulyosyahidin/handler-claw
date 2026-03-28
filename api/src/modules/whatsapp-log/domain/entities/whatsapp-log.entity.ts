@@ -1,5 +1,5 @@
-export type WhatsappLog = {
-  id: number;
+export type IWhatsappLog = {
+  id: string;
   received_at: Date;
 
   // Device & routing

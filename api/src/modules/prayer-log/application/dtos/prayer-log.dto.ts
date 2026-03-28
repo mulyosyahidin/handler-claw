@@ -1,37 +1,14 @@
-import type { PrayerLog } from "../../domain/entities/prayer-log.entity.js";
-import type { PrayerDateType } from "../../../../utils/date-filter.js";
 import type {
+  PrayerCategory,
   PrayerMethod,
   PrayerPlace,
   PrayerType,
-} from "../../../../lib/generated/prisma/enums.js";
+} from "../../../../lib/generated/prisma/client.js";
+import type { IPrayerLog } from "../../domain/entities/prayer-log.entity.js";
+import type { PaginationMetaDto } from "../../../../lib/types/pagination-meta-dto.js";
 
 /**
- * Shared Helper Types
- */
-export type PrayerLogFilter = {
-  date_type: PrayerDateType;
-  start?: string | undefined;
-  end?: string | undefined;
-  filtered: {
-    date_start?: string | undefined;
-    date_end?: string | undefined;
-  };
-};
-
-export type PrayerLogRepositoryFilter = {
-  date?: Date | { gte: Date; lte: Date } | undefined;
-  performed?: boolean | undefined;
-  prayer?: PrayerType | { in: PrayerType[] } | undefined;
-};
-
-export type FindAllPrayerLogData = {
-  logs: PrayerLog[];
-  total: number;
-};
-
-/**
- * Request Contracts
+ * Input Data Contracts
  */
 export type CreatePrayerLogRequest = {
   prayer: PrayerType;
@@ -39,45 +16,89 @@ export type CreatePrayerLogRequest = {
   performed_at?: Date;
   method?: PrayerMethod;
   place?: PrayerPlace;
-  is_qadha?: boolean;
+  is_qadha: boolean;
   notes?: string;
+};
+
+export type CreatePrayerLogData = {
+  userId: string;
+  date: Date;
+  prayer: PrayerType;
+  performed: boolean;
+  performedAt?: Date | null;
+  category: PrayerCategory;
+  method?: PrayerMethod | null;
+  place?: PrayerPlace;
+  isQadha?: boolean;
+  notes?: string | null;
+};
+
+export type UpdatePrayerLogData = {
+  performed?: boolean;
+  performedAt?: Date | null;
+  category?: PrayerCategory;
+  method?: PrayerMethod | null;
+  place?: PrayerPlace;
+  isQadha?: boolean;
+  notes?: string | null;
 };
 
 export type GetPrayerLogsQuery = {
   page: number;
   per_page: number;
-  date_type: PrayerDateType;
+  date_type:
+    | "today"
+    | "this_week"
+    | "this_month"
+    | "this_year"
+    | "7_days"
+    | "30_days"
+    | "1_year"
+    | "all"
+    | "custom";
   start?: string;
   end?: string;
 };
 
 export type GetPrayerLogsSummaryQuery = {
-  date_type: PrayerDateType;
+  date_type:
+    | "today"
+    | "this_week"
+    | "this_month"
+    | "this_year"
+    | "7_days"
+    | "30_days"
+    | "1_year"
+    | "all"
+    | "custom";
   start?: string;
   end?: string;
 };
 
-export type DeletePrayerLogParams = {
-  id: string;
-};
-
 /**
- * Response Contracts
+ * Filter Contracts
  */
-export type CreatePrayerLogResponse = {
-  prayer_log: PrayerLog;
+export type DateRangeFilter = {
+  gte?: Date | string;
+  lte?: Date | string;
+  gt?: Date | string;
+  lt?: Date | string;
 };
 
-export type GetPrayerLogsResponse = {
-  filter: PrayerLogFilter;
-  prayer_logs: PrayerLog[];
-  meta: {
-    page: number;
-    per_page: number;
-    total: number;
-    total_pages: number;
-  };
+export type PrayerLogRepositoryFilter = {
+  date?: DateRangeFilter;
+  performed?: boolean;
+  prayer?: PrayerType;
 };
+
+export type ByPrayer = Record<
+  PrayerType,
+  {
+    performed: number;
+    qadha: number;
+    jamaah: number;
+  }
+>;
 
 export type PrayerSummaryEntry = {
   label: string;
@@ -85,11 +106,40 @@ export type PrayerSummaryEntry = {
   total_sunnah_performed: number;
   total_performed: number;
   total_qadha: number;
-  by_prayer: Record<string, { performed: number; qadha: number; jamaah: number }>;
+  by_prayer: ByPrayer;
+};
+
+/**
+ * Response Contracts
+ */
+export type CreatePrayerLogResponse = {
+  prayer_log: IPrayerLog;
+};
+
+export type GetPrayerLogsResponse = {
+  filter: {
+    date_type: string;
+    start?: string | undefined;
+    end?: string | undefined;
+    filtered?: {
+      date_start?: string | undefined;
+      date_end?: string | undefined;
+    };
+  };
+  prayer_logs: IPrayerLog[];
+  meta: PaginationMetaDto;
 };
 
 export type GetPrayerLogsSummaryResponse = {
-  filter: PrayerLogFilter;
+  filter: {
+    date_type: string;
+    start?: string | undefined;
+    end?: string | undefined;
+    filtered?: {
+      date_start?: string | undefined;
+      date_end?: string | undefined;
+    };
+  };
   summary: PrayerSummaryEntry[];
   count: Record<string, number>;
   performances: Record<string, { count: number; percentage?: number }>;
@@ -99,8 +149,4 @@ export type GetPrayerLogsSummaryResponse = {
     total_performed: number;
     total_qadha: number;
   };
-};
-
-export type DeletePrayerLogResponse = {
-  success: boolean;
 };

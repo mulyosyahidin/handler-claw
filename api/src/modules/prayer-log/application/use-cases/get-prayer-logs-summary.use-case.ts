@@ -4,6 +4,7 @@ import {
   PrayerType,
 } from "../../../../lib/generated/prisma/enums.js";
 import type {
+  ByPrayer,
   GetPrayerLogsSummaryQuery,
   GetPrayerLogsSummaryResponse,
   PrayerSummaryEntry,
@@ -19,35 +20,39 @@ export class GetPrayerLogsSummaryUseCase {
     query: GetPrayerLogsSummaryQuery,
   ): Promise<GetPrayerLogsSummaryResponse> {
     const { date_type, start, end } = query;
+
     const { filter: dateFilter, date_start, date_end } = getPrayerDateFilter(date_type, start, end);
 
-    const logs = await this.prayerLogRepository.findManySummarized(userId, dateFilter);
+    const rows = await this.prayerLogRepository.findSummary(userId, dateFilter);
 
-    // Group logs by period label
-    const grouped = new Map<string, any[]>();
+    const grouped = new Map<string, PrayerSummaryEntry>();
 
+    // 🔥 init range
     if (date_start && date_end) {
-      const [y1, m1, d1] = date_start.split("-").map(Number) as [number, number, number];
-      const [y2, m2, d2] = date_end.split("-").map(Number) as [number, number, number];
+      const [y1, m1, d1] = this.parseYMD(date_start);
+      const [y2, m2, d2] = this.parseYMD(date_end);
 
       const cur = new Date(Date.UTC(y1, m1 - 1, d1));
       const endObj = new Date(Date.UTC(y2, m2 - 1, d2));
 
       while (cur <= endObj) {
-        grouped.set(this.toISODate(cur), []);
+        const label = this.toISODate(cur);
+
+        grouped.set(label, {
+          label,
+          total_wajib_performed: 0,
+          total_sunnah_performed: 0,
+          total_performed: 0,
+          total_qadha: 0,
+          by_prayer: this.initByPrayer(),
+        });
+
         cur.setUTCDate(cur.getUTCDate() + 1);
       }
     }
 
-    for (const log of logs) {
-      const label = this.toISODate(log.date);
-      if (!grouped.has(label)) grouped.set(label, []);
-      grouped.get(label)!.push(log);
-    }
-
-    const summary: PrayerSummaryEntry[] = [];
-    const grandCount: Record<string, number> = {};
-
+    // 🔥 grand totals
+    const grandCount: Record<PrayerType, number> = {} as any;
     for (const p of Object.values(PrayerType)) {
       grandCount[p] = 0;
     }
@@ -57,72 +62,82 @@ export class GetPrayerLogsSummaryUseCase {
     let grandTotal = 0;
     let grandQadha = 0;
 
-    for (const [label, entries] of grouped.entries()) {
-      const byPrayer: PrayerSummaryEntry["by_prayer"] = {};
-      const curDate = new Date(label);
-      const isFriday = curDate.getUTCDay() === 5;
+    // 🔥 process rows
+    for (const row of rows) {
+      const label = this.toISODate(new Date(row.date));
+      const key = row.prayer as PrayerType;
+      const count = Number(row.count);
 
-      for (const p of Object.values(PrayerType)) {
-        if (p === PrayerType.JUMAT && !isFriday) continue;
-        if (p === PrayerType.DZUHUR && isFriday) continue;
-        byPrayer[p] = { performed: 0, qadha: 0, jamaah: 0 };
+      if (!grouped.has(label)) {
+        grouped.set(label, {
+          label,
+          total_wajib_performed: 0,
+          total_sunnah_performed: 0,
+          total_performed: 0,
+          total_qadha: 0,
+          by_prayer: this.initByPrayer(),
+        });
       }
 
-      let wajib = 0;
-      let sunnah = 0;
-      let qadha = 0;
+      const entry = grouped.get(label)!;
 
-      for (const e of entries) {
-        const key = e.prayer as string;
-        grandCount[key] = (grandCount[key] || 0) + 1;
+      // ✅ core logic (tidak boleh dihapus)
+      entry.by_prayer[key].performed += count;
 
-        if (!byPrayer[key]) byPrayer[key] = { performed: 0, qadha: 0, jamaah: 0 };
-        byPrayer[key].performed++;
-        if (e.is_qadha) {
-          byPrayer[key].qadha++;
-          qadha++;
-        }
-        if (e.method === PrayerMethod.JAMAAH) byPrayer[key].jamaah++;
-
-        if (e.category === PrayerCategory.WAJIB) wajib++;
-        else sunnah++;
+      if (row.is_qadha) {
+        entry.by_prayer[key].qadha += count;
+        entry.total_qadha += count;
+        grandQadha += count;
       }
 
-      const total = wajib + sunnah;
-      grandWajib += wajib;
-      grandSunnah += sunnah;
-      grandTotal += total;
-      grandQadha += qadha;
+      if (row.method === PrayerMethod.JAMAAH) {
+        entry.by_prayer[key].jamaah += count;
+      }
 
-      summary.push({
-        label,
-        total_wajib_performed: wajib,
-        total_sunnah_performed: sunnah,
-        total_performed: total,
-        total_qadha: qadha,
-        by_prayer: byPrayer,
-      });
+      if (row.category === PrayerCategory.WAJIB) {
+        entry.total_wajib_performed += count;
+        grandWajib += count;
+      } else {
+        entry.total_sunnah_performed += count;
+        grandSunnah += count;
+      }
+
+      entry.total_performed += count;
+      grandTotal += count;
+
+      grandCount[key] += count;
     }
 
-    const totalDays = grouped.size || 1;
+    // 🔥 sort result (important)
+    const summary = Array.from(grouped.values()).sort((a, b) => a.label.localeCompare(b.label));
+
+    const totalDays = summary.length || 1;
+
     let totalFridays = 0;
-    for (const label of grouped.keys()) {
-      const d = new Date(label);
+    for (const s of summary) {
+      const d = new Date(s.label);
       if (d.getUTCDay() === 5) totalFridays++;
     }
+
     const totalNonFridays = totalDays - totalFridays;
 
-    const performances: Record<string, { count: number; percentage?: number }> = {};
+    const SUNNAH_PRAYERS = new Set<PrayerType>([
+      PrayerType.DHUHA,
+      PrayerType.TAHAJUD,
+      PrayerType.WITIR,
+    ]);
+
+    const performances: Record<PrayerType, { count: number; percentage?: number }> = {} as any;
+
     for (const p of Object.values(PrayerType)) {
       const count = grandCount[p] || 0;
+
       let denominator = totalDays;
 
       if (p === PrayerType.JUMAT) denominator = totalFridays;
       else if (p === PrayerType.DZUHUR) denominator = totalNonFridays;
 
-      const isSunnah = (
-        [PrayerType.DHUHA, PrayerType.TAHAJUD, PrayerType.WITIR] as PrayerType[]
-      ).includes(p as PrayerType);
+      const isSunnah = SUNNAH_PRAYERS.has(p);
 
       performances[p] = {
         count,
@@ -158,5 +173,34 @@ export class GetPrayerLogsSummaryUseCase {
   private toISODate(d: Date): string {
     const pad = (n: number) => n.toString().padStart(2, "0");
     return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+  }
+
+  private parseYMD(dateStr: string): [number, number, number] {
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) throw new Error("Invalid date format");
+
+    const y = Number(parts[0]);
+    const m = Number(parts[1]);
+    const d = Number(parts[2]);
+
+    if ([y, m, d].some(Number.isNaN)) {
+      throw new Error("Invalid date value");
+    }
+
+    return [y, m, d];
+  }
+
+  private initByPrayer(): ByPrayer {
+    const result = {} as ByPrayer;
+
+    for (const p of Object.values(PrayerType)) {
+      result[p] = {
+        performed: 0,
+        qadha: 0,
+        jamaah: 0,
+      };
+    }
+
+    return result;
   }
 }

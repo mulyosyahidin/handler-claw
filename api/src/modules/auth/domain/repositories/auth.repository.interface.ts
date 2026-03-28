@@ -1,9 +1,8 @@
-import type { Prisma } from "../../../../lib/generated/prisma/client.js";
-import type { User } from "../entities/user.entity.js";
+import type { User } from "../../../../lib/generated/prisma/client.js";
+import type { UpdateUserData } from "../../application/dtos/auth.dto.js";
 
 export interface AuthRepository {
   findByEmail(email: string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
-  create(data: Prisma.UserCreateInput): Promise<User>;
-  updateLastLogin(userId: string): Promise<void>;
+  update(id: string, data: UpdateUserData): Promise<User>;
 }

@@ -4,9 +4,7 @@ services:
     container_name: db_handler_claw
     restart: unless-stopped
     env_file:
-      - .env.production
-    ports:
-      - "127.0.0.1:5432:5432"
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -23,7 +21,7 @@ services:
     container_name: handler-claw-api-blue
     restart: always
     env_file:
-      - .env.production
+      - .env
     environment:
       - INSTANCE_NAME=api-blue
     depends_on:
@@ -48,7 +46,7 @@ services:
     container_name: handler-claw-api-green
     restart: always
     env_file:
-      - .env.production
+      - .env
     environment:
       - INSTANCE_NAME=api-green
     depends_on:

@@ -1,98 +1,112 @@
 import { prisma } from "../../../../config/index.js";
-import { type UserDeviceStatus } from "../../../../lib/generated/prisma/client.js";
+import {
+  Prisma,
+  UserDeviceStatus,
+  type UserDevice,
+} from "../../../../lib/generated/prisma/client.js";
+import type { PaginationType } from "../../../../lib/types/pagination.type.js";
+import type {
+  UpdateUserDeviceData,
+  UpsertUserDeviceData,
+  UserDeviceFilter,
+} from "../../application/dtos/user-device.dto.js";
 import type { UserDeviceRepository } from "../../domain/repositories/user-device.repository.interface.js";
-import type { UserDevice } from "../../domain/entities/user-device.entity.js";
-import { toUserDeviceEntity } from "../mappers/user-device.mapper.js";
-import type { CreateUserDeviceRequest } from "../../application/dtos/user-device.dto.js";
 
 export class PrismaUserDeviceRepository implements UserDeviceRepository {
-  async upsert(userId: string, data: CreateUserDeviceRequest): Promise<UserDevice> {
-    const { device_id: deviceId } = data;
-
-    const result = await prisma.userDevice.upsert({
+  async upsert(userId: string, data: UpsertUserDeviceData): Promise<UserDevice> {
+    return prisma.userDevice.upsert({
       where: {
-        deviceId: deviceId,
+        deviceId: data.deviceId,
       },
       update: {
         userId,
-        fcmToken: data.fcm_token,
-        status: "ACTIVE",
-        deviceBrand: data.device_brand ?? null,
-        deviceModel: data.device_model ?? null,
-        osVersion: data.os_version ?? null,
+        fcmToken: data.fcmToken,
+        status: UserDeviceStatus.ACTIVE,
+        deviceBrand: data.deviceBrand ?? null,
+        deviceModel: data.deviceModel ?? null,
+        osBuildId: data.osBuildId ?? null,
+        osVersion: data.osVersion ?? null,
         platform: data.platform,
         lastSeenAt: new Date(),
       },
       create: {
-        deviceId,
         userId,
-        fcmToken: data.fcm_token,
-        status: "ACTIVE",
-        deviceBrand: data.device_brand ?? null,
-        deviceModel: data.device_model ?? null,
-        osVersion: data.os_version ?? null,
+        deviceId: data.deviceId,
+        fcmToken: data.fcmToken,
+        status: UserDeviceStatus.ACTIVE,
+        deviceBrand: data.deviceBrand ?? null,
+        deviceModel: data.deviceModel ?? null,
+        osBuildId: data.osBuildId ?? null,
+        osVersion: data.osVersion ?? null,
         platform: data.platform,
         lastSeenAt: new Date(),
       },
     });
-
-    return toUserDeviceEntity(result);
   }
 
-  async updateStatus(
-    userId: string,
-    deviceId: string,
-    status: UserDeviceStatus,
-  ): Promise<UserDevice> {
-    const device = await prisma.userDevice.findFirst({
-      where: { userId, deviceId },
+  async update(id: string, data: UpdateUserDeviceData): Promise<UserDevice> {
+    return prisma.userDevice.update({
+      where: { id },
+      data: {
+        ...(data.status !== undefined ? { status: data.status } : {}),
+        ...(data.fcmToken !== undefined ? { fcmToken: data.fcmToken } : {}),
+        ...(data.deviceBrand !== undefined ? { deviceBrand: data.deviceBrand } : {}),
+        ...(data.deviceModel !== undefined ? { deviceModel: data.deviceModel } : {}),
+        ...(data.osBuildId !== undefined ? { osBuildId: data.osBuildId } : {}),
+        ...(data.osVersion !== undefined ? { osVersion: data.osVersion } : {}),
+        ...(data.platform !== undefined ? { platform: data.platform } : {}),
+        ...(data.lastSeenAt !== undefined ? { lastSeenAt: data.lastSeenAt } : {}),
+      },
     });
-
-    if (!device) {
-      throw new Error("Device tidak ditemukan");
-    }
-
-    const updated = await prisma.userDevice.update({
-      where: { id: device.id },
-      data: { status, updatedAt: new Date() },
-    });
-
-    return toUserDeviceEntity(updated);
   }
 
-  async findAllActiveByUserId(userId: string): Promise<UserDevice[]> {
-    const devices = await prisma.userDevice.findMany({
+  async findAllByActiveStatus(userId: string): Promise<UserDevice[]> {
+    return prisma.userDevice.findMany({
       where: { userId, status: "ACTIVE" },
     });
-    
-    return devices.map(toUserDeviceEntity);
   }
 
   async findById(userId: string, id: string): Promise<UserDevice | null> {
-    const device = await prisma.userDevice.findFirst({
-      where: { id, userId },
+    const device = await prisma.userDevice.findUnique({
+      where: { id },
     });
-    return device ? toUserDeviceEntity(device) : null;
+
+    if (!device || device.userId !== userId) return null;
+
+    return device;
   }
 
-  async findMany(userId: string, filter: any): Promise<{ devices: UserDevice[]; total: number }> {
-    const { page = 1, per_page = 10 } = filter;
-    const skip = (page - 1) * per_page;
-    const take = per_page;
+  async findAll(
+    userId: string,
+    filter: UserDeviceFilter,
+    pagination: PaginationType,
+  ): Promise<{ devices: UserDevice[]; total: number }> {
+    const { skip, take } = pagination;
+    const normalizedSearch = filter.search?.trim();
+
+    const where: Prisma.UserDeviceWhereInput = {
+      userId,
+      ...(normalizedSearch
+        ? {
+            OR: [
+              { deviceId: { contains: normalizedSearch, mode: "insensitive" } },
+              { deviceBrand: { contains: normalizedSearch, mode: "insensitive" } },
+              { deviceModel: { contains: normalizedSearch, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
 
     const [devices, total] = await Promise.all([
       prisma.userDevice.findMany({
-        where: { userId },
+        where,
         skip,
         take,
         orderBy: { updatedAt: "desc" },
       }),
-      prisma.userDevice.count({ where: { userId } }),
+      prisma.userDevice.count({ where }),
     ]);
 
-    return {
-      devices: devices.map(toUserDeviceEntity),
-      total,
-    };
+    return { devices, total };
   }
 }

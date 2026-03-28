@@ -1,18 +1,20 @@
+import { NotFoundError } from "../../../../lib/errors/not-found.error.js";
 import type { UserDeviceRepository } from "../../domain/repositories/user-device.repository.interface.js";
-import type { GetUserDeviceParams, GetUserDeviceDetailResponse } from "../dtos/user-device.dto.js";
+import { toUserDeviceEntity } from "../../infrastructure/mappers/user-device.mapper.js";
+import type { GetUserDeviceDetailResponse } from "../dtos/user-device.dto.js";
 
 export class GetUserDeviceDetailUseCase {
   constructor(private userDeviceRepository: UserDeviceRepository) {}
 
-  async execute(userId: string, params: GetUserDeviceParams): Promise<GetUserDeviceDetailResponse> {
-    const device = await this.userDeviceRepository.findById(userId, params.id);
+  async execute(userId: string, id: string): Promise<GetUserDeviceDetailResponse> {
+    const device = await this.userDeviceRepository.findById(userId, id);
 
     if (!device) {
-      throw new Error("Device not found");
+      throw new NotFoundError("Device not found");
     }
 
     return {
-      user_device: device,
+      user_device: toUserDeviceEntity(device),
     };
   }
 }

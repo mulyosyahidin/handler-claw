@@ -66,7 +66,7 @@ class ChatBubble extends StatelessWidget {
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
-                        '${log.senderName ?? 'N/A'} - ${log.sender}',
+                        '${log.senderName ?? 'N/A'} - ${log.isGroup ? log.memberPhone : log.sender}',
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class ChatBubble extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    '${DateFormat('dd/MM/yy').format(log.receivedAt.toLocal())} ${DateFormat('HH:mm').format(log.receivedAt.toLocal())}',
+                    '${log.isGroup && log.groupId != null ? '${log.groupId} • ' : ''}${DateFormat('dd/MM/yy').format(log.receivedAt.toLocal())} ${DateFormat('HH:mm').format(log.receivedAt.toLocal())}',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.5,

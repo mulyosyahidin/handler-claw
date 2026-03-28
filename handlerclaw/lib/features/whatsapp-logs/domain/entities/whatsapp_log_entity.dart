@@ -1,5 +1,5 @@
 class WhatsappLogEntity {
-  final int id;
+  final String id;
   final DateTime receivedAt;
   final String device;
   final String mode;

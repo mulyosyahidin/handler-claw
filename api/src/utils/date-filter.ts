@@ -1,17 +1,20 @@
-import { format, startOfISOWeek, startOfMonth, startOfYear, subDays, subYears } from "date-fns";
+import {
+  addDays,
+  format,
+  startOfISOWeek,
+  startOfMonth,
+  startOfYear,
+  subDays,
+  subYears,
+} from "date-fns";
 import { toZonedTime } from "date-fns-tz";
+import type { Prisma } from "../lib/generated/prisma/client.js";
 
 const TZ = "Asia/Jakarta";
 
 /**
  * Shared internal helpers
  */
-
-function toUtcMidnight(date: Date): Date {
-  const jakarta = toZonedTime(date, TZ);
-  return new Date(Date.UTC(jakarta.getFullYear(), jakarta.getMonth(), jakarta.getDate()));
-}
-
 function parseLocalDateString(dateStr: string): Date {
   const [year = 0, month = 1, day = 1] = dateStr.split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day));
@@ -40,10 +43,9 @@ export type WhatsappDateType = DateFilterType;
  * (Specifically for fields stored as UTC Midnight)
  */
 
-export type PrayerDateFilter =
-  | { date: Date }
-  | { date: { gte: Date; lte: Date } }
-  | Record<string, never>;
+export type PrayerDateFilter = {
+  date?: Prisma.DateTimeFilter;
+};
 
 export interface PrayerDateFilterResult {
   filter: PrayerDateFilter;
@@ -58,179 +60,127 @@ export function getPrayerDateFilter(
 ): PrayerDateFilterResult {
   const nowUtc = new Date();
   const jakartaNow = toZonedTime(nowUtc, TZ);
-  const today = toUtcMidnight(nowUtc);
-  const todayStr = format(jakartaNow, "yyyy-MM-dd");
+
+  // helper: convert local date → UTC midnight
+  const toUtcMidnightFromLocal = (date: Date) => {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+  };
+
+  const todayLocal = new Date(
+    jakartaNow.getFullYear(),
+    jakartaNow.getMonth(),
+    jakartaNow.getDate(),
+  );
+
+  const tomorrowLocal = addDays(todayLocal, 1);
+
+  const todayStr = format(todayLocal, "yyyy-MM-dd");
 
   switch (dateType) {
-    case "today":
-      return { filter: { date: today }, date_start: todayStr, date_end: todayStr };
-
-    case "this_week": {
-      const weekStartLocal = startOfISOWeek(jakartaNow);
-      const weekStart = toUtcMidnight(weekStartLocal);
+    case "today": {
       return {
-        filter: { date: { gte: weekStart, lte: today } },
-        date_start: format(weekStartLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "this_month": {
-      const monthStartLocal = startOfMonth(jakartaNow);
-      const monthStart = toUtcMidnight(monthStartLocal);
-      return {
-        filter: { date: { gte: monthStart, lte: today } },
-        date_start: format(monthStartLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "this_year": {
-      const yearStartLocal = startOfYear(jakartaNow);
-      const yearStart = toUtcMidnight(yearStartLocal);
-      return {
-        filter: { date: { gte: yearStart, lte: today } },
-        date_start: format(yearStartLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "7_days": {
-      const startLocal = subDays(jakartaNow, 6);
-      const start = toUtcMidnight(subDays(nowUtc, 6));
-      return {
-        filter: { date: { gte: start, lte: today } },
-        date_start: format(startLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "30_days": {
-      const startLocal = subDays(jakartaNow, 29);
-      const start = toUtcMidnight(subDays(nowUtc, 29));
-      return {
-        filter: { date: { gte: start, lte: today } },
-        date_start: format(startLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "1_year": {
-      const startLocal = subYears(jakartaNow, 1);
-      const start = toUtcMidnight(subYears(nowUtc, 1));
-      return {
-        filter: { date: { gte: start, lte: today } },
-        date_start: format(startLocal, "yyyy-MM-dd"),
-        date_end: todayStr,
-      };
-    }
-
-    case "custom": {
-      if (!customStart || !customEnd) {
-        throw new Error("custom_start and custom_end are required for date_type 'custom'");
-      }
-      const start = parseLocalDateString(customStart);
-      const end = parseLocalDateString(customEnd);
-      return {
-        filter: { date: { gte: start, lte: end } },
-        date_start: customStart,
-        date_end: customEnd,
-      };
-    }
-
-    case "all":
-    default:
-      return { filter: {} };
-  }
-}
-
-/**
- * Whatsapp Date Filter Logic
- * (Specifically for TIMESTAMP/DATETIME fields using gte/lt range)
- */
-
-export type WhatsappDateFilter = { receivedAt: { gte: Date; lt: Date } } | Record<string, never>;
-
-export interface WhatsappDateFilterResult {
-  filter: WhatsappDateFilter;
-  date_start?: string;
-  date_end?: string;
-}
-
-export function getWhatsappDateFilter(
-  dateType: DateFilterType,
-  customStart?: string,
-  customEnd?: string,
-): WhatsappDateFilterResult {
-  const nowUtc = new Date();
-  const jakartaNow = toZonedTime(nowUtc, TZ);
-  const today = toUtcMidnight(nowUtc);
-  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-  const todayStr = format(jakartaNow, "yyyy-MM-dd");
-
-  switch (dateType) {
-    case "today":
-      return {
-        filter: { receivedAt: { gte: today, lt: tomorrow } },
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(todayLocal),
+            lt: toUtcMidnightFromLocal(tomorrowLocal),
+          },
+        },
         date_start: todayStr,
         date_end: todayStr,
       };
+    }
 
     case "this_week": {
-      const weekStartLocal = startOfISOWeek(jakartaNow);
-      const weekStart = toUtcMidnight(weekStartLocal);
+      const startLocal = startOfISOWeek(todayLocal);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: weekStart, lt: tomorrow } },
-        date_start: format(weekStartLocal, "yyyy-MM-dd"),
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
+        date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
     }
 
     case "this_month": {
-      const monthStartLocal = startOfMonth(jakartaNow);
-      const monthStart = toUtcMidnight(monthStartLocal);
+      const startLocal = startOfMonth(todayLocal);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: monthStart, lt: tomorrow } },
-        date_start: format(monthStartLocal, "yyyy-MM-dd"),
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
+        date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
     }
 
     case "this_year": {
-      const yearStartLocal = startOfYear(jakartaNow);
-      const yearStart = toUtcMidnight(yearStartLocal);
+      const startLocal = startOfYear(todayLocal);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: yearStart, lt: tomorrow } },
-        date_start: format(yearStartLocal, "yyyy-MM-dd"),
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
+        date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
     }
 
     case "7_days": {
-      const startLocal = subDays(jakartaNow, 6);
-      const start = toUtcMidnight(subDays(nowUtc, 6));
+      const startLocal = subDays(todayLocal, 6);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: start, lt: tomorrow } },
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
         date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
     }
 
     case "30_days": {
-      const startLocal = subDays(jakartaNow, 29);
-      const start = toUtcMidnight(subDays(nowUtc, 29));
+      const startLocal = subDays(todayLocal, 29);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: start, lt: tomorrow } },
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
         date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
     }
 
     case "1_year": {
-      const startLocal = subYears(jakartaNow, 1);
-      const start = toUtcMidnight(subYears(nowUtc, 1));
+      const startLocal = subYears(todayLocal, 1);
+      const endLocal = tomorrowLocal;
+
       return {
-        filter: { receivedAt: { gte: start, lt: tomorrow } },
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(endLocal),
+          },
+        },
         date_start: format(startLocal, "yyyy-MM-dd"),
         date_end: todayStr,
       };
@@ -240,11 +190,17 @@ export function getWhatsappDateFilter(
       if (!customStart || !customEnd) {
         throw new Error("custom_start and custom_end are required for date_type 'custom'");
       }
-      const start = parseLocalDateString(customStart);
-      const end = parseLocalDateString(customEnd);
-      const endNextDay = new Date(end.getTime() + 24 * 60 * 60 * 1000);
+
+      const startLocal = parseLocalDateString(customStart);
+      const endLocal = parseLocalDateString(customEnd);
+
       return {
-        filter: { receivedAt: { gte: start, lt: endNextDay } },
+        filter: {
+          date: {
+            gte: toUtcMidnightFromLocal(startLocal),
+            lt: toUtcMidnightFromLocal(addDays(endLocal, 1)),
+          },
+        },
         date_start: customStart,
         date_end: customEnd,
       };

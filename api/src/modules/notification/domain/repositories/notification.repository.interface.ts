@@ -1,43 +1,18 @@
-import { type Prisma, ReminderHookStatus } from "../../../../lib/generated/prisma/client.js";
-import type { Notification, ReminderHook } from "../entities/notification.entity.js";
+import { type Notification } from "../../../../lib/generated/prisma/client.js";
+import type { PaginationType } from "../../../../lib/types/pagination.type.js";
 import type {
-  UpsertReminderHookPayload,
-  NotificationStatusSummaryData,
-  ReminderHookStatusSummaryData,
+  CreateNotificationData,
   NotificationFilter,
-  ReminderHookFilter,
-  GetNotificationsQuery,
+  UpdateNotificationData,
 } from "../../application/dtos/notification.dto.js";
 
 export interface NotificationRepository {
-  upsertHook(data: UpsertReminderHookPayload): Promise<ReminderHook>;
-  createNotification(data: Prisma.NotificationUncheckedCreateInput): Promise<Notification>;
-  updateNotification(
-    id: string,
-    data: Prisma.NotificationUncheckedUpdateInput,
-  ): Promise<Notification>;
-  updateHookStatus(
-    id: string,
-    status: ReminderHookStatus,
-    errorMessage?: string | null,
-  ): Promise<ReminderHook>;
-  findNotificationById(id: string): Promise<Notification | null>;
-  findHookById(userId: string, id: string): Promise<ReminderHook | null>;
-  findNotificationsSummary(
+  create(data: CreateNotificationData): Promise<Notification>;
+  update(id: string, data: UpdateNotificationData): Promise<Notification>;
+  findById(userId: string, id: string): Promise<Notification | null>;
+  findAll(
     userId: string,
     filter: NotificationFilter,
-  ): Promise<NotificationStatusSummaryData[]>;
-  getHooksSummary(
-    userId: string,
-    filter: ReminderHookFilter,
-  ): Promise<ReminderHookStatusSummaryData[]>;
-  findNotificationsByUserId(
-    userId: string,
-    take: number,
-    skip: number,
+    pagination: PaginationType,
   ): Promise<{ notifications: Notification[]; total: number }>;
-  findHooksByUserId(
-    userId: string,
-    filter: GetNotificationsQuery,
-  ): Promise<{ hooks: ReminderHook[]; total: number }>;
 }

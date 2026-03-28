@@ -1,13 +1,13 @@
 import { type User as PrismaUser } from "../../../../lib/generated/prisma/client.js";
-import { type User } from "../../domain/entities/user.entity.js";
+import type { IUser } from "../../domain/entities/user.entity.js";
 
-export const toUserEntity = (user: PrismaUser): User => {
+export function toUserEntity(data: PrismaUser): IUser {
   return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    last_login_at: user.lastLoginAt,
-    created_at: user.createdAt,
-    updated_at: user.updatedAt,
+    id: data.id,
+    email: data.email,
+    name: data.name,
+    last_login_at: data.lastLoginAt,
+    created_at: data.createdAt,
+    updated_at: data.updatedAt,
   };
-};
+}

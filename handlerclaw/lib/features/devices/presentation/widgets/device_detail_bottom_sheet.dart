@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handlerclaw/core/services/device_id_service.dart';
 import 'package:handlerclaw/features/devices/domain/entities/user_device_entity.dart';
 import 'package:handlerclaw/features/devices/data/repositories/user_device_repository_impl.dart';
-import 'package:handlerclaw/core/services/device_info_plus_service.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:intl/intl.dart';
 
@@ -65,7 +65,7 @@ class DeviceDetailBottomSheet extends ConsumerWidget {
                     final userDevice = device;
 
                     final currentDeviceId = ref
-                        .watch(currentDeviceIdProvider)
+                        .watch(currentAndroidIdProvider)
                         .value;
                     final isCurrent = userDevice.deviceId == currentDeviceId;
 
@@ -180,32 +180,6 @@ class DeviceDetailBottomSheet extends ConsumerWidget {
                             'dd MMM yyyy, HH:mm',
                           ).format(userDevice.createdAt.toLocal()),
                           colorScheme: colorScheme,
-                        ),
-                        const SizedBox(height: 16),
-                        const Divider(),
-                        const SizedBox(height: 16),
-                        Text(
-                          'FCM Token',
-                          style: AppTextStyles.body(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerHighest
-                                .withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            userDevice.fcmToken,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontFamily: 'monospace',
-                              color: colorScheme.outline,
-                            ),
-                          ),
                         ),
                       ],
                     );

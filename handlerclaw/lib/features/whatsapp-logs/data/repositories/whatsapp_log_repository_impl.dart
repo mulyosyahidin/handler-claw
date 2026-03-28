@@ -1,3 +1,4 @@
+import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/whatsapp-logs/data/datasources/whatsapp_log_remote_data_source.dart';
 import 'package:handlerclaw/features/whatsapp-logs/data/mappers/whatsapp_log_mapper.dart';
@@ -10,12 +11,12 @@ class WhatsappLogRepositoryImpl implements WhatsappLogRepository {
 
   @override
   Future<WhatsappLogListResponse> getLogs({
-    int? cursor,
+    int page = 1,
     int limit = 10,
     String? search,
   }) async {
     final responseDto = await _remoteDataSource.getLogs(
-      cursor: cursor,
+      page: page,
       limit: limit,
       search: search,
     );
@@ -26,9 +27,13 @@ class WhatsappLogRepositoryImpl implements WhatsappLogRepository {
             .toList() ??
         [];
 
+    final meta = responseDto.data?.meta;
+
     return WhatsappLogListResponse(
       logs: logs,
-      nextCursor: responseDto.data?.nextCursor,
+      meta:
+          meta ??
+          PaginationMetaDto(page: 1, perPage: limit, total: 0, totalPages: 0),
     );
   }
 }

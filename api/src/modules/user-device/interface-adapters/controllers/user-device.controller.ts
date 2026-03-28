@@ -12,6 +12,7 @@ import type { RegisterUserDeviceUseCase } from "../../application/use-cases/regi
 import type { GetUserDevicesUseCase } from "../../application/use-cases/get-user-devices.use-case.js";
 import type { GetUserDeviceDetailUseCase } from "../../application/use-cases/get-user-device-detail.use-case.js";
 import type { UpdateUserDeviceStatusUseCase } from "../../application/use-cases/update-user-device-status.use-case.js";
+import logger from "../../../../config/logger.js";
 
 export class UserDeviceController {
   constructor(
@@ -44,6 +45,7 @@ export class UserDeviceController {
       const result = await this.registerUserDeviceUseCase.execute(userId, parsed.data);
       res.status(201).json(createSuccessResponse("Berhasil mendaftarkan perangkat", result));
     } catch (error: any) {
+      logger.error("UserDeviceController::createDevice() Error:", error);
       res.status(500).json(createErrorResponse(error.message, null));
     }
   };
@@ -71,6 +73,8 @@ export class UserDeviceController {
       const result = await this.getUserDevicesUseCase.execute(userId, parsed.data);
       res.status(200).json(createSuccessResponse("Berhasil mengambil daftar perangkat", result));
     } catch (error: any) {
+      logger.error("UserDeviceController::getDevices() Error:", error);
+
       res.status(500).json(createErrorResponse(error.message, null));
     }
   };
@@ -94,11 +98,10 @@ export class UserDeviceController {
     }
 
     try {
-      const result = await this.getDeviceDetailUseCase.execute(userId, {
-        id: parsedParams.data.id,
-      });
+      const result = await this.getDeviceDetailUseCase.execute(userId, parsedParams.data.id);
       res.status(200).json(createSuccessResponse("Berhasil mengambil detail perangkat", result));
     } catch (error: any) {
+      logger.error("UserDeviceController::getDeviceById() Error:", error);
       res.status(404).json(
         createErrorResponse("Device tidak ditemukan", {
           id: error.message,
@@ -130,6 +133,8 @@ export class UserDeviceController {
       const result = await this.updateDeviceStatusUseCase.execute(userId, parsed.data);
       res.status(200).json(createSuccessResponse("Berhasil memperbarui status perangkat", result));
     } catch (error: any) {
+      logger.error("UserDeviceController::updateDeviceStatus() Error:", error);
+
       res.status(500).json(createErrorResponse(error.message, null));
     }
   };

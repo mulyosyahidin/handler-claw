@@ -1,13 +1,19 @@
+import type { IOverviewCount } from "../../domain/entities/overview-count.entity.js";
+
+/**
+ * Data Contracts
+ */
+export type OverviewCounts = {
+  whatsapp_log: number;
+  prayer_log: number;
+  notification_webhook: number;
+  notification: number;
+  device: number;
+};
+
 /**
  * Response Contracts
  */
-export type OverviewCount = {
-  total_whatsapp_logs: number;
-  total_prayer_logs: number;
-  total_reminder_hooks: number;
-  total_devices: number;
-};
-
 export type GetOverviewResponse = {
-  count: OverviewCount;
+  count: IOverviewCount;
 };

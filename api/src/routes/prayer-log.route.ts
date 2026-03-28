@@ -3,15 +3,13 @@ import { PrismaPrayerLogRepository } from "../modules/prayer-log/infrastructure/
 import { CreatePrayerLogUseCase } from "../modules/prayer-log/application/use-cases/create-prayer-log.use-case.js";
 import { GetPrayerLogsUseCase } from "../modules/prayer-log/application/use-cases/get-prayer-logs.use-case.js";
 import { GetPrayerLogsSummaryUseCase } from "../modules/prayer-log/application/use-cases/get-prayer-logs-summary.use-case.js";
-import { DeletePrayerLogUseCase } from "../modules/prayer-log/application/use-cases/delete-prayer-log.use-case.js";
 import { PrayerLogController } from "../modules/prayer-log/interface-adapters/controllers/prayer-log.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
-  deletePrayerLogParamsSchema,
   getPrayerLogsQuerySchema,
   getPrayerLogsSummaryQuerySchema,
-  logPrayerSchema,
+  insertLogPrayerSchema,
 } from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
 
 const prayerLogRouter: Router = Router();
@@ -22,13 +20,11 @@ const prayerLogRepository = new PrismaPrayerLogRepository();
 const createPrayerLogUseCase = new CreatePrayerLogUseCase(prayerLogRepository);
 const getPrayerLogsUseCase = new GetPrayerLogsUseCase(prayerLogRepository);
 const getPrayerLogsSummaryUseCase = new GetPrayerLogsSummaryUseCase(prayerLogRepository);
-const deletePrayerLogUseCase = new DeletePrayerLogUseCase(prayerLogRepository);
 
 const prayerLogController = new PrayerLogController(
   createPrayerLogUseCase,
   getPrayerLogsUseCase,
   getPrayerLogsSummaryUseCase,
-  deletePrayerLogUseCase,
 );
 
 // ─── OPENAPI DOCS ──────────────────────────────────────────────────────────
@@ -45,7 +41,7 @@ registry.registerPath({
     body: {
       content: {
         "application/json": {
-          schema: logPrayerSchema,
+          schema: insertLogPrayerSchema,
         },
       },
     },
@@ -92,29 +88,10 @@ registry.registerPath({
   },
 });
 
-registry.registerPath({
-  method: "delete",
-  path: "/api/prayer-logs/{id}",
-  summary: "Delete Prayer Log",
-  description: "Menghapus satu log jurnal solat berdasarkan ID.",
-  tags: ["Prayer Logs"],
-  security: [{ bearerAuth: [] }],
-  request: {
-    params: deletePrayerLogParamsSchema,
-  },
-  responses: {
-    200: { description: "Berhasil menghapus" },
-    401: { description: "Unauthorized" },
-    404: { description: "Log tidak ditemukan" },
-    422: { description: "Validation error" },
-  },
-});
-
 // ─── ROUTES ────────────────────────────────────────────────────────────────
 
 prayerLogRouter.get("/summary", authMiddleware, prayerLogController.getSummary);
 prayerLogRouter.get("/", authMiddleware, prayerLogController.getLogs);
 prayerLogRouter.post("/", authMiddleware, prayerLogController.insertLog);
-prayerLogRouter.delete("/:id", authMiddleware, prayerLogController.deleteLog);
 
 export default prayerLogRouter;

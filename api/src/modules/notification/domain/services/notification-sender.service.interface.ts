@@ -1,5 +1,4 @@
-import type { Notification } from "../entities/notification.entity.js";
-import type { UserDevice } from "../../../user-device/domain/entities/user-device.entity.js";
+import type { Notification, UserDevice } from "../../../../lib/generated/prisma/client.js";
 
 export interface NotificationSender {
   sendToDevice(notification: Notification, userDevice: UserDevice): Promise<string>;

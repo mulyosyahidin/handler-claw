@@ -3,52 +3,6 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 
 extendZodWithOpenApi(z);
 
-const whatsappDateTypeEnum = z.enum([
-  "today",
-  "this_week",
-  "this_month",
-  "this_year",
-  "7_days",
-  "30_days",
-  "1_year",
-  "all",
-  "custom",
-]);
-
-const dateRangeShape = {
-  date_type: whatsappDateTypeEnum.default("all"),
-  start: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
-    .optional(),
-  end: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
-    .optional(),
-};
-
-const dateRangeSuperRefine = (
-  data: { date_type: string; start?: string | undefined; end?: string | undefined },
-  ctx: z.RefinementCtx,
-) => {
-  if (data.date_type === "custom") {
-    if (!data.start) {
-      ctx.addIssue({
-        code: "custom",
-        message: "start date is required when date_type is 'custom'",
-        path: ["start"],
-      });
-    }
-    if (!data.end) {
-      ctx.addIssue({
-        code: "custom",
-        message: "end date is required when date_type is 'custom'",
-        path: ["end"],
-      });
-    }
-  }
-};
-
 // ─── CREATE SCHEMA ─────────────────────────────────────────────────────────
 
 export const createWhatsappLogSchema = z
@@ -113,30 +67,27 @@ export const createWhatsappLogSchema = z
 
 export const getWhatsappLogsQuerySchema = z
   .object({
-    cursor: z.coerce.number().int().positive().optional().openapi({
-      description: "ID of the last item from the previous page",
-      example: 100,
+    page: z.coerce.number().int().min(1, "Halaman minimal adalah 1").optional().default(1).openapi({
+      description: "Nomor halaman (1-based), default: 1",
+      example: 1,
     }),
-    take: z.coerce.number().int().min(1).max(200).default(10).openapi({
-      description: "Number of items to return (max 200)",
-      example: 50,
-    }),
+    per_page: z.coerce
+      .number()
+      .int()
+      .min(1, "Jumlah data minimal adalah 1")
+      .max(200, "Maksimal data per halaman adalah 200")
+      .optional()
+      .default(10)
+      .openapi({
+        description: "Jumlah data per halaman (max 200), default: 10",
+        example: 10,
+      }),
     search: z.string().optional().openapi({
       description: "Search in senderName, sender, senderLid, and messageText",
       example: "martin",
     }),
-    ...dateRangeShape,
   })
-  .superRefine(dateRangeSuperRefine)
   .openapi("GetWhatsappLogsQuery");
 
-// ─── SUMMARY QUERY SCHEMA ──────────────────────────────────────────────────
-
-export const getWhatsappLogsSummaryQuerySchema = z
-  .object(dateRangeShape)
-  .superRefine(dateRangeSuperRefine)
-  .openapi("GetWhatsappLogsSummaryQuery");
-
-export type CreateWhatsappLogInput = z.infer<typeof createWhatsappLogSchema>;
-export type GetWhatsappLogsQuery = z.infer<typeof getWhatsappLogsQuerySchema>;
-export type GetWhatsappLogsSummaryQuery = z.infer<typeof getWhatsappLogsSummaryQuerySchema>;
+export type CreateWhatsappLogSchemaValues = z.infer<typeof createWhatsappLogSchema>;
+export type GetWhatsappLogsQuerySchemaValues = z.infer<typeof getWhatsappLogsQuerySchema>;

@@ -38,8 +38,9 @@ class PrayerLogListResponseDto extends ApiResponseDto<PrayerLogListData> {
     return PrayerLogListResponseDto(
       success: json["success"] ?? false,
       message: json["message"] ?? "",
-      data:
-          json["data"] != null ? PrayerLogListData.fromJson(json["data"]) : null,
+      data: json["data"] != null
+          ? PrayerLogListData.fromJson(json["data"])
+          : null,
       errors: json["errors"],
     );
   }

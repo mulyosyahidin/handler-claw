@@ -52,8 +52,8 @@ export const ModelName = {
   User: 'User',
   PrayerLog: 'PrayerLog',
   WhatsappLog: 'WhatsappLog',
-  ReminderHook: 'ReminderHook',
   UserDevice: 'UserDevice',
+  NotificationWebhook: 'NotificationWebhook',
   Notification: 'Notification'
 } as const
 
@@ -134,22 +134,6 @@ export const WhatsappLogScalarFieldEnum = {
 export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
 
 
-export const ReminderHookScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  eventId: 'eventId',
-  status: 'status',
-  headersJson: 'headersJson',
-  payloadJson: 'payloadJson',
-  errorMessage: 'errorMessage',
-  processedAt: 'processedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ReminderHookScalarFieldEnum = (typeof ReminderHookScalarFieldEnum)[keyof typeof ReminderHookScalarFieldEnum]
-
-
 export const UserDeviceScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -157,6 +141,7 @@ export const UserDeviceScalarFieldEnum = {
   deviceId: 'deviceId',
   deviceBrand: 'deviceBrand',
   deviceModel: 'deviceModel',
+  osBuildId: 'osBuildId',
   osVersion: 'osVersion',
   fcmToken: 'fcmToken',
   platform: 'platform',
@@ -168,9 +153,21 @@ export const UserDeviceScalarFieldEnum = {
 export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
 
 
+export const NotificationWebhookScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationWebhookScalarFieldEnum = (typeof NotificationWebhookScalarFieldEnum)[keyof typeof NotificationWebhookScalarFieldEnum]
+
+
 export const NotificationScalarFieldEnum = {
   id: 'id',
-  reminderHookId: 'reminderHookId',
+  notificationWebhookId: 'notificationWebhookId',
   userId: 'userId',
   userDeviceId: 'userDeviceId',
   title: 'title',

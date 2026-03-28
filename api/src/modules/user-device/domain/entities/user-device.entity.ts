@@ -3,13 +3,14 @@ import type {
   UserDeviceStatus,
 } from "../../../../lib/generated/prisma/enums.js";
 
-export type UserDevice = {
+export type IUserDevice = {
   id: string;
   user_id: string;
   status: UserDeviceStatus;
   device_id: string;
   device_brand: string | null;
   device_model: string | null;
+  os_build_id: string | null;
   os_version: string | null;
   fcm_token: string;
   platform: UserDevicePlatform;

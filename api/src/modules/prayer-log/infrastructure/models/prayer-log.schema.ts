@@ -10,10 +10,25 @@ const prayerTypeEnum = z.enum(PrayerType as any, {
     message: "Invalid prayer type",
   }),
 });
+
 const prayerMethodEnum = z.enum(PrayerMethod as any);
 const prayerPlaceEnum = z.enum(PrayerPlace as any);
 
-export const logPrayerSchema = z
+const prayerDateTypeEnum = z.enum([
+  "today",
+  "this_week",
+  "this_month",
+  "this_year",
+  "7_days",
+  "30_days",
+  "1_year",
+  "all",
+  "custom",
+]);
+
+const emptyToUndefined = (val: unknown) => (val === "" ? undefined : val);
+
+export const insertLogPrayerSchema = z
   .object({
     prayer: prayerTypeEnum,
     local_date: z.coerce.date().optional(),
@@ -34,28 +49,20 @@ export const logPrayerSchema = z
   })
   .openapi("PrayerLog");
 
-const prayerDateTypeEnum = z.enum([
-  "today",
-  "this_week",
-  "this_month",
-  "this_year",
-  "7_days",
-  "30_days",
-  "1_year",
-  "all",
-  "custom",
-]);
-
 const dateRangeShape = {
   date_type: prayerDateTypeEnum.default("all"),
   start: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
-    .optional(),
+    .optional()
+    .refine((val) => !val || /^\d{4}-\d{2}-\d{2}$/.test(val), {
+      message: "Format harus YYYY-MM-DD",
+    }),
   end: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format harus YYYY-MM-DD")
-    .optional(),
+    .optional()
+    .refine((val) => !val || /^\d{4}-\d{2}-\d{2}$/.test(val), {
+      message: "Format harus YYYY-MM-DD",
+    }),
 };
 
 const dateRangeSuperRefine = (
@@ -82,8 +89,8 @@ const dateRangeSuperRefine = (
 
 export const getPrayerLogsQuerySchema = z
   .object({
-    page: z.coerce.number().int().min(1).default(1),
-    per_page: z.coerce.number().int().min(1).max(100).default(10),
+    page: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).default(1)),
+    per_page: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).max(100).default(10)),
     ...dateRangeShape,
   })
   .superRefine(dateRangeSuperRefine);
@@ -92,6 +99,6 @@ export const getPrayerLogsSummaryQuerySchema = z
   .object(dateRangeShape)
   .superRefine(dateRangeSuperRefine);
 
-export const deletePrayerLogParamsSchema = z.object({
-  id: z.string().uuid("Invalid ID format"),
-});
+export type InsertLogPrayerSchemaValues = z.infer<typeof insertLogPrayerSchema>;
+export type GetPrayerLogsQuerySchemaValues = z.infer<typeof getPrayerLogsQuerySchema>;
+export type GetPrayerLogsSummaryQuerySchemaValues = z.infer<typeof getPrayerLogsSummaryQuerySchema>;

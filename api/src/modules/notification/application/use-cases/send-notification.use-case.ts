@@ -4,88 +4,97 @@ import type { UserDeviceRepository } from "../../../user-device/domain/repositor
 import type { SendNotificationResponse } from "../dtos/notification.dto.js";
 import { NotificationStatus, UserDeviceStatus } from "../../../../lib/generated/prisma/client.js";
 import logger from "../../../../config/logger.js";
+import type { NotificationWebhookRepository } from "../../domain/repositories/notification-webhook.repository.interface.js";
+import { NotFoundError } from "../../../../lib/errors/not-found.error.js";
 
 export class SendNotificationUseCase {
   constructor(
+    private notificationWebhookRepository: NotificationWebhookRepository,
     private notificationRepository: NotificationRepository,
     private userDeviceRepository: UserDeviceRepository,
     private notificationSender: NotificationSender,
   ) {}
 
-  async execute(notificationId: string): Promise<SendNotificationResponse> {
-    const notification = await this.notificationRepository.findNotificationById(notificationId);
+  async execute(userId: string, id: string): Promise<SendNotificationResponse> {
+    // 1. Ambil notification
+    const notification = await this.notificationRepository.findById(userId, id);
     if (!notification) {
-      throw new Error("Notification not found");
+      throw new NotFoundError("Notification tidak ditemukan");
     }
 
+    // 2. Ambil device
+    const userDevice = await this.userDeviceRepository.findById(
+      notification.userId,
+      notification.userDeviceId,
+    );
+
+    if (!userDevice) {
+      throw new NotFoundError("Device tidak ditemukan");
+    }
+
+    // 3. Update state awal
+    await this.notificationRepository.update(notification.id, {
+      triggeredAt: new Date(),
+      retryCount: notification.retryCount + 1,
+    });
+
+    await this.notificationWebhookRepository.update(notification.notificationWebhookId, {
+      status: "PROCESSING",
+    });
+
     try {
-      await this.notificationRepository.updateNotification(notification.id, {
-        triggeredAt: new Date(),
-        retryCount: { increment: 1 },
+      // 4. Kirim notifikasi
+      const fcmMessageId = await this.notificationSender.sendToDevice(notification, userDevice);
+
+      // 5. Update sukses
+      await this.notificationRepository.update(notification.id, {
+        fcmMessageId,
+        status: NotificationStatus.SENT,
+        sentAt: new Date(),
       });
 
-      const userDevice = await this.userDeviceRepository.findById(
-        notification.user_id,
-        notification.user_device_id,
-      );
+      return {
+        success: true,
+        message_id: fcmMessageId,
+      };
+    } catch (error: any) {
+      const errorMessage = error?.message ?? "Unknown error";
 
-      if (!userDevice) {
-        throw new Error("Device not found or not owned by user");
-      }
+      logger.error(`[Notification] Failed to send ${notification.id}:`, errorMessage);
 
-      try {
-        const fcmMessageId = await this.notificationSender.sendToDevice(notification, userDevice);
-
-        await this.notificationRepository.updateNotification(notification.id, {
-          fcmMessageId,
-          status: NotificationStatus.SENT,
-          sentAt: new Date(),
-        });
-
-        await this.notificationRepository.updateHookStatus(
-          notification.reminder_hook_id,
-          "PROCESSED",
-        );
-
-        return { success: true, message_id: fcmMessageId };
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        logger.error(
-          `[Notification] Failed to send notification ${notification.id}:`,
-          errorMessage,
-        );
-
-        // Handle invalid token
-        const errorWithCode = error as { code?: string };
-        if (
-          errorWithCode.code === "messaging/registration-token-not-registered" ||
-          errorWithCode.code === "messaging/invalid-registration-token"
-        ) {
-          await this.userDeviceRepository.updateStatus(
-            notification.user_id,
-            userDevice.fcm_token,
-            UserDeviceStatus.INVALID_TOKEN,
-          );
+      // Handle invalid token
+      if (
+        error?.code === "messaging/registration-token-not-registered" ||
+        error?.code === "messaging/invalid-registration-token"
+      ) {
+        try {
+          await this.userDeviceRepository.update(notification.id, {
+            status: UserDeviceStatus.INVALID_TOKEN,
+          });
+        } catch (e) {
+          logger.error("[Notification] Failed update device status:", e);
         }
-
-        await this.notificationRepository.updateNotification(notification.id, {
-          status: NotificationStatus.FAILED,
-          failedAt: new Date(),
-          errorMessage,
-        });
-
-        await this.notificationRepository.updateHookStatus(
-          notification.reminder_hook_id,
-          "FAILED",
-          errorMessage,
-        );
-
-        throw error;
       }
-    } catch (error) {
-      logger.error(`[Notification] Orchestration error for ${notificationId}:`, error);
+
+      // Update gagal
+      await this.notificationRepository.update(notification.id, {
+        status: NotificationStatus.FAILED,
+        failedAt: new Date(),
+        errorMessage,
+      });
 
       throw error;
+    } finally {
+      try {
+        await this.notificationWebhookRepository.update(notification.notificationWebhookId, {
+          status: "PROCESSED",
+        });
+      } catch (e) {
+        logger.error(
+          `[Notification] Failed to mark webhook as PROCESSED (${notification.notificationWebhookId})`,
+          e,
+        );
+      }
     }
   }
 }

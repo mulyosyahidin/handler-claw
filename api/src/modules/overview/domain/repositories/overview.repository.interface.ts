@@ -1,5 +1,5 @@
-import type { SystemOverviewCount } from "../../../system/application/dtos/system.dto.js";
+import type { OverviewCounts } from "../../application/dtos/overview.dto.js";
 
 export interface OverviewRepository {
-  getCounts(userId: string): Promise<SystemOverviewCount>;
+  getUserOverviewCounts(userId: string): Promise<OverviewCounts>;
 }

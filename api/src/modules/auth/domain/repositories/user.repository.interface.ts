@@ -1,10 +1,12 @@
-import type { User as PrismaUser } from "../../../../lib/generated/prisma/client.js";
+import type { User } from "../../../../lib/generated/prisma/client.js";
+import type { UpdateUserData, UserFilter } from "../../application/dtos/auth.dto.js";
 
 export interface UserRepository {
-  findByEmail(email: string): Promise<(PrismaUser & { id: string }) | null>;
-  findById(id: string): Promise<(PrismaUser & { id: string }) | null>;
-  updateLastLogin(id: string): Promise<void>;
-  updateProfile(id: string, name: string, email: string): Promise<PrismaUser>;
-  updatePassword(id: string, hashedNewPassword: string): Promise<void>;
-  isEmailTaken(email: string, excludeUserId: string): Promise<boolean>;
+  findByEmail(email: string): Promise<User | null>;
+
+  findById(id: string): Promise<User | null>;
+
+  findFirst(where: UserFilter): Promise<User | null>;
+
+  update(id: string, data: UpdateUserData): Promise<User>;
 }

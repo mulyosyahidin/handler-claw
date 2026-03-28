@@ -1,13 +1,12 @@
 import { getFirebaseAdmin } from "../../../../lib/firebase-admin.js";
-import type { Notification } from "../../domain/entities/notification.entity.js";
-import type { UserDevice } from "../../../user-device/domain/entities/user-device.entity.js";
 import type { NotificationSender } from "../../domain/services/notification-sender.service.interface.js";
 import { toFcmData } from "../../../../utils/common.js";
+import type { Notification, UserDevice } from "../../../../lib/generated/prisma/client.js";
 
 export class FirebaseNotificationService implements NotificationSender {
   async sendToDevice(notification: Notification, userDevice: UserDevice): Promise<string> {
     const message = {
-      token: userDevice.fcm_token,
+      token: userDevice.fcmToken,
       notification: {
         title: notification.title,
         body: notification.body,

@@ -1,65 +1,62 @@
-import 'dart:convert';
-import 'package:handlerclaw/features/notifications/data/dto/notification_item_dto.dart';
-
 class NotificationDto {
   final String id;
+  final String notificationWebhookId;
   final String userId;
-  final String eventId;
+  final String userDeviceId;
+  final String title;
+  final String body;
+  final Map<String, dynamic> data;
+  final DateTime? triggeredAt;
   final String status;
-  final Map<String, dynamic> headersJson;
-  final NotificationItemDto payloadJson;
+  final String? fcmMessageId;
+  final DateTime? sentAt;
+  final DateTime? failedAt;
+  final int retryCount;
   final String? errorMessage;
-  final DateTime? processedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   NotificationDto({
     required this.id,
+    required this.notificationWebhookId,
     required this.userId,
-    required this.eventId,
+    required this.userDeviceId,
+    required this.title,
+    required this.body,
+    required this.data,
+    this.triggeredAt,
     required this.status,
-    required this.headersJson,
-    required this.payloadJson,
+    this.fcmMessageId,
+    this.sentAt,
+    this.failedAt,
+    required this.retryCount,
     this.errorMessage,
-    this.processedAt,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory NotificationDto.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> headers = {};
-    if (json['headers_json'] != null) {
-      if (json['headers_json'] is String) {
-        try {
-          headers = jsonDecode(json['headers_json']);
-        } catch (_) {}
-      } else if (json['headers_json'] is Map) {
-        headers = Map<String, dynamic>.from(json['headers_json']);
-      }
-    }
-
-    Map<String, dynamic> payloadMap = {};
-    if (json['payload_json'] != null) {
-      if (json['payload_json'] is String) {
-        try {
-          payloadMap = jsonDecode(json['payload_json']);
-        } catch (_) {}
-      } else if (json['payload_json'] is Map) {
-        payloadMap = Map<String, dynamic>.from(json['payload_json']);
-      }
-    }
-
     return NotificationDto(
       id: json['id'] ?? '',
+      notificationWebhookId: json['notification_webhook_id'] ?? '',
       userId: json['user_id'] ?? '',
-      eventId: json['event_id'] ?? '',
-      status: json['status'] ?? '',
-      headersJson: headers,
-      payloadJson: NotificationItemDto.fromJson(payloadMap),
-      errorMessage: json['error_message'],
-      processedAt: json['processed_at'] != null 
-          ? DateTime.parse(json['processed_at']) 
+      userDeviceId: json['user_device_id'] ?? '',
+      title: json['title'] ?? '',
+      body: json['body'] ?? '',
+      data: json['data'] is Map ? Map<String, dynamic>.from(json['data']) : {},
+      triggeredAt: json['triggered_at'] != null 
+          ? DateTime.parse(json['triggered_at']) 
           : null,
+      status: json['status'] ?? '',
+      fcmMessageId: json['fcm_message_id'],
+      sentAt: json['sent_at'] != null 
+          ? DateTime.parse(json['sent_at']) 
+          : null,
+      failedAt: json['failed_at'] != null 
+          ? DateTime.parse(json['failed_at']) 
+          : null,
+      retryCount: json['retry_count'] ?? 0,
+      errorMessage: json['error_message'],
       createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updated_at'] ?? DateTime.now().toIso8601String()),
     );
@@ -68,13 +65,19 @@ class NotificationDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'notification_webhook_id': notificationWebhookId,
       'user_id': userId,
-      'event_id': eventId,
+      'user_device_id': userDeviceId,
+      'title': title,
+      'body': body,
+      'data': data,
+      'triggered_at': triggeredAt?.toIso8601String(),
       'status': status,
-      'headers_json': headersJson,
-      'payload_json': payloadJson.toJson(),
+      'fcm_message_id': fcmMessageId,
+      'sent_at': sentAt?.toIso8601String(),
+      'failed_at': failedAt?.toIso8601String(),
+      'retry_count': retryCount,
       'error_message': errorMessage,
-      'processed_at': processedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

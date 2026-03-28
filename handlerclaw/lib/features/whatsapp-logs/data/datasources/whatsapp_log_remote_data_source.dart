@@ -11,7 +11,7 @@ class WhatsappLogRemoteDataSource {
   WhatsappLogRemoteDataSource(this._dio);
 
   Future<WhatsappLogListResponseDto> getLogs({
-    int? cursor,
+    int page = 1,
     int limit = 10,
     String? search,
   }) async {
@@ -23,8 +23,8 @@ class WhatsappLogRemoteDataSource {
       final response = await _dio.get(
         endpoint,
         queryParameters: {
-          "cursor": ?cursor,
-          "take": limit,
+          "page": page,
+          "per_page": limit,
           if (search != null && search.isNotEmpty) "search": search,
         },
       );

@@ -3,22 +3,20 @@ import type { AuthRequest } from "../../../../middleware/auth.middleware.js";
 import { CreatePrayerLogUseCase } from "../../application/use-cases/create-prayer-log.use-case.js";
 import { GetPrayerLogsUseCase } from "../../application/use-cases/get-prayer-logs.use-case.js";
 import { GetPrayerLogsSummaryUseCase } from "../../application/use-cases/get-prayer-logs-summary.use-case.js";
-import { DeletePrayerLogUseCase } from "../../application/use-cases/delete-prayer-log.use-case.js";
 import {
-  deletePrayerLogParamsSchema,
   getPrayerLogsQuerySchema,
   getPrayerLogsSummaryQuerySchema,
-  logPrayerSchema,
+  insertLogPrayerSchema,
 } from "../../infrastructure/models/prayer-log.schema.js";
 import { zodErrorMapper } from "../../../../utils/zod.js";
 import { createErrorResponse, createSuccessResponse } from "../../../../lib/types/response.js";
+import logger from "../../../../config/logger.js";
 
 export class PrayerLogController {
   constructor(
     private createPrayerLogUseCase: CreatePrayerLogUseCase,
     private getPrayerLogsUseCase: GetPrayerLogsUseCase,
     private getPrayerLogsSummaryUseCase: GetPrayerLogsSummaryUseCase,
-    private deletePrayerLogUseCase: DeletePrayerLogUseCase,
   ) {}
 
   // POST /api/prayer-logs
@@ -29,7 +27,7 @@ export class PrayerLogController {
       return;
     }
 
-    const parsed = logPrayerSchema.safeParse(req.body);
+    const parsed = insertLogPrayerSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(422).json(
@@ -44,6 +42,7 @@ export class PrayerLogController {
       const result = await this.createPrayerLogUseCase.execute(userId, parsed.data as any);
       res.status(201).json(createSuccessResponse("Berhasil mencatat jurnal solat", result));
     } catch (error: any) {
+      logger.error("PrayerLogController::insertLog() Error:", error);
       if (error.message.startsWith("CONFLICT_")) {
         res.status(409).json(
           createErrorResponse("Conflict", {
@@ -56,7 +55,6 @@ export class PrayerLogController {
         return;
       }
 
-      console.error("[PrayerLog] Gagal mencatat jurnal solat:", error);
       res
         .status(500)
         .json(
@@ -88,6 +86,7 @@ export class PrayerLogController {
       const result = await this.getPrayerLogsUseCase.execute(userId, parsed.data as any);
       res.status(200).json(createSuccessResponse("Berhasil mengambil jurnal solat", result));
     } catch (error: any) {
+      logger.error("PrayerLogController::getLogs() Error:", error);
       res
         .status(500)
         .json(
@@ -121,41 +120,10 @@ export class PrayerLogController {
         .status(200)
         .json(createSuccessResponse("Berhasil mengambil ringkasan jurnal solat", result));
     } catch (error: any) {
+      logger.error("PrayerLogController::getSummary() Error:", error);
       res.status(500).json(
         createErrorResponse("Internal server error", {
           error: "Gagal mengambil ringkasan jurnal solat",
-        }),
-      );
-    }
-  };
-
-  // DELETE /api/prayer-logs/:id
-  deleteLog = async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.userId;
-    if (!userId) {
-      res.status(401).json(createErrorResponse("Unauthorized", { token: "Token tidak valid" }));
-      return;
-    }
-
-    const parsed = deletePrayerLogParamsSchema.safeParse(req.params);
-
-    if (!parsed.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsed.error),
-        }),
-      );
-      return;
-    }
-
-    try {
-      await this.deletePrayerLogUseCase.execute(userId, parsed.data);
-      res.status(200).json(createSuccessResponse("Berhasil menghapus jurnal solat", null));
-    } catch (error: any) {
-      const status = error.message === "Prayer log not found" ? 404 : 500;
-      res.status(status).json(
-        createErrorResponse(status === 404 ? "Not Found" : "Internal server error", {
-          error: error.message,
         }),
       );
     }

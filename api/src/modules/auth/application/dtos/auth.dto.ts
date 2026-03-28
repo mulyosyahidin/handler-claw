@@ -1,15 +1,11 @@
-import type { User } from "../../domain/entities/user.entity.js";
+import type { IUser } from "../../domain/entities/user.entity.js";
 
 /**
- * Request Contracts
+ * Input Data Contracts
  */
 export type LoginRequest = {
   email: string;
   password: string;
-};
-
-export type RefreshTokenRequest = {
-  refresh_token: string;
 };
 
 export type UpdateProfileRequest = {
@@ -27,7 +23,7 @@ export type UpdatePasswordRequest = {
  * Response Contracts
  */
 export type LoginResponse = {
-  user: User;
+  user: IUser;
   access_token: string;
 };
 
@@ -36,9 +32,26 @@ export type RefreshTokenResponse = {
 };
 
 export type GetMeResponse = {
-  user: User;
+  user: IUser;
 };
 
 export type UpdateProfileResponse = {
-  user: User;
+  user: IUser;
+};
+
+/**
+ * Repository Data Contracts
+ */
+export type UserFilter = {
+  id?: string;
+  email?: string;
+  name?: string;
+  NOT?: UserFilter;
+};
+
+export type UpdateUserData = {
+  name?: string;
+  email?: string;
+  password?: string;
+  lastLoginAt?: Date;
 };

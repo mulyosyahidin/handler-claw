@@ -393,8 +393,8 @@ export const ModelName = {
   User: 'User',
   PrayerLog: 'PrayerLog',
   WhatsappLog: 'WhatsappLog',
-  ReminderHook: 'ReminderHook',
   UserDevice: 'UserDevice',
+  NotificationWebhook: 'NotificationWebhook',
   Notification: 'Notification'
 } as const
 
@@ -411,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "prayerLog" | "whatsappLog" | "reminderHook" | "userDevice" | "notification"
+    modelProps: "user" | "prayerLog" | "whatsappLog" | "userDevice" | "notificationWebhook" | "notification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -637,80 +637,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ReminderHook: {
-      payload: Prisma.$ReminderHookPayload<ExtArgs>
-      fields: Prisma.ReminderHookFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ReminderHookFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ReminderHookFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        findFirst: {
-          args: Prisma.ReminderHookFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ReminderHookFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        findMany: {
-          args: Prisma.ReminderHookFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
-        }
-        create: {
-          args: Prisma.ReminderHookCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        createMany: {
-          args: Prisma.ReminderHookCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ReminderHookCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
-        }
-        delete: {
-          args: Prisma.ReminderHookDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        update: {
-          args: Prisma.ReminderHookUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        deleteMany: {
-          args: Prisma.ReminderHookDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ReminderHookUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ReminderHookUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>[]
-        }
-        upsert: {
-          args: Prisma.ReminderHookUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReminderHookPayload>
-        }
-        aggregate: {
-          args: Prisma.ReminderHookAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateReminderHook>
-        }
-        groupBy: {
-          args: Prisma.ReminderHookGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ReminderHookGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ReminderHookCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ReminderHookCountAggregateOutputType> | number
-        }
-      }
-    }
     UserDevice: {
       payload: Prisma.$UserDevicePayload<ExtArgs>
       fields: Prisma.UserDeviceFieldRefs
@@ -782,6 +708,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserDeviceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserDeviceCountAggregateOutputType> | number
+        }
+      }
+    }
+    NotificationWebhook: {
+      payload: Prisma.$NotificationWebhookPayload<ExtArgs>
+      fields: Prisma.NotificationWebhookFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationWebhookFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationWebhookFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationWebhookFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationWebhookFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        findMany: {
+          args: Prisma.NotificationWebhookFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>[]
+        }
+        create: {
+          args: Prisma.NotificationWebhookCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        createMany: {
+          args: Prisma.NotificationWebhookCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationWebhookCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationWebhookDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        update: {
+          args: Prisma.NotificationWebhookUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationWebhookDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationWebhookUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationWebhookUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationWebhookUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationWebhookPayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationWebhookAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificationWebhook>
+        }
+        groupBy: {
+          args: Prisma.NotificationWebhookGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationWebhookGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationWebhookCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationWebhookCountAggregateOutputType> | number
         }
       }
     }
@@ -959,22 +959,6 @@ export const WhatsappLogScalarFieldEnum = {
 export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
 
 
-export const ReminderHookScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  eventId: 'eventId',
-  status: 'status',
-  headersJson: 'headersJson',
-  payloadJson: 'payloadJson',
-  errorMessage: 'errorMessage',
-  processedAt: 'processedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ReminderHookScalarFieldEnum = (typeof ReminderHookScalarFieldEnum)[keyof typeof ReminderHookScalarFieldEnum]
-
-
 export const UserDeviceScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -982,6 +966,7 @@ export const UserDeviceScalarFieldEnum = {
   deviceId: 'deviceId',
   deviceBrand: 'deviceBrand',
   deviceModel: 'deviceModel',
+  osBuildId: 'osBuildId',
   osVersion: 'osVersion',
   fcmToken: 'fcmToken',
   platform: 'platform',
@@ -993,9 +978,21 @@ export const UserDeviceScalarFieldEnum = {
 export type UserDeviceScalarFieldEnum = (typeof UserDeviceScalarFieldEnum)[keyof typeof UserDeviceScalarFieldEnum]
 
 
+export const NotificationWebhookScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationWebhookScalarFieldEnum = (typeof NotificationWebhookScalarFieldEnum)[keyof typeof NotificationWebhookScalarFieldEnum]
+
+
 export const NotificationScalarFieldEnum = {
   id: 'id',
-  reminderHookId: 'reminderHookId',
+  notificationWebhookId: 'notificationWebhookId',
   userId: 'userId',
   userDeviceId: 'userDeviceId',
   title: 'title',
@@ -1203,20 +1200,6 @@ export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'ReminderHookStatus'
- */
-export type EnumReminderHookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderHookStatus'>
-    
-
-
-/**
- * Reference to a field of type 'ReminderHookStatus[]'
- */
-export type ListEnumReminderHookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderHookStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'UserDeviceStatus'
  */
 export type EnumUserDeviceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserDeviceStatus'>
@@ -1241,6 +1224,20 @@ export type EnumUserDevicePlatformFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'UserDevicePlatform[]'
  */
 export type ListEnumUserDevicePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserDevicePlatform[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationWebhookStatus'
+ */
+export type EnumNotificationWebhookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationWebhookStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationWebhookStatus[]'
+ */
+export type ListEnumNotificationWebhookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationWebhookStatus[]'>
     
 
 
@@ -1361,8 +1358,8 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   prayerLog?: Prisma.PrayerLogOmit
   whatsappLog?: Prisma.WhatsappLogOmit
-  reminderHook?: Prisma.ReminderHookOmit
   userDevice?: Prisma.UserDeviceOmit
+  notificationWebhook?: Prisma.NotificationWebhookOmit
   notification?: Prisma.NotificationOmit
 }
 

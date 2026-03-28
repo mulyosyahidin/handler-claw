@@ -4,6 +4,8 @@ import type {
   UpdateUserDeviceStatusRequest,
   UpdateUserDeviceStatusResponse,
 } from "../dtos/user-device.dto.js";
+import { toUserDeviceEntity } from "../../infrastructure/mappers/user-device.mapper.js";
+import { NotFoundError } from "../../../../lib/errors/not-found.error.js";
 
 export class UpdateUserDeviceStatusUseCase {
   constructor(private userDeviceRepository: UserDeviceRepository) {}
@@ -12,11 +14,18 @@ export class UpdateUserDeviceStatusUseCase {
     userId: string,
     data: UpdateUserDeviceStatusRequest,
   ): Promise<UpdateUserDeviceStatusResponse> {
-    await this.userDeviceRepository.updateStatus(
-      userId,
-      data.device_id,
-      data.status as UserDeviceStatus,
-    );
-    return { success: true };
+    const device = await this.userDeviceRepository.findById(userId, data.device_id);
+
+    if (!device) {
+      throw new NotFoundError("Device tidak ditemukan");
+    }
+
+    const updated = await this.userDeviceRepository.update(device.id, {
+      status: data.status as UserDeviceStatus,
+    });
+
+    return {
+      user_device: toUserDeviceEntity(updated),
+    };
   }
 }

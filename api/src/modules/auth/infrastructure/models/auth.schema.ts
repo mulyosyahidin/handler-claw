@@ -10,15 +10,11 @@ export const loginSchema = z
   })
   .openapi("Login");
 
-export type LoginRequest = z.infer<typeof loginSchema>;
-
 export const refreshTokenSchema = z
   .object({
     refresh_token: z.string().min(1, "Refresh token is required"),
   })
   .openapi("RefreshToken");
-
-export type RefreshTokenRequest = z.infer<typeof refreshTokenSchema>;
 
 export const updateProfileSchema = z
   .object({
@@ -26,8 +22,6 @@ export const updateProfileSchema = z
     email: z.email("Format email tidak valid"),
   })
   .openapi("UpdateProfile");
-
-export type UpdateProfileRequest = z.infer<typeof updateProfileSchema>;
 
 export const updatePasswordSchema = z
   .object({
@@ -41,4 +35,7 @@ export const updatePasswordSchema = z
   })
   .openapi("UpdatePassword");
 
-export type UpdatePasswordRequest = z.infer<typeof updatePasswordSchema>;
+export type LoginSchemaValues = z.infer<typeof loginSchema>;
+export type RefreshTokenSchemaValues = z.infer<typeof refreshTokenSchema>;
+export type UpdateProfileSchemaValues = z.infer<typeof updateProfileSchema>;
+export type UpdatePasswordSchemaValues = z.infer<typeof updatePasswordSchema>;

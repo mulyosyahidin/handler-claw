@@ -73,7 +73,6 @@ class _NotificationDetailPageState
         }
 
         final data = snapshot.data!;
-        final payload = data.payload;
 
         return Scaffold(
           appBar: AppBar(
@@ -100,15 +99,15 @@ class _NotificationDetailPageState
               children: [
                 centerIcon(colorScheme),
                 const SizedBox(height: 24),
-                titleText(payload, theme, colorScheme),
+                titleText(data, theme, colorScheme),
                 const SizedBox(height: 8),
                 timestampText(data, theme, colorScheme),
                 const SizedBox(height: 32),
-                contentCard(payload, theme, colorScheme),
+                contentCard(data, theme, colorScheme),
                 const SizedBox(height: 16),
-                infoCard(data, payload, theme, colorScheme),
+                infoCard(data, theme, colorScheme),
                 const SizedBox(height: 32),
-                actionButtons(payload, colorScheme),
+                actionButtons(data, colorScheme),
               ],
             ),
           ),
@@ -135,10 +134,14 @@ class _NotificationDetailPageState
     );
   }
 
-  Widget titleText(dynamic payload, ThemeData theme, ColorScheme colorScheme) {
+  Widget titleText(
+    NotificationEntity data,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     return Center(
       child: Text(
-        payload.title.isNotEmpty ? payload.title : 'Notifikasi',
+        data.title.isNotEmpty ? data.title : 'Notifikasi',
         style: theme.textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,
@@ -149,7 +152,11 @@ class _NotificationDetailPageState
     );
   }
 
-  Widget timestampText(NotificationEntity data, ThemeData theme, ColorScheme colorScheme) {
+  Widget timestampText(
+    NotificationEntity data,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     return Center(
       child: Text(
         _formatTimestamp(data.createdAt),
@@ -160,7 +167,11 @@ class _NotificationDetailPageState
     );
   }
 
-  Widget contentCard(dynamic payload, ThemeData theme, ColorScheme colorScheme) {
+  Widget contentCard(
+    NotificationEntity data,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -182,7 +193,7 @@ class _NotificationDetailPageState
           ),
           const SizedBox(height: 12),
           Text(
-            payload.message.isNotEmpty ? payload.message : 'Tidak ada pesan',
+            data.body.isNotEmpty ? data.body : 'Tidak ada pesan',
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurface,
               height: 1.6,
@@ -193,7 +204,11 @@ class _NotificationDetailPageState
     );
   }
 
-  Widget infoCard(NotificationEntity data, dynamic payload, ThemeData theme, ColorScheme colorScheme) {
+  Widget infoCard(
+    NotificationEntity data,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -216,14 +231,14 @@ class _NotificationDetailPageState
           const SizedBox(height: 16),
           _InfoRow(
             label: 'Event ID',
-            value: data.eventId,
+            value: data.notificationWebhookId,
             onSurface: colorScheme.onSurface,
             onSurfaceVariant: colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 12),
           _InfoRow(
             label: 'Tipe',
-            value: payload.type.isNotEmpty ? payload.type : '-',
+            value: data.data['type'] ?? '-',
             onSurface: colorScheme.onSurface,
             onSurfaceVariant: colorScheme.onSurfaceVariant,
           ),
@@ -237,7 +252,7 @@ class _NotificationDetailPageState
           const SizedBox(height: 12),
           _InfoRow(
             label: 'Link',
-            value: payload.linkTo.isNotEmpty ? payload.linkTo : '-',
+            value: data.data['link_to'] ?? '-',
             onSurface: colorScheme.onSurface,
             onSurfaceVariant: colorScheme.onSurfaceVariant,
           ),
@@ -246,16 +261,17 @@ class _NotificationDetailPageState
     );
   }
 
-  Widget actionButtons(dynamic payload, ColorScheme colorScheme) {
+  Widget actionButtons(NotificationEntity data, ColorScheme colorScheme) {
+    final linkTo = data.data['link_to'] ?? '';
     return Column(
       children: [
-        if (payload.linkTo.isNotEmpty) ...[
+        if (linkTo.isNotEmpty) ...[
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () async {
                 try {
-                  final uri = Uri.parse(payload.linkTo);
+                  final uri = Uri.parse(linkTo);
                   if (await canLaunchUrl(uri)) {
                     await launchUrl(uri, mode: LaunchMode.externalApplication);
                   } else {
@@ -303,7 +319,18 @@ class _NotificationDetailPageState
     try {
       final local = dateTime.toLocal();
       const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'Mei',
+        'Jun',
+        'Jul',
+        'Agu',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des',
       ];
       return '${local.day} ${months[local.month - 1]} ${local.year}, ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
     } catch (e) {

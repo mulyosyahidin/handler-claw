@@ -25,10 +25,7 @@
     "db:reset": "prisma migrate reset",
     "db:seed": "prisma db seed",
     "db:deploy": "prisma migrate deploy",
-    "db:validate": "prisma validate",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "db:validate": "prisma validate"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",
@@ -51,16 +48,12 @@
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
-    "@types/supertest": "^7.2.0",
-    "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^10.0.3",
     "madge": "^8.0.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
-    "supertest": "^7.2.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1",
-    "vitest": "^4.1.2"
+    "typescript-eslint": "^8.57.1"
   }
 }

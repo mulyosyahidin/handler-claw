@@ -47,6 +47,25 @@ class NotificationItemCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                item.title,
+                style: AppTextStyles.body(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                item.body.length > 40
+                    ? '${item.body.substring(0, 40)}...'
+                    : item.body,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
               Row(
                 children: [
                   Container(
@@ -74,43 +93,6 @@ class NotificationItemCard extends StatelessWidget {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                item.payload.title,
-                style: AppTextStyles.body(fontWeight: FontWeight.w600, fontSize: 16),
-              ),
-
-              const SizedBox(height: 4),
-              Text(
-                item.payload.message.length > 40
-                    ? '${item.payload.message.substring(0, 40)}...'
-                    : item.payload.message,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(Icons.event_note, size: 14, color: colorScheme.primary),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      item.eventId,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    size: 20,
-                    color: colorScheme.onSurfaceVariant,
                   ),
                 ],
               ),

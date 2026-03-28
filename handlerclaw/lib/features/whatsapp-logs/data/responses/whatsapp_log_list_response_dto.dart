@@ -1,13 +1,14 @@
 import 'package:handlerclaw/core/models/api_response_dto.dart';
+import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 import 'package:handlerclaw/features/whatsapp-logs/data/dto/whatsapp_log_dto.dart';
 
 class WhatsappLogListData {
   final List<WhatsappLogDto> whatsappLogs;
-  final int? nextCursor;
+  final PaginationMetaDto meta;
 
   WhatsappLogListData({
     required this.whatsappLogs,
-    this.nextCursor,
+    required this.meta,
   });
 
   factory WhatsappLogListData.fromJson(Map<String, dynamic> json) {
@@ -17,7 +18,7 @@ class WhatsappLogListData {
               ?.map((e) => WhatsappLogDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      nextCursor: json['next_cursor'],
+      meta: PaginationMetaDto.fromJson(json['meta'] as Map<String, dynamic>),
     );
   }
 }

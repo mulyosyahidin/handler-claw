@@ -1,11 +1,19 @@
-import { type UserDeviceStatus } from "../../../../lib/generated/prisma/client.js";
-import type { UserDevice } from "../entities/user-device.entity.js";
-import type { CreateUserDeviceRequest } from "../../application/dtos/user-device.dto.js";
+import { type UserDevice } from "../../../../lib/generated/prisma/client.js";
+import type { PaginationType } from "../../../../lib/types/pagination.type.js";
+import type {
+  UpdateUserDeviceData,
+  UserDeviceFilter,
+  UpsertUserDeviceData,
+} from "../../application/dtos/user-device.dto.js";
 
 export interface UserDeviceRepository {
-  upsert(userId: string, data: CreateUserDeviceRequest): Promise<UserDevice>;
-  updateStatus(userId: string, deviceId: string, status: UserDeviceStatus): Promise<UserDevice>;
-  findAllActiveByUserId(userId: string): Promise<UserDevice[]>;
+  upsert(userId: string, data: UpsertUserDeviceData): Promise<UserDevice>;
+  update(id: string, data: UpdateUserDeviceData): Promise<UserDevice>;
+  findAllByActiveStatus(userId: string): Promise<UserDevice[]>;
   findById(userId: string, id: string): Promise<UserDevice | null>;
-  findMany(userId: string, filter: any): Promise<{ devices: UserDevice[]; total: number }>;
+  findAll(
+    userId: string,
+    filter: UserDeviceFilter,
+    pagination: PaginationType,
+  ): Promise<{ devices: UserDevice[]; total: number }>;
 }
