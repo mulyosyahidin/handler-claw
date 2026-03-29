@@ -11,6 +11,7 @@ export class PrismaWhatsappLogRepository implements WhatsappLogRepository {
   async create(data: CreateWhatsappLogData): Promise<WhatsappLog> {
     return prisma.whatsappLog.create({
       data: {
+        userId: data.userId,
         device: data.device,
         mode: data.mode,
         sender: data.sender,
@@ -52,6 +53,7 @@ export class PrismaWhatsappLogRepository implements WhatsappLogRepository {
         ],
       }),
       ...(filter.isGroup !== undefined && { isGroup: filter.isGroup }),
+      ...(filter.userId !== undefined && { userId: filter.userId }),
     };
 
     const [total, logs] = await Promise.all([

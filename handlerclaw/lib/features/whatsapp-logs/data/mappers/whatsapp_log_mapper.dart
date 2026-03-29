@@ -5,6 +5,7 @@ class WhatsappLogMapper {
   static WhatsappLogEntity fromDto(WhatsappLogDto dto) {
     return WhatsappLogEntity(
       id: dto.id,
+      userId: dto.userId,
       receivedAt: dto.receivedAt,
       device: dto.device,
       mode: dto.mode,

@@ -1,5 +1,6 @@
 class WhatsappLogDto {
   final String id;
+  final String? userId;
   final DateTime receivedAt;
   final String device;
   final String mode;
@@ -25,6 +26,7 @@ class WhatsappLogDto {
 
   WhatsappLogDto({
     required this.id,
+    this.userId,
     required this.receivedAt,
     required this.device,
     required this.mode,
@@ -52,6 +54,7 @@ class WhatsappLogDto {
   factory WhatsappLogDto.fromJson(Map<String, dynamic> json) {
     return WhatsappLogDto(
       id: json['id']?.toString() ?? '',
+      userId: json['user_id']?.toString(),
       receivedAt: DateTime.parse(
         json['received_at'] ?? DateTime.now().toIso8601String(),
       ),
@@ -82,6 +85,7 @@ class WhatsappLogDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'user_id': userId,
       'received_at': receivedAt.toIso8601String(),
       'device': device,
       'mode': mode,

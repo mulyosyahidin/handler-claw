@@ -40,6 +40,7 @@ export type GetWhatsappLogsQuery = {
 export type CreateWhatsappLogData = {
   device: string;
   mode: string;
+  userId: string | null;
 
   sender: string;
   senderLid: string | null;
@@ -76,6 +77,7 @@ export type CreateWhatsappLogData = {
 export type WhatsappLogFilter = {
   search?: string | undefined;
   isGroup?: boolean | undefined;
+  userId?: string | undefined;
 };
 
 /**

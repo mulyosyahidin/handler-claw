@@ -1,5 +1,6 @@
 class WhatsappLogEntity {
   final String id;
+  final String? userId;
   final DateTime receivedAt;
   final String device;
   final String mode;
@@ -25,6 +26,7 @@ class WhatsappLogEntity {
 
   WhatsappLogEntity({
     required this.id,
+    this.userId,
     required this.receivedAt,
     required this.device,
     required this.mode,

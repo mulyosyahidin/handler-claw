@@ -1030,7 +1030,8 @@ export const WhatsappLogScalarFieldEnum = {
   location: 'location',
   pollName: 'pollName',
   pollChoices: 'pollChoices',
-  waTimestamp: 'waTimestamp'
+  waTimestamp: 'waTimestamp',
+  userId: 'userId'
 } as const
 
 export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]

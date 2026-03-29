@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { AuthRequest } from "../../../../middleware/auth.middleware.js";
 import {
   createWhatsappLogSchema,
   getWhatsappLogsQuerySchema,
@@ -29,7 +30,11 @@ export class WhatsappLogController {
     }
 
     try {
-      const result = await this.createWhatsappLogUseCase.execute(parsed.data);
+      const userId = req.params.userId;
+      const result = await this.createWhatsappLogUseCase.execute(
+        typeof userId === "string" ? userId : null,
+        parsed.data,
+      );
       res.status(201).json(createSuccessResponse("Berhasil menyimpan whatsapp log", result));
     } catch (error: any) {
       logger.error("WhatsappLogController::createLog() Error:", error);
@@ -39,7 +44,14 @@ export class WhatsappLogController {
   };
 
   // GET /api/whatsapp-logs
-  getLogs = async (req: Request, res: Response) => {
+  getLogs = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json(createErrorResponse("Unauthorized", null));
+      return;
+    }
+
     const parsed = getWhatsappLogsQuerySchema.safeParse(req.query);
 
     if (!parsed.success) {
@@ -52,7 +64,7 @@ export class WhatsappLogController {
     }
 
     try {
-      const result = await this.getWhatsappLogsUseCase.execute(parsed.data);
+      const result = await this.getWhatsappLogsUseCase.execute(userId, parsed.data);
       res.status(200).json(createSuccessResponse("Berhasil mengambil whatsapp logs", result));
     } catch (error: any) {
       logger.error("WhatsappLogController::getLogs() Error:", error);

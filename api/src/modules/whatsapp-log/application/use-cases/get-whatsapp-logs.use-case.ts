@@ -9,7 +9,10 @@ import type {
 export class GetWhatsappLogsUseCase {
   constructor(private whatsappLogRepository: WhatsappLogRepository) {}
 
-  async execute(query: GetWhatsappLogsQuery): Promise<GetWhatsappLogsResponse> {
+  async execute(
+    userId: string | null,
+    query: GetWhatsappLogsQuery,
+  ): Promise<GetWhatsappLogsResponse> {
     const { page, per_page, search, is_group } = query;
 
     const skip = (page - 1) * per_page;
@@ -24,6 +27,10 @@ export class GetWhatsappLogsUseCase {
 
     if (is_group !== undefined) {
       filter.isGroup = is_group;
+    }
+
+    if (userId) {
+      filter.userId = userId;
     }
 
     const { logs, total } = await this.whatsappLogRepository.findAll(filter, { skip, take });

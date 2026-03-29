@@ -1,4 +1,5 @@
 import type { WhatsappLogRepository } from "../../domain/repositories/whatsapp-log.repository.interface.js";
+import type { UserRepository } from "../../../auth/domain/repositories/user.repository.interface.js";
 import { toWhatsappLogEntity } from "../../infrastructure/mappers/whatsapp-log.mapper.js";
 import type {
   CreateWhatsappLogData,
@@ -7,11 +8,27 @@ import type {
 } from "../dtos/whatsapp-log.dto.js";
 
 export class CreateWhatsappLogUseCase {
-  constructor(private whatsappLogRepository: WhatsappLogRepository) {}
+  constructor(
+    private whatsappLogRepository: WhatsappLogRepository,
+    private userRepository: UserRepository,
+  ) {}
 
-  async execute(input: CreateWhatsappLogRequest): Promise<CreateWhatsappLogResponse> {
+  async execute(
+    userId: string | null,
+    input: CreateWhatsappLogRequest,
+  ): Promise<CreateWhatsappLogResponse> {
+    let validatedUserId: string | null = null;
+
+    if (userId) {
+      const user = await this.userRepository.findById(userId);
+      if (user) {
+        validatedUserId = userId;
+      }
+    }
+
     const data = input;
     const mappedData: CreateWhatsappLogData = {
+      userId: validatedUserId,
       device: data.device,
       mode: data.mode,
       sender: data.sender || data.pengirim || "",

@@ -4,6 +4,7 @@ import type { IWhatsappLog } from "../../domain/entities/whatsapp-log.entity.js"
 export function toWhatsappLogEntity(data: WhatsappLog): IWhatsappLog {
   return {
     id: data.id,
+    user_id: data.userId,
     received_at: data.receivedAt,
     device: data.device,
     mode: data.mode,

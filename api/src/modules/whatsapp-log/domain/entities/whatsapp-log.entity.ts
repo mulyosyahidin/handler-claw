@@ -1,5 +1,6 @@
 export type IWhatsappLog = {
   id: string;
+  user_id: string | null;
   received_at: Date;
 
   // Device & routing

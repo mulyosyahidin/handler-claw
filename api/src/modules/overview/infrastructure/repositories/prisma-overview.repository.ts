@@ -7,7 +7,7 @@ export class PrismaOverviewRepository implements OverviewRepository {
   async getUserOverviewCounts(userId: string): Promise<OverviewCounts> {
     const [whatsapp_log, prayer_log, notification_webhook, notification, device] =
       await Promise.all([
-        prisma.whatsappLog.count(),
+        prisma.whatsappLog.count({ where: { userId } }),
         prisma.prayerLog.count({ where: { userId } }),
         prisma.notificationWebhook.count({ where: { userId } }),
         prisma.notification.count({ where: { userId } }),
