@@ -67,12 +67,19 @@ enum NotificationStatus {
   FAILED
 }
 
+enum UserDriver {
+  EMAIL
+  GOOGLE
+}
+
 model User {
   id          String    @id @default(uuid())
+  driver      UserDriver @default(EMAIL)
   email       String    @unique
   name        String
-  password    String
+  password    String?
   lastLoginAt DateTime? @map("last_login_at")
+  avatarUrl   String?   @map("avatar_url")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
@@ -162,7 +169,7 @@ model UserDevice {
   userId String           @map("user_id")
   status UserDeviceStatus @default(ACTIVE)
 
-  deviceId    String  @unique @map("device_id")
+  deviceId    String  @map("device_id")
   deviceBrand String? @map("device_brand")
   deviceModel String? @map("device_model")
   osBuildId   String? @map("os_build_id")
@@ -179,6 +186,7 @@ model UserDevice {
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   notifications Notification[]
 
+  @@unique([userId, deviceId])
   @@index([userId])
   @@map("user_devices")
 }
@@ -234,4 +242,18 @@ model Notification {
   @@index([userId])
   @@index([userDeviceId])
   @@map("notifications")
+}
+
+model File {
+  id String @id @default(uuid())
+
+  fileName String @map("file_name")
+  fileType String @map("file_type")
+  fileSize Int @map("file_size")
+  filePath String @map("file_path")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("files")
 }

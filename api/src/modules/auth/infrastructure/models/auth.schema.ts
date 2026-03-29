@@ -35,7 +35,28 @@ export const updatePasswordSchema = z
   })
   .openapi("UpdatePassword");
 
+export const updateAvatarSchema = z
+  .object({
+    avatar_url: z.string().min(1, "URL avatar wajib diisi"),
+  })
+  .openapi("UpdateAvatar");
+
+export const googleLoginSchema = z
+  .object({
+    id_token: z.string().min(1, "ID Token Google wajib diisi"),
+    device_id: z.string().optional(),
+    device_brand: z.string().optional(),
+    device_model: z.string().optional(),
+    os_build_id: z.string().optional(),
+    os_version: z.string().optional(),
+    fcm_token: z.string().optional(),
+    platform: z.enum(["ANDROID", "IOS", "WEB"]).optional(),
+  })
+  .openapi("GoogleLogin");
+
 export type LoginSchemaValues = z.infer<typeof loginSchema>;
+export type GoogleLoginSchemaValues = z.infer<typeof googleLoginSchema>;
 export type RefreshTokenSchemaValues = z.infer<typeof refreshTokenSchema>;
 export type UpdateProfileSchemaValues = z.infer<typeof updateProfileSchema>;
 export type UpdatePasswordSchemaValues = z.infer<typeof updatePasswordSchema>;
+export type UpdateAvatarSchemaValues = z.infer<typeof updateAvatarSchema>;

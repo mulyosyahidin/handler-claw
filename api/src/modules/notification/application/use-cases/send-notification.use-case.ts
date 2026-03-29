@@ -32,6 +32,26 @@ export class SendNotificationUseCase {
       throw new NotFoundError("Device tidak ditemukan");
     }
 
+    // 2.1. Pastikan status device ACTIVE
+    if (userDevice.status !== UserDeviceStatus.ACTIVE) {
+      logger.info(
+        `[Notification] Skipping send to ${userDevice.id} because status is ${userDevice.status}`,
+      );
+
+      // Update status notification agar tidak menggantung (tergantung kebijakan bisnis,
+      // bisa FAILED atau tetap PENDING. Di sini kita anggap FAILED agar tidak dicoba lagi)
+      await this.notificationRepository.update(notification.id, {
+        status: NotificationStatus.FAILED,
+        failedAt: new Date(),
+        errorMessage: `Device status is ${userDevice.status}`,
+      });
+
+      return {
+        success: false,
+        message_id: null,
+      };
+    }
+
     // 3. Update state awal
     await this.notificationRepository.update(notification.id, {
       triggeredAt: new Date(),
@@ -68,7 +88,7 @@ export class SendNotificationUseCase {
         error?.code === "messaging/invalid-registration-token"
       ) {
         try {
-          await this.userDeviceRepository.update(notification.id, {
+          await this.userDeviceRepository.update(userDevice.id, {
             status: UserDeviceStatus.INVALID_TOKEN,
           });
         } catch (e) {

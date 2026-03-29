@@ -32,6 +32,15 @@ class ProfileRepositoryImpl implements ProfileRepository {
       confirmNewPassword: confirmNewPassword,
     );
   }
+
+  @override
+  Future<ProfileUpdateResponseDto> updateAvatar({
+    required String avatarUrl,
+  }) async {
+    return await _remoteDataSource.updateAvatar(
+      avatarUrl: avatarUrl,
+    );
+  }
 }
 
 final profileRepositoryProvider = Provider<ProfileRepository>((ref) {

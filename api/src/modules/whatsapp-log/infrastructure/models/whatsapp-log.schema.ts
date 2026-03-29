@@ -86,6 +86,18 @@ export const getWhatsappLogsQuerySchema = z
       description: "Search in senderName, sender, senderLid, and messageText",
       example: "martin",
     }),
+    is_group: z
+      .preprocess((val) => {
+        if (typeof val === "string") {
+          if (val === "true") return true;
+          if (val === "false") return false;
+        }
+        return val;
+      }, z.boolean().optional())
+      .openapi({
+        description: "Filter by group or personal logs",
+        example: true,
+      }),
   })
   .openapi("GetWhatsappLogsQuery");
 

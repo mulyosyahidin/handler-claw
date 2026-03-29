@@ -2,16 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:handlerclaw/core/providers/secure_storage_provider.dart';
 import 'package:handlerclaw/core/data/dto/user_dto.dart';
 import 'package:handlerclaw/core/domain/entities/user_entity.dart';
 import 'package:handlerclaw/core/data/mappers/user_mapper.dart';
 
 class TokenStorage {
-  final _storage = const FlutterSecureStorage(
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock_this_device,
-    ),
-  );
+  final FlutterSecureStorage _storage;
+
+  TokenStorage(this._storage);
 
   static const _tokenKey = "auth_token";
   static const _userKey = "user_data";
@@ -49,5 +48,6 @@ class TokenStorage {
 }
 
 final tokenStorageProvider = Provider<TokenStorage>((ref) {
-  return TokenStorage();
+  final storage = ref.watch(secureStorageProvider);
+  return TokenStorage(storage);
 });

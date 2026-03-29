@@ -17,7 +17,7 @@ class HomeRepositoryImpl implements HomeRepository {
       throw Exception(response.message);
     }
 
-    return HomeMapper.fromCountDto(response.data!.count);
+    return HomeMapper.fromData(response.data!);
   }
 }
 

@@ -183,11 +183,51 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                               width: 1,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              initials.toUpperCase(),
-                              style: AppTextStyles.title(color: primary),
-                            ),
+                          child: ClipOval(
+                            child:
+                                user?.avatarUrl != null &&
+                                    user!.avatarUrl!.isNotEmpty
+                                ? Image.network(
+                                    user.avatarUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Center(
+                                        child: Text(
+                                          initials.toUpperCase(),
+                                          style: AppTextStyles.title(
+                                            color: primary,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                  )
+                                : Center(
+                                    child: Text(
+                                      initials.toUpperCase(),
+                                      style: AppTextStyles.title(
+                                        color: primary,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

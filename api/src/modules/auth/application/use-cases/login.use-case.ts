@@ -17,7 +17,8 @@ export class LoginUseCase {
 
     const user = await this.userRepository.findByEmail(email);
 
-    const isPasswordValid = user && (await this.passwordService.compare(password, user.password));
+    const isPasswordValid =
+      user && user.password && (await this.passwordService.compare(password, user.password));
 
     if (!user || !isPasswordValid) {
       throw new UnauthorizedError("Periksa kembali kredensial Anda", {

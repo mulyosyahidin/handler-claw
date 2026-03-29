@@ -10,7 +10,7 @@ export class GetWhatsappLogsUseCase {
   constructor(private whatsappLogRepository: WhatsappLogRepository) {}
 
   async execute(query: GetWhatsappLogsQuery): Promise<GetWhatsappLogsResponse> {
-    const { page, per_page, search } = query;
+    const { page, per_page, search, is_group } = query;
 
     const skip = (page - 1) * per_page;
     const take = per_page;
@@ -20,6 +20,10 @@ export class GetWhatsappLogsUseCase {
     const normalizedSearch = search?.trim();
     if (normalizedSearch) {
       filter.search = normalizedSearch;
+    }
+
+    if (is_group !== undefined) {
+      filter.isGroup = is_group;
     }
 
     const { logs, total } = await this.whatsappLogRepository.findAll(filter, { skip, take });

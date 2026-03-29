@@ -31,6 +31,7 @@ async function main(): Promise<void> {
       email: defaultEmail,
       name: defaultName,
       password: hashedPassword,
+      avatarUrl: "https://i.pravatar.cc/300",
     },
   });
 

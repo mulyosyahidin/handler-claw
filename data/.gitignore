@@ -1,4 +1,3 @@
 *.db
 *.log
 *-firebase-*.json
-prod-backup/

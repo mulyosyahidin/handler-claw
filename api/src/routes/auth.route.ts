@@ -8,6 +8,10 @@ import { RefreshTokenUseCase } from "../modules/auth/application/use-cases/refre
 import { GetMeUseCase } from "../modules/auth/application/use-cases/get-me.use-case.js";
 import { UpdateProfileUseCase } from "../modules/auth/application/use-cases/update-profile.use-case.js";
 import { UpdatePasswordUseCase } from "../modules/auth/application/use-cases/update-password.use-case.js";
+import { GoogleLoginUseCase } from "../modules/auth/application/use-cases/google-login.use-case.js";
+import { UpdateAvatarUseCase } from "../modules/auth/application/use-cases/update-avatar.use-case.js";
+import { PrismaFileRepository } from "../modules/files/infrastructure/repositories/prisma-file.repository.js";
+import { PrismaUserDeviceRepository } from "../modules/user-device/infrastructure/repositories/prisma-user-device.repository.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 
@@ -17,6 +21,8 @@ const authRouter: Router = Router();
 const userRepository = new PrismaUserRepository();
 const passwordService = new BcryptPasswordService();
 const tokenService = new JoseTokenService();
+const fileRepository = new PrismaFileRepository();
+const userDeviceRepository = new PrismaUserDeviceRepository();
 
 // Application Layer (Use Cases)
 const loginUseCase = new LoginUseCase(userRepository, passwordService, tokenService);
@@ -24,6 +30,13 @@ const refreshTokenUseCase = new RefreshTokenUseCase(tokenService);
 const getMeUseCase = new GetMeUseCase(userRepository);
 const updateProfileUseCase = new UpdateProfileUseCase(userRepository);
 const updatePasswordUseCase = new UpdatePasswordUseCase(userRepository, passwordService);
+const googleLoginUseCase = new GoogleLoginUseCase(
+  userRepository,
+  tokenService,
+  fileRepository,
+  userDeviceRepository,
+);
+const updateAvatarUseCase = new UpdateAvatarUseCase(userRepository);
 
 // Interface Adapters Layer (Controller)
 const authController = new AuthController(
@@ -32,7 +45,21 @@ const authController = new AuthController(
   getMeUseCase,
   updateProfileUseCase,
   updatePasswordUseCase,
+  googleLoginUseCase,
+  updateAvatarUseCase,
 );
+
+registry.registerPath({
+  method: "post",
+  path: "/api/auth/google",
+  summary: "Login with Google",
+  description: "Melakukan login atau registrasi menggunakan Firebase ID Token dari Google.",
+  tags: ["Auth"],
+  responses: {
+    200: { description: "Berhasil login dengan Google" },
+    401: { description: "Token tidak valid" },
+  },
+});
 
 registry.registerPath({
   method: "get",
@@ -76,10 +103,26 @@ registry.registerPath({
   },
 });
 
+registry.registerPath({
+  method: "patch",
+  path: "/api/auth/profile/avatar",
+  summary: "Update Avatar",
+  description: "Memperbarui URL foto profil (avatar) pengguna yang sedang login.",
+  tags: ["Auth"],
+  security: [{ bearerAuth: [] }],
+  responses: {
+    200: { description: "Avatar berhasil diperbarui" },
+    400: { description: "Validasi gagal" },
+    401: { description: "Unauthorized" },
+  },
+});
+
 authRouter.post("/login", authController.login);
+authRouter.post("/google", authController.googleLogin);
 authRouter.post("/refresh-access-token", authController.refreshToken);
 authRouter.get("/profile", authMiddleware, authController.getMe);
 authRouter.patch("/profile", authMiddleware, authController.updateProfile);
 authRouter.patch("/profile/password", authMiddleware, authController.updatePassword);
+authRouter.patch("/profile/avatar", authMiddleware, authController.updateAvatar);
 
 export default authRouter;

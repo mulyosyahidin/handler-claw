@@ -16,4 +16,5 @@ export type OverviewCounts = {
  */
 export type GetOverviewResponse = {
   count: IOverviewCount;
+  prayer_status: Record<string, boolean>;
 };

@@ -1,3 +1,4 @@
+import type { UserDevicePlatform } from "../../../../lib/generated/prisma/enums.js";
 import type { IUser } from "../../domain/entities/user.entity.js";
 
 /**
@@ -17,6 +18,21 @@ export type UpdatePasswordRequest = {
   current_password: string;
   new_password: string;
   confirm_new_password: string;
+};
+
+export type UpdateAvatarRequest = {
+  avatar_url: string;
+};
+
+export type GoogleLoginRequest = {
+  id_token: string;
+  device_id?: string | undefined;
+  device_brand?: string | undefined;
+  device_model?: string | undefined;
+  os_build_id?: string | undefined;
+  os_version?: string | undefined;
+  fcm_token?: string | undefined;
+  platform?: UserDevicePlatform | undefined;
 };
 
 /**
@@ -39,6 +55,10 @@ export type UpdateProfileResponse = {
   user: IUser;
 };
 
+export type UpdateAvatarResponse = {
+  user: IUser;
+};
+
 /**
  * Repository Data Contracts
  */
@@ -50,8 +70,17 @@ export type UserFilter = {
 };
 
 export type UpdateUserData = {
-  name?: string;
-  email?: string;
-  password?: string;
-  lastLoginAt?: Date;
+  name?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  lastLoginAt?: Date | undefined;
+  avatarUrl?: string | undefined;
+};
+
+export type CreateUserData = {
+  email: string;
+  name: string;
+  driver: "EMAIL" | "GOOGLE";
+  password?: string | undefined;
+  avatarUrl?: string | undefined;
 };

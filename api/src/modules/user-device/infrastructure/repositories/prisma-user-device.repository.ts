@@ -16,7 +16,10 @@ export class PrismaUserDeviceRepository implements UserDeviceRepository {
   async upsert(userId: string, data: UpsertUserDeviceData): Promise<UserDevice> {
     return prisma.userDevice.upsert({
       where: {
-        deviceId: data.deviceId,
+        userId_deviceId: {
+          userId,
+          deviceId: data.deviceId,
+        },
       },
       update: {
         userId,
@@ -74,6 +77,17 @@ export class PrismaUserDeviceRepository implements UserDeviceRepository {
     if (!device || device.userId !== userId) return null;
 
     return device;
+  }
+
+  async findByDeviceId(userId: string, deviceId: string): Promise<UserDevice | null> {
+    return prisma.userDevice.findUnique({
+      where: {
+        userId_deviceId: {
+          userId,
+          deviceId,
+        },
+      },
+    });
   }
 
   async findAll(

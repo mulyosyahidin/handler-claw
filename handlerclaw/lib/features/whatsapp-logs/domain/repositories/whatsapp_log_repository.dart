@@ -6,6 +6,7 @@ abstract class WhatsappLogRepository {
     int page = 1,
     int limit = 10,
     String? search,
+    bool? isGroup,
   });
 }
 

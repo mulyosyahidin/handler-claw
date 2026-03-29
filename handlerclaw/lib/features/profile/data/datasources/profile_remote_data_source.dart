@@ -68,6 +68,33 @@ class ProfileRemoteDataSource {
       }
       rethrow;
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ProfileUpdateResponseDto> updateAvatar({
+    required String avatarUrl,
+  }) async {
+    const endpoint = ApiEndpoint.profileAvatar;
+
+    try {
+      Logger.api("PATCH", endpoint);
+
+      final response = await _dio.patch(
+        endpoint,
+        data: {
+          'avatar_url': avatarUrl,
+        },
+      );
+
+      return ProfileUpdateResponseDto.fromJson(response.data);
+    } on DioException catch (e) {
+      Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      if (e.response != null) {
+        return ProfileUpdateResponseDto.fromJson(e.response!.data);
+      }
+      rethrow;
+    } catch (e) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
       rethrow;
     }

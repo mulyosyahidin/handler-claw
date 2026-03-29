@@ -555,10 +555,6 @@ export type NullableEnumPrayerPlaceFieldUpdateOperationsInput = {
   set?: $Enums.PrayerPlace | null
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type PrayerLogCreateWithoutUserInput = {
   id?: string
   date: Date | string

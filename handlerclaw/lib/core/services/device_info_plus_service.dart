@@ -12,6 +12,7 @@ class DeviceInfoPlusService {
       "device_brand": androidInfo.brand,
       "device_model": androidInfo.model,
       "os_version": androidInfo.version.release,
+      "os_build_id": androidInfo.id,
     };
   }
 }

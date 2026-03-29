@@ -12,4 +12,8 @@ abstract class ProfileRepository {
     required String newPassword,
     required String confirmNewPassword,
   });
+
+  Future<ProfileUpdateResponseDto> updateAvatar({
+    required String avatarUrl,
+  });
 }

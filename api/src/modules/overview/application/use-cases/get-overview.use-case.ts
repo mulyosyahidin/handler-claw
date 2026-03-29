@@ -6,10 +6,14 @@ export class GetOverviewUseCase {
   constructor(private overviewRepository: OverviewRepository) {}
 
   async execute(userId: string): Promise<GetOverviewResponse> {
-    const counts = await this.overviewRepository.getUserOverviewCounts(userId);
+    const [counts, prayerStatus] = await Promise.all([
+      this.overviewRepository.getUserOverviewCounts(userId),
+      this.overviewRepository.getTodayPrayerStatus(userId),
+    ]);
 
     return {
       count: toOverviewCountEntity(counts),
+      prayer_status: prayerStatus,
     };
   }
 }

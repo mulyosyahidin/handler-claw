@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
+import 'package:handlerclaw/core/config/env.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/features/auth/presentation/screens/login_page.dart';
 import 'package:handlerclaw/features/devices/presentation/screens/devices_page.dart';
@@ -14,6 +15,7 @@ import 'package:handlerclaw/features/splash/presentation/screens/splash_page.dar
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/prayer_log_page.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/add_prayer_log_page.dart';
 import 'package:handlerclaw/features/whatsapp-logs/presentation/screens/whatsapp_logs_page.dart';
+import 'package:handlerclaw/features/debug/presentation/screens/debug_page.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
 class Routes {
@@ -29,6 +31,7 @@ class Routes {
   static const prayerLogs = "/prayer-logs";
   static const devices = "/devices";
   static const addLog = "/add-log";
+  static const debug = "/debug";
 }
  
 final routerProvider = Provider<GoRouter>((ref) {
@@ -83,6 +86,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           return AddPrayerLogPage(initialPrayer: prayer);
         },
       ),
+      GoRoute(
+        path: Routes.debug,
+        builder: (context, state) => const DebugPage(),
+      ),
     ],
     redirect: notifier.redirect,
   );
@@ -126,6 +133,11 @@ class RouterNotifier extends ChangeNotifier {
       return Routes.login;
     }
     if (isAuthenticated && location == Routes.login) return Routes.home;
+    
+    // Prevent access to debug page if it's disabled in Env
+    if (location == Routes.debug && !Env.showDebugPage) {
+      return Routes.home;
+    }
 
     return null;
   }

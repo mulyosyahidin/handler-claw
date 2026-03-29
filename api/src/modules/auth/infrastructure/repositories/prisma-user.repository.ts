@@ -1,6 +1,10 @@
 import type { User } from "../../../../lib/generated/prisma/client.js";
 import { prisma } from "../../../../config/index.js";
-import type { UpdateUserData, UserFilter } from "../../application/dtos/auth.dto.js";
+import type {
+  CreateUserData,
+  UpdateUserData,
+  UserFilter,
+} from "../../application/dtos/auth.dto.js";
 import type { UserRepository } from "../../domain/repositories/user.repository.interface.js";
 
 export class PrismaUserRepository implements UserRepository {
@@ -24,6 +28,19 @@ export class PrismaUserRepository implements UserRepository {
         ...(data.name !== undefined ? { name: data.name } : {}),
         ...(data.password !== undefined ? { password: data.password } : {}),
         ...(data.lastLoginAt !== undefined ? { lastLoginAt: data.lastLoginAt } : {}),
+        ...(data.avatarUrl !== undefined ? { avatarUrl: data.avatarUrl } : {}),
+      },
+    });
+  }
+
+  async create(data: CreateUserData): Promise<User> {
+    return prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        driver: data.driver,
+        password: data.password ?? null,
+        avatarUrl: data.avatarUrl ?? null,
       },
     });
   }

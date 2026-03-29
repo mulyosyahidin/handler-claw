@@ -51,6 +51,7 @@ export class PrismaWhatsappLogRepository implements WhatsappLogRepository {
           { messageText: { contains: search, mode: "insensitive" } },
         ],
       }),
+      ...(filter.isGroup !== undefined && { isGroup: filter.isGroup }),
     };
 
     const [total, logs] = await Promise.all([

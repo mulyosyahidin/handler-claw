@@ -39,7 +39,8 @@ jobs:
         working-directory: handlerclaw
         run: |
           flutter build apk --release \
-            --dart-define=API_BASE_URL=${{ vars.API_BASE_URL }}
+            --dart-define=API_BASE_URL=${{ vars.API_BASE_URL }} \
+            --dart-define=SHOW_DEBUG_PAGE=false
 
       - name: Distribute to Firebase App Distribution
         run: |

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handlerclaw/features/prayer-logs/domain/entities/prayer_log_summary_entity.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
@@ -8,14 +7,13 @@ import 'package:handlerclaw/core/utils/toast_utils.dart';
 
 class PrayerChip extends ConsumerWidget {
   final String prayerName;
-  final PrayerDetailEntity detail;
+  final bool isPerformed;
 
-  const PrayerChip({super.key, required this.prayerName, required this.detail});
+  const PrayerChip({super.key, required this.prayerName, required this.isPerformed});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isPerformed = detail.performed > 0;
 
     IconData icon;
     switch (prayerName) {

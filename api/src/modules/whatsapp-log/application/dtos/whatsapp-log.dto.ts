@@ -34,6 +34,7 @@ export type GetWhatsappLogsQuery = {
   page: number;
   per_page: number;
   search?: string | undefined;
+  is_group?: boolean | undefined;
 };
 
 export type CreateWhatsappLogData = {
@@ -74,6 +75,7 @@ export type CreateWhatsappLogData = {
  */
 export type WhatsappLogFilter = {
   search?: string | undefined;
+  isGroup?: boolean | undefined;
 };
 
 /**

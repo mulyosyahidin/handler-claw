@@ -84,3 +84,11 @@ export const NotificationStatus = {
 } as const
 
 export type NotificationStatus = (typeof NotificationStatus)[keyof typeof NotificationStatus]
+
+
+export const UserDriver = {
+  EMAIL: 'EMAIL',
+  GOOGLE: 'GOOGLE'
+} as const
+
+export type UserDriver = (typeof UserDriver)[keyof typeof UserDriver]

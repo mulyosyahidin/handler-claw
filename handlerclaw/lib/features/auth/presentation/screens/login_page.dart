@@ -91,6 +91,41 @@ class _LoginPageState extends ConsumerState<LoginPage>
     }
   }
 
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+    try {
+      final googleAuthService = ref.read(googleAuthServiceProvider);
+      final idToken = await googleAuthService.signInWithGoogle();
+
+      if (idToken == null) {
+        if (mounted) setState(() => _isLoading = false);
+        return;
+      }
+
+      final successMessage = await ref
+          .read(loginControllerProvider)
+          .loginWithGoogle(idToken);
+
+      if (mounted) {
+        ToastUtils.showSuccess(
+          context,
+          title: 'Berhasil',
+          description: successMessage,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastUtils.showError(
+          context,
+          title: 'Ooops..',
+          description: e.toString(),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -120,7 +155,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
               left: -40,
               child: _GlowCircle(color: glowColor, size: 160),
             ),
-            
+
             SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ConstrainedBox(
@@ -155,6 +190,60 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               isLoading: _isLoading,
                               onPressed: _handleLogin,
                             ),
+                            const SizedBox(height: 24),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: textMuted.withValues(alpha: 0.2),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: Text(
+                                    'Atau masuk dengan',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: textMuted,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    color: textMuted.withValues(alpha: 0.2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: _isLoading
+                                    ? null
+                                    : _handleGoogleLogin,
+                                icon: Image.network(
+                                  'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                                  width: 20,
+                                  height: 20,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.g_mobiledata, size: 24),
+                                ),
+                                label: const Text('Google'),
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  side: BorderSide(
+                                    color: textMuted.withValues(alpha: 0.2),
+                                  ),
+                                ),
+                              ),
+                            ),
                             AuthFooter(textMuted: textMuted),
                           ],
                         ),
@@ -184,9 +273,7 @@ class _GlowCircle extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [color, Colors.transparent],
-        ),
+        gradient: RadialGradient(colors: [color, Colors.transparent]),
       ),
     );
   }

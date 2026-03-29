@@ -38,6 +38,7 @@ class DeviceRepositoryImpl implements DeviceRepository {
         "device_brand": deviceInfo["device_brand"],
         "device_model": deviceInfo["device_model"],
         "os_version": deviceInfo["os_version"],
+        "os_build_id": deviceInfo["os_build_id"],
       },
     );
   }

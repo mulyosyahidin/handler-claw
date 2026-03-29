@@ -11,6 +11,7 @@ export interface UserDeviceRepository {
   update(id: string, data: UpdateUserDeviceData): Promise<UserDevice>;
   findAllByActiveStatus(userId: string): Promise<UserDevice[]>;
   findById(userId: string, id: string): Promise<UserDevice | null>;
+  findByDeviceId(userId: string, deviceId: string): Promise<UserDevice | null>;
   findAll(
     userId: string,
     filter: UserDeviceFilter,

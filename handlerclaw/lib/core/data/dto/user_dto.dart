@@ -2,7 +2,9 @@ class UserDto {
   final String id;
   final String name;
   final String email;
-  final DateTime lastLoginAt;
+  final String driver;
+  final String? avatarUrl;
+  final DateTime? lastLoginAt;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -10,7 +12,9 @@ class UserDto {
     required this.id,
     required this.name,
     required this.email,
-    required this.lastLoginAt,
+    required this.driver,
+    this.avatarUrl,
+    this.lastLoginAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -20,7 +24,11 @@ class UserDto {
       id: json['id'],
       name: json['name'],
       email: json['email'],
-      lastLoginAt: DateTime.parse(json['last_login_at']),
+      driver: json['driver'] ?? 'EMAIL',
+      avatarUrl: json['avatar_url'],
+      lastLoginAt: json['last_login_at'] != null
+          ? DateTime.parse(json['last_login_at'])
+          : null,
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -31,7 +39,9 @@ class UserDto {
       id: "",
       name: "",
       email: "",
-      lastLoginAt: DateTime.now(),
+      driver: "EMAIL",
+      avatarUrl: null,
+      lastLoginAt: null,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -42,7 +52,9 @@ class UserDto {
       'id': id,
       'name': name,
       'email': email,
-      'last_login_at': lastLoginAt.toIso8601String(),
+      'driver': driver,
+      'avatar_url': avatarUrl,
+      'last_login_at': lastLoginAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

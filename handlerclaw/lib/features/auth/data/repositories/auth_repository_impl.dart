@@ -33,6 +33,32 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<AuthResult> loginWithGoogle(
+    String idToken, {
+    Map<String, dynamic>? deviceInfo,
+  }) async {
+    final response = await remoteDataSource.loginWithGoogle(
+      idToken,
+      deviceInfo: deviceInfo,
+    );
+
+    if (response.success && response.data != null) {
+      final loginData = response.data!;
+      return AuthResult(
+        success: true,
+        message: response.message,
+        user: UserMapper.fromDto(loginData.user),
+        accessToken: loginData.accessToken,
+      );
+    }
+
+    return AuthResult(
+      success: false,
+      message: response.message,
+    );
+  }
+
+  @override
   Future<UserEntity?> getMe() async {
     final response = await remoteDataSource.getMe();
     

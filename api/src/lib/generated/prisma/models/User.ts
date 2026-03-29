@@ -26,30 +26,36 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
+  driver: $Enums.UserDriver | null
   email: string | null
   name: string | null
   password: string | null
   lastLoginAt: Date | null
+  avatarUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
+  driver: $Enums.UserDriver | null
   email: string | null
   name: string | null
   password: string | null
   lastLoginAt: Date | null
+  avatarUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
+  driver: number
   email: number
   name: number
   password: number
   lastLoginAt: number
+  avatarUrl: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,30 +64,36 @@ export type UserCountAggregateOutputType = {
 
 export type UserMinAggregateInputType = {
   id?: true
+  driver?: true
   email?: true
   name?: true
   password?: true
   lastLoginAt?: true
+  avatarUrl?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
+  driver?: true
   email?: true
   name?: true
   password?: true
   lastLoginAt?: true
+  avatarUrl?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
+  driver?: true
   email?: true
   name?: true
   password?: true
   lastLoginAt?: true
+  avatarUrl?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -161,10 +173,12 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
+  driver: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password: string | null
   lastLoginAt: Date | null
+  avatarUrl: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -192,10 +206,12 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
+  driver?: Prisma.EnumUserDriverFilter<"User"> | $Enums.UserDriver
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringNullableFilter<"User"> | string | null
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   prayerLogs?: Prisma.PrayerLogListRelationFilter
@@ -206,10 +222,12 @@ export type UserWhereInput = {
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  driver?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   prayerLogs?: Prisma.PrayerLogOrderByRelationAggregateInput
@@ -224,9 +242,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  driver?: Prisma.EnumUserDriverFilter<"User"> | $Enums.UserDriver
   name?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringNullableFilter<"User"> | string | null
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   prayerLogs?: Prisma.PrayerLogListRelationFilter
@@ -237,10 +257,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  driver?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -253,20 +275,24 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
+  driver?: Prisma.EnumUserDriverWithAggregatesFilter<"User"> | $Enums.UserDriver
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
-  password?: Prisma.StringWithAggregatesFilter<"User"> | string
+  password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
@@ -277,10 +303,12 @@ export type UserCreateInput = {
 
 export type UserUncheckedCreateInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
@@ -291,10 +319,12 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
@@ -305,10 +335,12 @@ export type UserUpdateInput = {
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
@@ -319,60 +351,72 @@ export type UserUncheckedUpdateInput = {
 
 export type UserCreateManyInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  driver?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   password?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  driver?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   password?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  driver?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   password?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+  avatarUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -384,6 +428,14 @@ export type UserScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type EnumUserDriverFieldUpdateOperationsInput = {
+  set?: $Enums.UserDriver
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -452,10 +504,12 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
 
 export type UserCreateWithoutPrayerLogsInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
@@ -465,10 +519,12 @@ export type UserCreateWithoutPrayerLogsInput = {
 
 export type UserUncheckedCreateWithoutPrayerLogsInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
@@ -494,10 +550,12 @@ export type UserUpdateToOneWithWhereWithoutPrayerLogsInput = {
 
 export type UserUpdateWithoutPrayerLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
@@ -507,10 +565,12 @@ export type UserUpdateWithoutPrayerLogsInput = {
 
 export type UserUncheckedUpdateWithoutPrayerLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
@@ -520,10 +580,12 @@ export type UserUncheckedUpdateWithoutPrayerLogsInput = {
 
 export type UserCreateWithoutUserDevicesInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
@@ -533,10 +595,12 @@ export type UserCreateWithoutUserDevicesInput = {
 
 export type UserUncheckedCreateWithoutUserDevicesInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
@@ -562,10 +626,12 @@ export type UserUpdateToOneWithWhereWithoutUserDevicesInput = {
 
 export type UserUpdateWithoutUserDevicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
@@ -575,10 +641,12 @@ export type UserUpdateWithoutUserDevicesInput = {
 
 export type UserUncheckedUpdateWithoutUserDevicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
@@ -588,10 +656,12 @@ export type UserUncheckedUpdateWithoutUserDevicesInput = {
 
 export type UserCreateWithoutNotificationWebhooksInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
@@ -601,10 +671,12 @@ export type UserCreateWithoutNotificationWebhooksInput = {
 
 export type UserUncheckedCreateWithoutNotificationWebhooksInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
@@ -630,10 +702,12 @@ export type UserUpdateToOneWithWhereWithoutNotificationWebhooksInput = {
 
 export type UserUpdateWithoutNotificationWebhooksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
@@ -643,10 +717,12 @@ export type UserUpdateWithoutNotificationWebhooksInput = {
 
 export type UserUncheckedUpdateWithoutNotificationWebhooksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
@@ -656,10 +732,12 @@ export type UserUncheckedUpdateWithoutNotificationWebhooksInput = {
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
@@ -669,10 +747,12 @@ export type UserCreateWithoutNotificationsInput = {
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
+  driver?: $Enums.UserDriver
   email: string
   name: string
-  password: string
+  password?: string | null
   lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
@@ -698,10 +778,12 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
@@ -711,10 +793,12 @@ export type UserUpdateWithoutNotificationsInput = {
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
@@ -782,10 +866,12 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  driver?: boolean
   email?: boolean
   name?: boolean
   password?: boolean
   lastLoginAt?: boolean
+  avatarUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>
@@ -797,35 +883,41 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  driver?: boolean
   email?: boolean
   name?: boolean
   password?: boolean
   lastLoginAt?: boolean
+  avatarUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  driver?: boolean
   email?: boolean
   name?: boolean
   password?: boolean
   lastLoginAt?: boolean
+  avatarUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
+  driver?: boolean
   email?: boolean
   name?: boolean
   password?: boolean
   lastLoginAt?: boolean
+  avatarUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "driver" | "email" | "name" | "password" | "lastLoginAt" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prayerLogs?: boolean | Prisma.User$prayerLogsArgs<ExtArgs>
   userDevices?: boolean | Prisma.User$userDevicesArgs<ExtArgs>
@@ -846,10 +938,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    driver: $Enums.UserDriver
     email: string
     name: string
-    password: string
+    password: string | null
     lastLoginAt: Date | null
+    avatarUrl: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1280,10 +1374,12 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
+  readonly driver: Prisma.FieldRef<"User", 'UserDriver'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly avatarUrl: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

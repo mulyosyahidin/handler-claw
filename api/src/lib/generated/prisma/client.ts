@@ -74,3 +74,8 @@ export type NotificationWebhook = Prisma.NotificationWebhookModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model File
+ * 
+ */
+export type File = Prisma.FileModel

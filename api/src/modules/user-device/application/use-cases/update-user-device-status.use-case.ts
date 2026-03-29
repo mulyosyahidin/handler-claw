@@ -14,7 +14,7 @@ export class UpdateUserDeviceStatusUseCase {
     userId: string,
     data: UpdateUserDeviceStatusRequest,
   ): Promise<UpdateUserDeviceStatusResponse> {
-    const device = await this.userDeviceRepository.findById(userId, data.device_id);
+    const device = await this.userDeviceRepository.findByDeviceId(userId, data.device_id);
 
     if (!device) {
       throw new NotFoundError("Device tidak ditemukan");

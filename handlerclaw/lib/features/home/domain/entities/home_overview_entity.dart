@@ -2,13 +2,18 @@ class HomeOverviewEntity {
   final int totalWhatsappLogs;
   final int totalPrayerLogs;
   final int totalReminderHooks;
+  final int totalNotifications;
   final int totalDevices;
 
+  final Map<String, bool> prayerStatus;
+ 
   const HomeOverviewEntity({
     required this.totalWhatsappLogs,
     required this.totalPrayerLogs,
     required this.totalReminderHooks,
+    required this.totalNotifications,
     required this.totalDevices,
+    required this.prayerStatus,
   });
 
   factory HomeOverviewEntity.initial() {
@@ -16,7 +21,10 @@ class HomeOverviewEntity {
       totalWhatsappLogs: 0,
       totalPrayerLogs: 0,
       totalReminderHooks: 0,
+      totalNotifications: 0,
       totalDevices: 0,
+      prayerStatus: {},
     );
   }
 }
+

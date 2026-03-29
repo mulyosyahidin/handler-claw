@@ -14,6 +14,7 @@ class WhatsappLogRemoteDataSource {
     int page = 1,
     int limit = 10,
     String? search,
+    bool? isGroup,
   }) async {
     const endpoint = ApiEndpoint.whatsappLogList;
 
@@ -26,6 +27,7 @@ class WhatsappLogRemoteDataSource {
           "page": page,
           "per_page": limit,
           if (search != null && search.isNotEmpty) "search": search,
+          "is_group": ?isGroup,
         },
       );
 

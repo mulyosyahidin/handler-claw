@@ -13,10 +13,15 @@ export class UpdatePasswordUseCase {
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
-      throw {
-        message: "User tidak ditemukan",
-        errors: { user: "User tidak ditemukan" },
-      };
+      throw new BadRequestError("User tidak ditemukan", {
+        user: "User tidak ditemukan",
+      });
+    }
+
+    if (user.driver === "GOOGLE" || !user.password) {
+      throw new BadRequestError("Pengguna dengan login Google tidak dapat mengubah password", {
+        driver: "Gunakan pengaturan akun Google untuk mengelola keamanan",
+      });
     }
 
     const isPasswordValid = await this.passwordService.compare(

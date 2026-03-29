@@ -14,11 +14,13 @@ class WhatsappLogRepositoryImpl implements WhatsappLogRepository {
     int page = 1,
     int limit = 10,
     String? search,
+    bool? isGroup,
   }) async {
     final responseDto = await _remoteDataSource.getLogs(
       page: page,
       limit: limit,
       search: search,
+      isGroup: isGroup,
     );
 
     final logs =

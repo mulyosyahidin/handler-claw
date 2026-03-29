@@ -116,7 +116,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                     )
                   : Text(
-                      'Masuk Sekarang',
+                      'Masuk',
                       style: AppTextStyles.body(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

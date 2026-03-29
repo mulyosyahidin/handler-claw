@@ -57,7 +57,7 @@ class _WhatsAppLogsPageState extends ConsumerState<WhatsAppLogsPage> {
         children: [
           // Search Field
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: TextField(
               controller: _searchController,
               onChanged: (val) => ref
@@ -97,6 +97,53 @@ class _WhatsAppLogsPageState extends ConsumerState<WhatsAppLogsPage> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: colorScheme.primary, width: 1),
                 ),
+              ),
+            ),
+          ),
+ 
+          // Filters
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _FilterChip(
+                    label: 'Semua',
+                    isSelected: state.value?.isGroup == null,
+                    onSelected: (selected) {
+                      if (selected) {
+                        ref
+                            .read(whatsappLogListControllerProvider.notifier)
+                            .onFilterChanged(null);
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  _FilterChip(
+                    label: 'Personal',
+                    isSelected: state.value?.isGroup == false,
+                    onSelected: (selected) {
+                      if (selected) {
+                        ref
+                            .read(whatsappLogListControllerProvider.notifier)
+                            .onFilterChanged(false);
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  _FilterChip(
+                    label: 'Grup',
+                    isSelected: state.value?.isGroup == true,
+                    onSelected: (selected) {
+                      if (selected) {
+                        ref
+                            .read(whatsappLogListControllerProvider.notifier)
+                            .onFilterChanged(true);
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -160,6 +207,49 @@ class _WhatsAppLogsPageState extends ConsumerState<WhatsAppLogsPage> {
           ),
         ],
       ),
+    );
+  }
+}
+ 
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final ValueChanged<bool> onSelected;
+ 
+  const _FilterChip({
+    required this.label,
+    required this.isSelected,
+    required this.onSelected,
+  });
+ 
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+ 
+    return FilterChip(
+      label: Text(
+        label,
+        style: AppTextStyles.label(
+          color: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      onSelected: onSelected,
+      selectedColor: colorScheme.primary,
+      checkmarkColor: colorScheme.onPrimary,
+      backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: isSelected ? colorScheme.primary : colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      showCheckmark: false,
+      visualDensity: VisualDensity.compact,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
     );
   }
 }

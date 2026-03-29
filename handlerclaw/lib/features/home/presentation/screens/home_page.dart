@@ -7,7 +7,6 @@ import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/app_drawer.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/prayer_chip.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/summary_card.dart';
-import 'package:handlerclaw/features/prayer-logs/application/today_prayer_controller.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 
 class HomePage extends ConsumerWidget {
@@ -19,8 +18,7 @@ class HomePage extends ConsumerWidget {
     final userName = authSession.value?.user?.name ?? 'Claw Master';
 
     final overviewAsync = ref.watch(homeControllerProvider);
-    final todayPrayersAsync = ref.watch(todayPrayerControllerProvider);
-
+ 
     return Scaffold(
       appBar: AppBar(
         title: Text('HandlerClaw', style: AppTextStyles.title()),
@@ -30,7 +28,6 @@ class HomePage extends ConsumerWidget {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               ref.read(homeControllerProvider.notifier).refresh();
-              ref.read(todayPrayerControllerProvider.notifier).refresh();
             },
           ),
         ],
@@ -41,7 +38,6 @@ class HomePage extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           await ref.read(homeControllerProvider.notifier).refresh();
-          await ref.read(todayPrayerControllerProvider.notifier).refresh();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -52,80 +48,145 @@ class HomePage extends ConsumerWidget {
               // Welcome Header
               Text('Halo, $userName!', style: AppTextStyles.hero()),
               const SizedBox(height: 32),
-
+ 
               // Summary Grid
               Text('App Summary', style: AppTextStyles.heading()),
               const SizedBox(height: 16),
               overviewAsync.when(
-                data: (HomeOverviewEntity overview) => GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1.2,
+                data: (HomeOverviewEntity overview) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SummaryCard(
-                      title: 'WA Logs',
-                      value: overview.totalWhatsappLogs.toString(),
-                      subtitle: 'Global messages',
-                      icon: Icons.chat_bubble_outline,
-                      color: Colors.blue,
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1.2,
+                      children: [
+                        SummaryCard(
+                          title: 'WA Logs',
+                          value: overview.totalWhatsappLogs.toString(),
+                          subtitle: 'Global messages',
+                          icon: Icons.chat_bubble_outline,
+                          color: Colors.blue,
+                        ),
+                        SummaryCard(
+                          title: 'Prayer Logs',
+                          value: overview.totalPrayerLogs.toString(),
+                          subtitle: 'Your spiritual stats',
+                          icon: Icons.mosque_outlined,
+                          color: Colors.green,
+                        ),
+                        SummaryCard(
+                          title: 'Webhooks',
+                          value: overview.totalReminderHooks.toString(),
+                          subtitle: 'Active automations',
+                          icon: Icons.webhook,
+                          color: Colors.orange,
+                        ),
+                        SummaryCard(
+                          title: 'Notifications',
+                          value: overview.totalNotifications.toString(),
+                          subtitle: 'Sent alerts',
+                          icon: Icons.notifications_none_outlined,
+                          color: Colors.redAccent,
+                        ),
+                        SummaryCard(
+                          title: 'Your Devices',
+                          value: overview.totalDevices.toString(),
+                          subtitle: 'Registered gadgets',
+                          icon: Icons.devices,
+                          color: Colors.purple,
+                        ),
+                      ],
                     ),
-                    SummaryCard(
-                      title: 'Prayer Logs',
-                      value: overview.totalPrayerLogs.toString(),
-                      subtitle: 'Your spiritual stats',
-                      icon: Icons.mosque_outlined,
-                      color: Colors.green,
-                    ),
-                    SummaryCard(
-                      title: 'Reminder Hooks',
-                      value: overview.totalReminderHooks.toString(),
-                      subtitle: 'Active automations',
-                      icon: Icons.webhook,
-                      color: Colors.orange,
-                    ),
-                    SummaryCard(
-                      title: 'Your Devices',
-                      value: overview.totalDevices.toString(),
-                      subtitle: 'Registered gadgets',
-                      icon: Icons.devices,
-                      color: Colors.purple,
-                    ),
+                    const SizedBox(height: 32),
+ 
+                    // Today's Prayer Status (Inside Data)
+                    Text('Jurnal Solat Hari Ini', style: AppTextStyles.heading()),
+                    const SizedBox(height: 16),
+                    if (overview.prayerStatus.isEmpty)
+                      Text(
+                        'No prayer logs for today yet.',
+                        style: AppTextStyles.body(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      )
+                    else
+                      SizedBox(
+                        width: double.infinity,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: overview.prayerStatus.entries.map((entry) {
+                            return PrayerChip(
+                              prayerName: entry.key,
+                              isPerformed: entry.value,
+                            );
+                          }).toList(),
+                        ),
+                      ),
                   ],
                 ),
-                loading: () => GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1.2,
-                  children: const [
-                    SummaryCardSkeleton(
-                      title: 'WA Logs',
-                      subtitle: 'Global messages',
-                      icon: Icons.chat_bubble_outline,
-                      color: Colors.blue,
+                loading: () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1.2,
+                      children: const [
+                        SummaryCardSkeleton(
+                          title: 'WA Logs',
+                          subtitle: 'Global messages',
+                          icon: Icons.chat_bubble_outline,
+                          color: Colors.blue,
+                        ),
+                        SummaryCardSkeleton(
+                          title: 'Prayer Logs',
+                          subtitle: 'Your spiritual stats',
+                          icon: Icons.mosque_outlined,
+                          color: Colors.green,
+                        ),
+                        SummaryCardSkeleton(
+                          title: 'Webhooks',
+                          subtitle: 'Active automations',
+                          icon: Icons.webhook,
+                          color: Colors.orange,
+                        ),
+                        SummaryCardSkeleton(
+                          title: 'Notifications',
+                          subtitle: 'Sent alerts',
+                          icon: Icons.notifications_none_outlined,
+                          color: Colors.redAccent,
+                        ),
+                        SummaryCardSkeleton(
+                          title: 'Your Devices',
+                          subtitle: 'Registered gadgets',
+                          icon: Icons.devices,
+                          color: Colors.purple,
+                        ),
+                      ],
                     ),
-                    SummaryCardSkeleton(
-                      title: 'Prayer Logs',
-                      subtitle: 'Your spiritual stats',
-                      icon: Icons.mosque_outlined,
-                      color: Colors.green,
-                    ),
-                    SummaryCardSkeleton(
-                      title: 'Reminder Hooks',
-                      subtitle: 'Active automations',
-                      icon: Icons.webhook,
-                      color: Colors.orange,
-                    ),
-                    SummaryCardSkeleton(
-                      title: 'Your Devices',
-                      subtitle: 'Registered gadgets',
-                      icon: Icons.devices,
-                      color: Colors.purple,
+                    const SizedBox(height: 32),
+                    Text('Jurnal Solat Hari Ini', style: AppTextStyles.heading()),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(
+                          5,
+                          (index) => const PrayerChipSkeleton(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -138,69 +199,6 @@ class HomePage extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              // Today's Prayer Status
-              Text('Jurnal Solat Hari Ini', style: AppTextStyles.heading()),
-              const SizedBox(height: 16),
-              todayPrayersAsync.when(
-                data: (todaySummary) {
-                  if (todaySummary == null || todaySummary.byPrayer.isEmpty) {
-                    return Text(
-                      'No prayer logs for today yet.',
-                      style: AppTextStyles.body(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.5),
-                      ),
-                    );
-                  }
-
-                  // Define mandatory prayers based on the day of the week
-                  final isFriday = DateTime.now().weekday == DateTime.friday;
-                  final mandatoryPrayers = [
-                    'SUBUH',
-                    if (isFriday) 'JUMAT' else 'DZUHUR',
-                    'ASHAR',
-                    'MAGHRIB',
-                    'ISYA',
-                  ];
-
-                  // Filter and sort prayers based on mandatory list
-                  final displayedPrayers = mandatoryPrayers
-                      .where((p) => todaySummary.byPrayer.containsKey(p))
-                      .toList();
-
-                  return SizedBox(
-                    width: double.infinity,
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: displayedPrayers.map((prayerName) {
-                        return PrayerChip(
-                          prayerName: prayerName,
-                          detail: todaySummary.byPrayer[prayerName]!,
-                        );
-                      }).toList(),
-                    ),
-                  );
-                },
-                loading: () => SizedBox(
-                  width: double.infinity,
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: List.generate(
-                      5,
-                      (index) => const PrayerChipSkeleton(),
-                    ),
-                  ),
-                ),
-                error: (err, stack) => Text(
-                  'Failed to load prayer status',
-                  style: AppTextStyles.body(color: Colors.red),
                 ),
               ),
             ],

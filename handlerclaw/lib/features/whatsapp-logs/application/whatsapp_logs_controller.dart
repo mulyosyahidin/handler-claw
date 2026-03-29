@@ -10,12 +10,14 @@ class WhatsappLogListState {
   final PaginationMetaDto? meta;
   final bool isLoadingMore;
   final String? search;
+  final bool? isGroup;
 
   WhatsappLogListState({
     required this.items,
     this.meta,
     this.isLoadingMore = false,
     this.search,
+    this.isGroup,
   });
 
   WhatsappLogListState copyWith({
@@ -23,13 +25,16 @@ class WhatsappLogListState {
     PaginationMetaDto? meta,
     bool? isLoadingMore,
     String? search,
+    bool? isGroup,
     bool clearMeta = false,
+    bool clearIsGroup = false,
   }) {
     return WhatsappLogListState(
       items: items ?? this.items,
       meta: clearMeta ? null : (meta ?? this.meta),
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       search: search ?? this.search,
+      isGroup: clearIsGroup ? null : (isGroup ?? this.isGroup),
     );
   }
 }
@@ -44,13 +49,14 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
     return await _fetchPage();
   }
 
-  Future<WhatsappLogListState> _fetchPage({int page = 1, String? search}) async {
-    final response = await _repository.getLogs(page: page, search: search);
+  Future<WhatsappLogListState> _fetchPage({int page = 1, String? search, bool? isGroup}) async {
+    final response = await _repository.getLogs(page: page, search: search, isGroup: isGroup);
     
     return WhatsappLogListState(
       items: response.logs,
       meta: response.meta,
       search: search,
+      isGroup: isGroup,
     );
   }
 
@@ -67,6 +73,7 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
       final response = await _repository.getLogs(
         page: meta.page + 1,
         search: currentState.search,
+        isGroup: currentState.isGroup,
       );
       
       state = AsyncData(currentState.copyWith(
@@ -81,15 +88,29 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => _fetchPage(search: state.value?.search));
+    state = await AsyncValue.guard(() => _fetchPage(
+      search: state.value?.search,
+      isGroup: state.value?.isGroup,
+    ));
   }
 
   void onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () async {
       state = const AsyncLoading();
-      state = await AsyncValue.guard(() => _fetchPage(search: query));
+      state = await AsyncValue.guard(() => _fetchPage(
+        search: query,
+        isGroup: state.value?.isGroup,
+      ));
     });
+  }
+ 
+  void onFilterChanged(bool? isGroup) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _fetchPage(
+      search: state.value?.search,
+      isGroup: isGroup,
+    ));
   }
 }
 

@@ -3,12 +3,14 @@ import 'package:handlerclaw/features/home/data/dto/overview_count_dto.dart';
 
 class OverviewData {
   final OverviewCountDto count;
+  final Map<String, bool> prayerStatus;
 
-  OverviewData({required this.count});
+  OverviewData({required this.count, required this.prayerStatus});
 
   factory OverviewData.fromJson(Map<String, dynamic> json) {
     return OverviewData(
       count: OverviewCountDto.fromJson(json['count'] ?? {}),
+      prayerStatus: Map<String, bool>.from(json['prayer_status'] ?? {}),
     );
   }
 }

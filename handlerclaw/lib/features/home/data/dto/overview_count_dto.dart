@@ -1,22 +1,26 @@
 class OverviewCountDto {
-  final int totalWhatsappLogs;
-  final int totalPrayerLogs;
-  final int totalReminderHooks;
-  final int totalDevices;
+  final int whatsappLog;
+  final int prayerLog;
+  final int notificationWebhook;
+  final int notification;
+  final int device;
 
   OverviewCountDto({
-    required this.totalWhatsappLogs,
-    required this.totalPrayerLogs,
-    required this.totalReminderHooks,
-    required this.totalDevices,
+    required this.whatsappLog,
+    required this.prayerLog,
+    required this.notificationWebhook,
+    required this.notification,
+    required this.device,
   });
 
   factory OverviewCountDto.fromJson(Map<String, dynamic> json) {
     return OverviewCountDto(
-      totalWhatsappLogs: json['total_whatsapp_logs'] ?? 0,
-      totalPrayerLogs: json['total_prayer_logs'] ?? 0,
-      totalReminderHooks: json['total_reminder_hooks'] ?? 0,
-      totalDevices: json['total_devices'] ?? 0,
+      whatsappLog: json['whatsapp_log'] ?? 0,
+      prayerLog: json['prayer_log'] ?? 0,
+      notificationWebhook: json['notification_webhook'] ?? 0,
+      notification: json['notification'] ?? 0,
+      device: json['device'] ?? 0,
     );
   }
 }
+
