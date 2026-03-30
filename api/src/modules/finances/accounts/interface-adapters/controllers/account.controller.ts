@@ -37,9 +37,7 @@ export class AccountController {
     const parsed = createAccountSchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsed.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
       );
       return;
     }
@@ -74,9 +72,7 @@ export class AccountController {
     const parsed = getAccountsQuerySchema.safeParse(req.query);
     if (!parsed.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsed.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
       );
       return;
     }
@@ -101,9 +97,7 @@ export class AccountController {
     const parsedParams = accountParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsedParams.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
       );
       return;
     }
@@ -134,9 +128,7 @@ export class AccountController {
     const parsedParams = accountParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsedParams.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
       );
       return;
     }
@@ -144,9 +136,7 @@ export class AccountController {
     const parsedBody = updateAccountSchema.safeParse(req.body);
     if (!parsedBody.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsedBody.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsedBody.error)),
       );
       return;
     }
@@ -193,9 +183,7 @@ export class AccountController {
     const parsedParams = accountParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
       res.status(422).json(
-        createErrorResponse("Validation error", {
-          errors: zodErrorMapper(parsedParams.error),
-        }),
+        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
       );
       return;
     }
