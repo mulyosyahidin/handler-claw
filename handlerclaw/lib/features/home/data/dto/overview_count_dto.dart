@@ -4,6 +4,7 @@ class OverviewCountDto {
   final int notificationWebhook;
   final int notification;
   final int device;
+  final int apiKey;
 
   OverviewCountDto({
     required this.whatsappLog,
@@ -11,6 +12,7 @@ class OverviewCountDto {
     required this.notificationWebhook,
     required this.notification,
     required this.device,
+    required this.apiKey,
   });
 
   factory OverviewCountDto.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class OverviewCountDto {
       notificationWebhook: json['notification_webhook'] ?? 0,
       notification: json['notification'] ?? 0,
       device: json['device'] ?? 0,
+      apiKey: json['api_key'] ?? 0,
     );
   }
 }

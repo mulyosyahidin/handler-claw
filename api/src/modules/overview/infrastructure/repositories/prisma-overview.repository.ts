@@ -1,17 +1,20 @@
 import { prisma } from "../../../../config/index.js";
-import { PrayerType } from "../../../../lib/generated/prisma/client.js";
+import { ApiKeyStatus, PrayerType } from "../../../../lib/generated/prisma/client.js";
 import type { OverviewCounts } from "../../application/dtos/overview.dto.js";
 import type { OverviewRepository } from "../../domain/repositories/overview.repository.interface.js";
 
 export class PrismaOverviewRepository implements OverviewRepository {
   async getUserOverviewCounts(userId: string): Promise<OverviewCounts> {
-    const [whatsapp_log, prayer_log, notification_webhook, notification, device] =
+    const [whatsapp_log, prayer_log, notification_webhook, notification, device, api_key] =
       await Promise.all([
         prisma.whatsappLog.count({ where: { userId } }),
         prisma.prayerLog.count({ where: { userId } }),
         prisma.notificationWebhook.count({ where: { userId } }),
         prisma.notification.count({ where: { userId } }),
         prisma.userDevice.count({ where: { userId } }),
+        prisma.apiKey.count({
+          where: { userId, status: ApiKeyStatus.ACTIVE }
+        }),
       ]);
 
     return {
@@ -20,6 +23,7 @@ export class PrismaOverviewRepository implements OverviewRepository {
       notification_webhook,
       notification,
       device,
+      api_key,
     };
   }
 

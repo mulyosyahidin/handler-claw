@@ -7,6 +7,7 @@ import notificationRouter from "./notification.route.js";
 import userDeviceRouter from "./user-device.route.js";
 import overviewRouter from "./overview.route.js";
 import fileRouter from "./file.route.js";
+import apiKeyRouter from "./api-key.route.js";
 
 const router: Router = Router();
 
@@ -18,5 +19,6 @@ router.use("/notifications", notificationRouter);
 router.use("/user-devices", userDeviceRouter);
 router.use("/overview", overviewRouter);
 router.use("/files", fileRouter);
+router.use("/api-keys", apiKeyRouter);
 
 export default router;

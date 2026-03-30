@@ -14,4 +14,9 @@ class ApiEndpoint {
   static const String prayerLogSummary = "/prayer-logs/summary";
   static const String userDevice = "/user-devices";
   static const String userDeviceStatus = "/user-devices/status";
+  
+  static const String apiKeyList = "/api-keys";
+  static const String apiKeyDetail = "/api-keys/{id}";
+  static const String apiKeyRevoke = "/api-keys/{id}/revoke";
+  static const String apiKeyRotate = "/api-keys/{id}/rotate";
 }

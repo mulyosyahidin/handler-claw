@@ -4,6 +4,7 @@ class HomeOverviewEntity {
   final int totalReminderHooks;
   final int totalNotifications;
   final int totalDevices;
+  final int totalApiKeys;
 
   final Map<String, bool> prayerStatus;
  
@@ -13,6 +14,7 @@ class HomeOverviewEntity {
     required this.totalReminderHooks,
     required this.totalNotifications,
     required this.totalDevices,
+    required this.totalApiKeys,
     required this.prayerStatus,
   });
 
@@ -23,6 +25,7 @@ class HomeOverviewEntity {
       totalReminderHooks: 0,
       totalNotifications: 0,
       totalDevices: 0,
+      totalApiKeys: 0,
       prayerStatus: {},
     );
   }

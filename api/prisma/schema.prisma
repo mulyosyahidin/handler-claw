@@ -72,6 +72,21 @@ enum UserDriver {
   GOOGLE
 }
 
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum EmailLogStatus {
+  SENT
+  FAILED
+}
+
+enum EmailLogType {
+  TEMPLATE
+  PLAIN
+}
+
 model User {
   id          String    @id @default(uuid())
   driver      UserDriver @default(EMAIL)
@@ -88,6 +103,7 @@ model User {
   notificationWebhooks NotificationWebhook[]
   notifications Notification[]
   whatsappLogs  WhatsappLog[]
+  apiKeys ApiKey[]
 
   @@map("users")
 }
@@ -262,4 +278,46 @@ model File {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("files")
+}
+
+model ApiKey {
+  id String @id @default(uuid())
+  userId String @map("user_id")
+
+  keyPreview String @map("key_preview")
+  keyFull String @map("key_full")
+
+  name String
+  status ApiKeyStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
+
+model EmailLog {
+  id String @id @default(uuid())
+
+  from    String
+  to      String
+  subject String
+  type    EmailLogType
+
+  templateName String? @map("template_name")
+  context      Json?
+  attachments  Json?
+
+  resendId     String? @map("resend_id")
+  status       EmailLogStatus
+  errorMessage String?        @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("email_logs")
 }

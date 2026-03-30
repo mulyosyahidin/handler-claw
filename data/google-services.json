@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "706273898592-kdqbt4u9svbm8ftuug3sr6frfkcohuuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.martin.handlerclaw",
+            "certificate_hash": "4727504764714a4256abc83d0dbc27ef3ce95a80"
+          }
+        },
+        {
           "client_id": "706273898592-m7at9ptigkqleflbidkcbrlmjinr1qap.apps.googleusercontent.com",
           "client_type": 3
         }

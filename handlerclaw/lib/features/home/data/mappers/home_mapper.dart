@@ -10,6 +10,7 @@ class HomeMapper {
       totalReminderHooks: dto.notificationWebhook,
       totalNotifications: dto.notification,
       totalDevices: dto.device,
+      totalApiKeys: dto.apiKey,
       prayerStatus: data.prayerStatus,
     );
   }

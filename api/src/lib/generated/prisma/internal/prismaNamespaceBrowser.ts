@@ -55,7 +55,9 @@ export const ModelName = {
   UserDevice: 'UserDevice',
   NotificationWebhook: 'NotificationWebhook',
   Notification: 'Notification',
-  File: 'File'
+  File: 'File',
+  ApiKey: 'ApiKey',
+  EmailLog: 'EmailLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -202,6 +204,39 @@ export const FileScalarFieldEnum = {
 } as const
 
 export type FileScalarFieldEnum = (typeof FileScalarFieldEnum)[keyof typeof FileScalarFieldEnum]
+
+
+export const ApiKeyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  keyPreview: 'keyPreview',
+  keyFull: 'keyFull',
+  name: 'name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+export const EmailLogScalarFieldEnum = {
+  id: 'id',
+  from: 'from',
+  to: 'to',
+  subject: 'subject',
+  type: 'type',
+  templateName: 'templateName',
+  context: 'context',
+  attachments: 'attachments',
+  resendId: 'resendId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
 export const SortOrder = {

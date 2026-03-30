@@ -79,3 +79,13 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type File = Prisma.FileModel
+/**
+ * Model ApiKey
+ * 
+ */
+export type ApiKey = Prisma.ApiKeyModel
+/**
+ * Model EmailLog
+ * 
+ */
+export type EmailLog = Prisma.EmailLogModel

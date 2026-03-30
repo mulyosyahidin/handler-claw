@@ -219,6 +219,7 @@ export type UserWhereInput = {
   notificationWebhooks?: Prisma.NotificationWebhookListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   whatsappLogs?: Prisma.WhatsappLogListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -236,6 +237,7 @@ export type UserOrderByWithRelationInput = {
   notificationWebhooks?: Prisma.NotificationWebhookOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   whatsappLogs?: Prisma.WhatsappLogOrderByRelationAggregateInput
+  apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -256,6 +258,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notificationWebhooks?: Prisma.NotificationWebhookListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   whatsappLogs?: Prisma.WhatsappLogListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -303,6 +306,7 @@ export type UserCreateInput = {
   notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -320,6 +324,7 @@ export type UserUncheckedCreateInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -337,6 +342,7 @@ export type UserUpdateInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -354,6 +360,7 @@ export type UserUncheckedUpdateInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -530,6 +537,20 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutApiKeysInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApiKeysInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutApiKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApiKeysInput
+  upsert?: Prisma.UserUpsertWithoutApiKeysInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApiKeysInput, Prisma.UserUpdateWithoutApiKeysInput>, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+}
+
 export type UserCreateWithoutPrayerLogsInput = {
   id?: string
   driver?: $Enums.UserDriver
@@ -544,6 +565,7 @@ export type UserCreateWithoutPrayerLogsInput = {
   notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPrayerLogsInput = {
@@ -560,6 +582,7 @@ export type UserUncheckedCreateWithoutPrayerLogsInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPrayerLogsInput = {
@@ -592,6 +615,7 @@ export type UserUpdateWithoutPrayerLogsInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPrayerLogsInput = {
@@ -608,6 +632,7 @@ export type UserUncheckedUpdateWithoutPrayerLogsInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWhatsappLogsInput = {
@@ -624,6 +649,7 @@ export type UserCreateWithoutWhatsappLogsInput = {
   userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
   notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWhatsappLogsInput = {
@@ -640,6 +666,7 @@ export type UserUncheckedCreateWithoutWhatsappLogsInput = {
   userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWhatsappLogsInput = {
@@ -672,6 +699,7 @@ export type UserUpdateWithoutWhatsappLogsInput = {
   userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
   notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWhatsappLogsInput = {
@@ -688,6 +716,7 @@ export type UserUncheckedUpdateWithoutWhatsappLogsInput = {
   userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserDevicesInput = {
@@ -704,6 +733,7 @@ export type UserCreateWithoutUserDevicesInput = {
   notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserDevicesInput = {
@@ -720,6 +750,7 @@ export type UserUncheckedCreateWithoutUserDevicesInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserDevicesInput = {
@@ -752,6 +783,7 @@ export type UserUpdateWithoutUserDevicesInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserDevicesInput = {
@@ -768,6 +800,7 @@ export type UserUncheckedUpdateWithoutUserDevicesInput = {
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationWebhooksInput = {
@@ -784,6 +817,7 @@ export type UserCreateWithoutNotificationWebhooksInput = {
   userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationWebhooksInput = {
@@ -800,6 +834,7 @@ export type UserUncheckedCreateWithoutNotificationWebhooksInput = {
   userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationWebhooksInput = {
@@ -832,6 +867,7 @@ export type UserUpdateWithoutNotificationWebhooksInput = {
   userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationWebhooksInput = {
@@ -848,6 +884,7 @@ export type UserUncheckedUpdateWithoutNotificationWebhooksInput = {
   userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -864,6 +901,7 @@ export type UserCreateWithoutNotificationsInput = {
   userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
   notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -880,6 +918,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -912,6 +951,7 @@ export type UserUpdateWithoutNotificationsInput = {
   userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
   notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -928,6 +968,91 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
   notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
   whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutApiKeysInput = {
+  id?: string
+  driver?: $Enums.UserDriver
+  email: string
+  name: string
+  password?: string | null
+  lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prayerLogs?: Prisma.PrayerLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+  notificationWebhooks?: Prisma.NotificationWebhookCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  whatsappLogs?: Prisma.WhatsappLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApiKeysInput = {
+  id?: string
+  driver?: $Enums.UserDriver
+  email: string
+  name: string
+  password?: string | null
+  lastLoginAt?: Date | string | null
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prayerLogs?: Prisma.PrayerLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+  notificationWebhooks?: Prisma.NotificationWebhookUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  whatsappLogs?: Prisma.WhatsappLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApiKeysInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+}
+
+export type UserUpsertWithoutApiKeysInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApiKeysInput, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApiKeysInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApiKeysInput, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+}
+
+export type UserUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prayerLogs?: Prisma.PrayerLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+  notificationWebhooks?: Prisma.NotificationWebhookUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  whatsappLogs?: Prisma.WhatsappLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.EnumUserDriverFieldUpdateOperationsInput | $Enums.UserDriver
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prayerLogs?: Prisma.PrayerLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+  notificationWebhooks?: Prisma.NotificationWebhookUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  whatsappLogs?: Prisma.WhatsappLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -941,6 +1066,7 @@ export type UserCountOutputType = {
   notificationWebhooks: number
   notifications: number
   whatsappLogs: number
+  apiKeys: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -949,6 +1075,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   notificationWebhooks?: boolean | UserCountOutputTypeCountNotificationWebhooksArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   whatsappLogs?: boolean | UserCountOutputTypeCountWhatsappLogsArgs
+  apiKeys?: boolean | UserCountOutputTypeCountApiKeysArgs
 }
 
 /**
@@ -996,6 +1123,13 @@ export type UserCountOutputTypeCountWhatsappLogsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.WhatsappLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApiKeyWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1012,6 +1146,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notificationWebhooks?: boolean | Prisma.User$notificationWebhooksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   whatsappLogs?: boolean | Prisma.User$whatsappLogsArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1058,6 +1193,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notificationWebhooks?: boolean | Prisma.User$notificationWebhooksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   whatsappLogs?: boolean | Prisma.User$whatsappLogsArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1071,6 +1207,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notificationWebhooks: Prisma.$NotificationWebhookPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     whatsappLogs: Prisma.$WhatsappLogPayload<ExtArgs>[]
+    apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1481,6 +1618,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notificationWebhooks<T extends Prisma.User$notificationWebhooksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationWebhooksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationWebhookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsappLogs<T extends Prisma.User$whatsappLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$whatsappLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsappLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  apiKeys<T extends Prisma.User$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2024,6 +2162,30 @@ export type User$whatsappLogsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.WhatsappLogScalarFieldEnum | Prisma.WhatsappLogScalarFieldEnum[]
+}
+
+/**
+ * User.apiKeys
+ */
+export type User$apiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApiKey
+   */
+  select?: Prisma.ApiKeySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApiKey
+   */
+  omit?: Prisma.ApiKeyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApiKeyInclude<ExtArgs> | null
+  where?: Prisma.ApiKeyWhereInput
+  orderBy?: Prisma.ApiKeyOrderByWithRelationInput | Prisma.ApiKeyOrderByWithRelationInput[]
+  cursor?: Prisma.ApiKeyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApiKeyScalarFieldEnum | Prisma.ApiKeyScalarFieldEnum[]
 }
 
 /**

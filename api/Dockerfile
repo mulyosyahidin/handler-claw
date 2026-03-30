@@ -49,6 +49,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # 2. Setup User & Permissions
+RUN mkdir -p /app/public/uploads && chown -R node:node /app/public
+
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/dist ./dist
 COPY --from=builder --chown=node:node /app/prisma ./prisma

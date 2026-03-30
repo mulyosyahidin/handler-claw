@@ -202,8 +202,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                                     },
                                     loadingBuilder:
                                         (context, child, loadingProgress) {
-                                          if (loadingProgress == null)
+                                          if (loadingProgress == null) {
                                             return child;
+                                          }
+                                          
                                           return Center(
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
@@ -352,6 +354,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                     onTap: () {
                       Navigator.pop(context);
                       context.push(Routes.profile);
+                    },
+                  ),
+                  _DrawerNavItem(
+                    icon: Icons.vpn_key_outlined,
+                    label: 'API Keys',
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.apiKeys,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.apiKeys);
                     },
                   ),
                 ],

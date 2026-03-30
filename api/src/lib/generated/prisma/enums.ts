@@ -92,3 +92,27 @@ export const UserDriver = {
 } as const
 
 export type UserDriver = (typeof UserDriver)[keyof typeof UserDriver]
+
+
+export const ApiKeyStatus = {
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED'
+} as const
+
+export type ApiKeyStatus = (typeof ApiKeyStatus)[keyof typeof ApiKeyStatus]
+
+
+export const EmailLogStatus = {
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type EmailLogStatus = (typeof EmailLogStatus)[keyof typeof EmailLogStatus]
+
+
+export const EmailLogType = {
+  TEMPLATE: 'TEMPLATE',
+  PLAIN: 'PLAIN'
+} as const
+
+export type EmailLogType = (typeof EmailLogType)[keyof typeof EmailLogType]

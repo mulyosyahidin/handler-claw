@@ -16,6 +16,9 @@ importers:
       "@scalar/express-api-reference":
         specifier: ^0.9.4
         version: 0.9.4
+      "@types/handlebars":
+        specifier: ^4.1.0
+        version: 4.1.0
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
@@ -37,6 +40,9 @@ importers:
       firebase-admin:
         specifier: ^13.7.0
         version: 13.7.0
+      handlebars:
+        specifier: ^4.7.9
+        version: 4.7.9
       jose:
         specifier: ^6.2.2
         version: 6.2.2
@@ -46,6 +52,9 @@ importers:
       prisma:
         specifier: ^6.19.2
         version: 6.19.2(typescript@5.9.3)
+      resend:
+        specifier: ^6.9.4
+        version: 6.9.4
       winston:
         specifier: ^3.19.0
         version: 3.19.0
@@ -760,6 +769,12 @@ packages:
         integrity: sha512-/KiKkpHNOBgkFJwu9sh48LkHSMYGyuTcSFK/qMBdnOAlrRJzRSXAOFB5qwzaVQuDl8wAvHVMkaASQDReTahxuw==,
       }
 
+  "@stablelib/base64@1.0.1":
+    resolution:
+      {
+        integrity: sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==,
+      }
+
   "@standard-schema/spec@1.1.0":
     resolution:
       {
@@ -848,6 +863,13 @@ packages:
       {
         integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==,
       }
+
+  "@types/handlebars@4.1.0":
+    resolution:
+      {
+        integrity: sha512-gq9YweFKNNB1uFK71eRqsd4niVkXrxHugqWFQkeLRJvGjnxsLr16bYtcsG4tOFwmYi0Bax+wCkbf1reUfdl4kA==,
+      }
+    deprecated: This is a stub types definition. handlebars provides its own type definitions, so you do not need this installed.
 
   "@types/http-errors@2.0.5":
     resolution:
@@ -1959,6 +1981,12 @@ packages:
         integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==,
       }
 
+  fast-sha256@1.3.0:
+    resolution:
+      {
+        integrity: sha512-n11RGP/lrWEFI/bWdygLxhI+pVeo1ZYIVwvvPkW7azl/rOy+F3HYRZ2K5zeE9mmkhQppyv9sQFx0JM9UabnpPQ==,
+      }
+
   fast-xml-builder@1.1.4:
     resolution:
       {
@@ -2265,6 +2293,14 @@ packages:
         integrity: sha512-pCcEwRi+TKpMlxAQObHDQ56KawURgyAf6jtIY046fJ5tIv3zDe/LEIubckAO8fj6JnAxLdmWkUfNyulQ2iKdEw==,
       }
     engines: { node: ">=14.0.0" }
+
+  handlebars@4.7.9:
+    resolution:
+      {
+        integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==,
+      }
+    engines: { node: ">=0.4.7" }
+    hasBin: true
 
   has-flag@3.0.0:
     resolution:
@@ -2873,6 +2909,12 @@ packages:
       }
     engines: { node: ">= 0.6" }
 
+  neo-async@2.6.2:
+    resolution:
+      {
+        integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==,
+      }
+
   node-addon-api@8.6.0:
     resolution:
       {
@@ -3136,6 +3178,12 @@ packages:
       }
     engines: { node: ">=4" }
 
+  postal-mime@2.7.3:
+    resolution:
+      {
+        integrity: sha512-MjhXadAJaWgYzevi46+3kLak8y6gbg0ku14O1gO/LNOuay8dO+1PtcSGvAdgDR0DoIsSaiIA8y/Ddw6MnrO0Tw==,
+      }
+
   postcss-values-parser@6.0.2:
     resolution:
       {
@@ -3330,6 +3378,18 @@ packages:
     engines: { node: ">=0.4.0" }
     hasBin: true
 
+  resend@6.9.4:
+    resolution:
+      {
+        integrity: sha512-/M3dsJzu5OgozqVsA4Psd/1L7EdePgOIIxClas453GOQYFG3VHc2ZyCHZFlvqsc9aZCCd2BJRRqZgWC8D9c7/g==,
+      }
+    engines: { node: ">=20" }
+    peerDependencies:
+      "@react-email/render": "*"
+    peerDependenciesMeta:
+      "@react-email/render":
+        optional: true
+
   resolve-dependency-path@4.0.1:
     resolution:
       {
@@ -3515,6 +3575,12 @@ packages:
         integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==,
       }
 
+  standardwebhooks@1.0.0:
+    resolution:
+      {
+        integrity: sha512-BbHGOQK9olHPMvQNHWul6MYlrRTAOKn03rOe4A8O3CLWhNf4YHBqq2HJKKC+sfqpxiBY52pNeesD6jIiLDz8jg==,
+      }
+
   statuses@2.0.2:
     resolution:
       {
@@ -3634,6 +3700,12 @@ packages:
         integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==,
       }
     engines: { node: ">= 0.4" }
+
+  svix@1.86.0:
+    resolution:
+      {
+        integrity: sha512-/HTvXwjLJe1l/MsLXAO1ddCYxElJk4eNR4DzOjDOEmGrPN/3BtBE8perGwMAaJ2sT5T172VkBYzmHcjUfM1JRQ==,
+      }
 
   tagged-tag@1.0.0:
     resolution:
@@ -3799,6 +3871,14 @@ packages:
     engines: { node: ">=14.17" }
     hasBin: true
 
+  uglify-js@3.19.3:
+    resolution:
+      {
+        integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==,
+      }
+    engines: { node: ">=0.8.0" }
+    hasBin: true
+
   undefsafe@2.0.5:
     resolution:
       {
@@ -3829,6 +3909,13 @@ packages:
       {
         integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==,
       }
+
+  uuid@10.0.0:
+    resolution:
+      {
+        integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==,
+      }
+    hasBin: true
 
   uuid@11.1.0:
     resolution:
@@ -3932,6 +4019,12 @@ packages:
         integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==,
       }
     engines: { node: ">=0.10.0" }
+
+  wordwrap@1.0.0:
+    resolution:
+      {
+        integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==,
+      }
 
   wrap-ansi@7.0.0:
     resolution:
@@ -4367,6 +4460,8 @@ snapshots:
       color: 5.0.3
       text-hex: 1.0.0
 
+  "@stablelib/base64@1.0.1": {}
+
   "@standard-schema/spec@1.1.0": {}
 
   "@tootallnate/once@2.0.0":
@@ -4419,6 +4514,10 @@ snapshots:
       "@types/body-parser": 1.19.6
       "@types/express-serve-static-core": 5.1.1
       "@types/serve-static": 2.2.0
+
+  "@types/handlebars@4.1.0":
+    dependencies:
+      handlebars: 4.7.9
 
   "@types/http-errors@2.0.5": {}
 
@@ -5177,6 +5276,8 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
+  fast-sha256@1.3.0: {}
+
   fast-xml-builder@1.1.4:
     dependencies:
       path-expression-matcher: 1.2.0
@@ -5447,6 +5548,15 @@ snapshots:
       - encoding
       - supports-color
     optional: true
+
+  handlebars@4.7.9:
+    dependencies:
+      minimist: 1.2.8
+      neo-async: 2.6.2
+      source-map: 0.6.1
+      wordwrap: 1.0.0
+    optionalDependencies:
+      uglify-js: 3.19.3
 
   has-flag@3.0.0: {}
 
@@ -5762,6 +5872,8 @@ snapshots:
 
   negotiator@1.0.0: {}
 
+  neo-async@2.6.2: {}
+
   node-addon-api@8.6.0: {}
 
   node-domexception@1.0.0: {}
@@ -5898,6 +6010,8 @@ snapshots:
       pathe: 2.0.3
 
   pluralize@8.0.0: {}
+
+  postal-mime@2.7.3: {}
 
   postcss-values-parser@6.0.2(postcss@8.5.8):
     dependencies:
@@ -6042,6 +6156,11 @@ snapshots:
 
   requirejs@2.3.8: {}
 
+  resend@6.9.4:
+    dependencies:
+      postal-mime: 2.7.3
+      svix: 1.86.0
+
   resolve-dependency-path@4.0.1: {}
 
   resolve-pkg-maps@1.0.0: {}
@@ -6164,10 +6283,14 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  source-map@0.6.1:
-    optional: true
+  source-map@0.6.1: {}
 
   stack-trace@0.0.10: {}
+
+  standardwebhooks@1.0.0:
+    dependencies:
+      "@stablelib/base64": 1.0.1
+      fast-sha256: 1.3.0
 
   statuses@2.0.2: {}
 
@@ -6233,6 +6356,11 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  svix@1.86.0:
+    dependencies:
+      standardwebhooks: 1.0.0
+      uuid: 10.0.0
 
   tagged-tag@1.0.0: {}
 
@@ -6332,6 +6460,9 @@ snapshots:
 
   typescript@5.9.3: {}
 
+  uglify-js@3.19.3:
+    optional: true
+
   undefsafe@2.0.5: {}
 
   undici-types@7.18.2: {}
@@ -6343,6 +6474,8 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  uuid@10.0.0: {}
 
   uuid@11.1.0: {}
 
@@ -6404,6 +6537,8 @@ snapshots:
       winston-transport: 4.9.0
 
   word-wrap@1.2.5: {}
+
+  wordwrap@1.0.0: {}
 
   wrap-ansi@7.0.0:
     dependencies:

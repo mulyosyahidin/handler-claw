@@ -16,6 +16,7 @@ import 'package:handlerclaw/features/prayer-logs/presentation/screens/prayer_log
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/add_prayer_log_page.dart';
 import 'package:handlerclaw/features/whatsapp-logs/presentation/screens/whatsapp_logs_page.dart';
 import 'package:handlerclaw/features/debug/presentation/screens/debug_page.dart';
+import 'package:handlerclaw/features/api-keys/presentation/screens/api_key_list_screen.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
 class Routes {
@@ -31,6 +32,7 @@ class Routes {
   static const prayerLogs = "/prayer-logs";
   static const devices = "/devices";
   static const addLog = "/add-log";
+  static const apiKeys = "/api-keys";
   static const debug = "/debug";
 }
  
@@ -89,6 +91,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.debug,
         builder: (context, state) => const DebugPage(),
+      ),
+      GoRoute(
+        path: Routes.apiKeys,
+        builder: (context, state) => const ApiKeyListScreen(),
       ),
     ],
     redirect: notifier.redirect,

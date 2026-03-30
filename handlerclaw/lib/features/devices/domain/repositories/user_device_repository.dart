@@ -6,7 +6,7 @@ abstract class UserDeviceRepository {
     int perPage = 10,
     String? search,
   });
-  
+
   Future<UserDeviceEntity?> getDeviceDetail(String id);
 }
 

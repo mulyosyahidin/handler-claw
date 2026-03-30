@@ -4,4 +4,5 @@ export type IOverviewCount = {
   notification_webhook: number;
   notification: number;
   device: number;
+  api_key: number;
 };

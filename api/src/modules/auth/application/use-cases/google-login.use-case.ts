@@ -8,6 +8,7 @@ import { toUserEntity } from "../../infrastructure/mappers/user.mapper.js";
 import { UnauthorizedError } from "../../../../lib/errors/unauthorized.error.js";
 import { getFirebaseAdmin } from "../../../../lib/firebase-admin.js";
 import logger from "../../../../config/logger.js";
+import { sendEmailWithTemplate } from "../../../../lib/email/resend.js";
 
 export class GoogleLoginUseCase {
   constructor(
@@ -68,6 +69,19 @@ export class GoogleLoginUseCase {
         name: name || email.split("@")[0],
         driver: "GOOGLE",
         avatarUrl,
+      });
+
+      // Send welcome email (non-blocking)
+      sendEmailWithTemplate({
+        to: user.email,
+        subject: "Selamat Datang di HandlerClaw!",
+        template: "welcome",
+        context: {
+          name: user.name,
+          appUrl: process.env.APP_URL || "https://handlerclaw.com",
+        },
+      }).catch((err) => {
+        logger.error("GoogleLoginUseCase::execute() Welcome email error:", err);
       });
     } else {
       // Update existing user info

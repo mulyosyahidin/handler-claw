@@ -75,11 +75,13 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
           FIREBASE_CLIENT_EMAIL: ${{ vars.FIREBASE_CLIENT_EMAIL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_EMAIL: ${{ vars.RESEND_FROM_EMAIL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
@@ -108,6 +110,8 @@ jobs:
             printf "FIREBASE_PROJECT_ID=%s\n" "$FIREBASE_PROJECT_ID" >> .env
             printf "FIREBASE_PRIVATE_KEY=%s\n" "$FIREBASE_PRIVATE_KEY" >> .env
             printf "FIREBASE_CLIENT_EMAIL=%s\n" "$FIREBASE_CLIENT_EMAIL" >> .env
+            printf "RESEND_API_KEY=%s\n" "$RESEND_API_KEY" >> .env
+            printf "RESEND_FROM_EMAIL=%s\n" "$RESEND_FROM_EMAIL" >> .env
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env

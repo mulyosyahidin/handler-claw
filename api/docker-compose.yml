@@ -40,6 +40,8 @@ services:
         max-file: "3"
     networks:
       - internal
+    volumes:
+      - api_uploads:/app/public/uploads
 
   handler_claw_api_green:
     image: ${DOCKER_IMAGE}
@@ -65,9 +67,13 @@ services:
         max-file: "3"
     networks:
       - internal
+    volumes:
+      - api_uploads:/app/public/uploads
 
 volumes:
   postgres_data:
+    driver: local
+  api_uploads:
     driver: local
 
 networks:

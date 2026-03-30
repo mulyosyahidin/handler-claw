@@ -6,6 +6,7 @@ export function toOverviewCountEntity(data: {
   notification_webhook: number;
   notification: number;
   device: number;
+  api_key: number;
 }): IOverviewCount {
   return {
     whatsapp_log: data.whatsapp_log,
@@ -13,5 +14,6 @@ export function toOverviewCountEntity(data: {
     notification_webhook: data.notification_webhook,
     notification: data.notification,
     device: data.device,
+    api_key: data.api_key,
   };
 }
