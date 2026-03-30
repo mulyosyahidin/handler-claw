@@ -9,6 +9,7 @@ import overviewRouter from "./overview.route.js";
 import fileRouter from "./file.route.js";
 import apiKeyRouter from "./api-key.route.js";
 import accountTypeRouter from "./account-type.route.js";
+import accountRouter from "./account.route.js";
 
 const router: Router = Router();
 
@@ -22,5 +23,6 @@ router.use("/overview", overviewRouter);
 router.use("/files", fileRouter);
 router.use("/api-keys", apiKeyRouter);
 router.use("/finances/account-types", accountTypeRouter);
+router.use("/finances/accounts", accountRouter);
 
 export default router;
