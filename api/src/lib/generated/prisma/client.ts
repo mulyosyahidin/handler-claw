@@ -89,3 +89,18 @@ export type ApiKey = Prisma.ApiKeyModel
  * 
  */
 export type EmailLog = Prisma.EmailLogModel
+/**
+ * Model AccountType
+ * 
+ */
+export type AccountType = Prisma.AccountTypeModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model BalanceSnapshot
+ * 
+ */
+export type BalanceSnapshot = Prisma.BalanceSnapshotModel

@@ -1,8 +1,8 @@
 import { NotFoundError } from "../../../../lib/errors/not-found.error.js";
 import { ApiKeyStatus } from "../../../../lib/generated/prisma/enums.js";
 import type { ApiKeyRepository } from "../../domain/repositories/api-key.repository.interface.js";
-import { toApiKeyEntity } from '../../infrastructure/mappers/api-key.mapper.js';
-import type { RevokeApiKeyResponse } from '../dtos/api-key.dto.js';
+import { toApiKeyEntity } from "../../infrastructure/mappers/api-key.mapper.js";
+import type { RevokeApiKeyResponse } from "../dtos/api-key.dto.js";
 
 export class RevokeApiKeyUseCase {
   constructor(private apiKeyRepository: ApiKeyRepository) {}
@@ -19,7 +19,7 @@ export class RevokeApiKeyUseCase {
     });
 
     return {
-      api_key: toApiKeyEntity(result)
+      api_key: toApiKeyEntity(result),
     };
   }
 }

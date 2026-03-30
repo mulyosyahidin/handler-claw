@@ -13,7 +13,7 @@ export class PrismaOverviewRepository implements OverviewRepository {
         prisma.notification.count({ where: { userId } }),
         prisma.userDevice.count({ where: { userId } }),
         prisma.apiKey.count({
-          where: { userId, status: ApiKeyStatus.ACTIVE }
+          where: { userId, status: ApiKeyStatus.ACTIVE },
         }),
       ]);
 

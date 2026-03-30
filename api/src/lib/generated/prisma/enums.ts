@@ -116,3 +116,12 @@ export const EmailLogType = {
 } as const
 
 export type EmailLogType = (typeof EmailLogType)[keyof typeof EmailLogType]
+
+
+export const AccountCategory = {
+  LIQUID: 'LIQUID',
+  DEBT: 'DEBT',
+  INVESTMENT: 'INVESTMENT'
+} as const
+
+export type AccountCategory = (typeof AccountCategory)[keyof typeof AccountCategory]

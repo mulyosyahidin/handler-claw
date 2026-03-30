@@ -57,7 +57,10 @@ export const ModelName = {
   Notification: 'Notification',
   File: 'File',
   ApiKey: 'ApiKey',
-  EmailLog: 'EmailLog'
+  EmailLog: 'EmailLog',
+  AccountType: 'AccountType',
+  Account: 'Account',
+  BalanceSnapshot: 'BalanceSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -237,6 +240,46 @@ export const EmailLogScalarFieldEnum = {
 } as const
 
 export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
+
+
+export const AccountTypeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type AccountTypeScalarFieldEnum = (typeof AccountTypeScalarFieldEnum)[keyof typeof AccountTypeScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  accountTypeId: 'accountTypeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const BalanceSnapshotScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  amount: 'amount',
+  date: 'date',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type BalanceSnapshotScalarFieldEnum = (typeof BalanceSnapshotScalarFieldEnum)[keyof typeof BalanceSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {

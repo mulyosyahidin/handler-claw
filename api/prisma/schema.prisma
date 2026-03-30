@@ -11,11 +11,14 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["public", "finance"]
 }
 
 enum PrayerCategory {
   WAJIB
   SUNNAH
+
+  @@schema("public")
 }
 
 enum PrayerType {
@@ -29,17 +32,23 @@ enum PrayerType {
   DHUHA
   TAHAJUD
   WITIR
+
+  @@schema("public")
 }
 
 enum PrayerMethod {
   JAMAAH
   SENDIRI
+
+  @@schema("public")
 }
 
 enum PrayerPlace {
   MASJID
   RUMAH
   LAINNYA
+
+  @@schema("public")
 }
 
 enum UserDevicePlatform {
@@ -47,44 +56,68 @@ enum UserDevicePlatform {
   IOS
   WEB
   WINDOWS
+
+  @@schema("public")
 }
 
 enum UserDeviceStatus {
   ACTIVE
   LOGGED_OUT
   INVALID_TOKEN
+
+  @@schema("public")
 }
 
 enum NotificationWebhookStatus {
   RECEIVED
   PROCESSING
   PROCESSED
+
+  @@schema("public")
 }
 
 enum NotificationStatus {
   PENDING
   SENT
   FAILED
+
+  @@schema("public")
 }
 
 enum UserDriver {
   EMAIL
   GOOGLE
+
+  @@schema("public")
 }
 
 enum ApiKeyStatus {
   ACTIVE
   REVOKED
+
+  @@schema("public")
 }
 
 enum EmailLogStatus {
   SENT
   FAILED
+
+  @@schema("public")
 }
 
 enum EmailLogType {
   TEMPLATE
   PLAIN
+
+  @@schema("public")
+}
+
+enum AccountCategory {
+  LIQUID
+  DEBT
+  INVESTMENT
+
+  @@schema("finance")
 }
 
 model User {
@@ -104,8 +137,11 @@ model User {
   notifications Notification[]
   whatsappLogs  WhatsappLog[]
   apiKeys ApiKey[]
+  accountTypes AccountType[]
+  accounts Account[]
 
   @@map("users")
+  @@schema("public")
 }
 
 model PrayerLog {
@@ -132,7 +168,9 @@ model PrayerLog {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([userId, date])
+
   @@map("prayer_logs")
+  @@schema("public")
 }
 
 model WhatsappLog {
@@ -183,7 +221,9 @@ model WhatsappLog {
   @@index([device])
   @@index([receivedAt])
   @@index([isGroup])
+
   @@map("whatsapp_logs")
+  @@schema("public")
 }
 
 model UserDevice {
@@ -210,7 +250,9 @@ model UserDevice {
 
   @@unique([userId, deviceId])
   @@index([userId])
+
   @@map("user_devices")
+  @@schema("public")
 }
 
 model NotificationWebhook {
@@ -228,7 +270,9 @@ model NotificationWebhook {
 
   @@index([userId])
   @@index([createdAt])
+
   @@map("notification_webhooks")
+  @@schema("public")
 }
 
 model Notification {
@@ -263,7 +307,9 @@ model Notification {
   @@index([status])
   @@index([userId])
   @@index([userDeviceId])
+
   @@map("notifications")
+  @@schema("public")
 }
 
 model File {
@@ -278,6 +324,7 @@ model File {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("files")
+  @@schema("public")
 }
 
 model ApiKey {
@@ -297,6 +344,7 @@ model ApiKey {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("api_keys")
+  @@schema("public")
 }
 
 model EmailLog {
@@ -319,5 +367,65 @@ model EmailLog {
 
   @@index([status])
   @@index([createdAt])
+
   @@map("email_logs")
+  @@schema("public")
+}
+
+model AccountType {
+  id String @id @default(uuid())
+  userId    String          @map("user_id")
+
+  name String
+  category AccountCategory
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  accounts Account[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account_types")
+  @@schema("finance")
+}
+
+model Account {
+  id        String          @id @default(uuid())
+  userId    String          @map("user_id")
+
+  name      String
+  accountTypeId String @map("account_type_id")
+
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  balances  BalanceSnapshot[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountType AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+  @@schema("finance")
+}
+
+model BalanceSnapshot {
+  id        String   @id @default(uuid())
+
+  accountId String   @map("account_id")
+  amount    Decimal  @db.Decimal(20, 2)
+  date      DateTime @db.Date
+
+  note String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, date])
+
+  @@map("balance_snapshots")
+  @@schema("finance")
 }
