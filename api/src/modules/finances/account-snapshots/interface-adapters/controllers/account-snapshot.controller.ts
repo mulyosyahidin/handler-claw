@@ -38,9 +38,7 @@ export class AccountSnapshotController {
 
     const parsed = createAccountSnapshotSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
-      );
+      res.status(422).json(createErrorResponse("Validation error", zodErrorMapper(parsed.error)));
       return;
     }
 
@@ -91,9 +89,7 @@ export class AccountSnapshotController {
 
     const parsed = getAccountSnapshotsQuerySchema.safeParse(req.query);
     if (!parsed.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
-      );
+      res.status(422).json(createErrorResponse("Validation error", zodErrorMapper(parsed.error)));
       return;
     }
 
@@ -124,9 +120,9 @@ export class AccountSnapshotController {
 
     const parsedParams = accountSnapshotParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)));
       return;
     }
 
@@ -137,7 +133,10 @@ export class AccountSnapshotController {
         return;
       }
 
-      const result = await this.getAccountSnapshotDetailUseCase.execute(userId, parsedParams.data.id);
+      const result = await this.getAccountSnapshotDetailUseCase.execute(
+        userId,
+        parsedParams.data.id,
+      );
       res.status(200).json(createSuccessResponse("Berhasil mengambil detail snapshot", result));
     } catch (error: any) {
       logger.error("AccountSnapshotController::getById() Error:", error);
@@ -155,17 +154,17 @@ export class AccountSnapshotController {
 
     const parsedParams = accountSnapshotParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)));
       return;
     }
 
     const parsedBody = updateAccountSnapshotSchema.safeParse(req.body);
     if (!parsedBody.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedBody.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedBody.error)));
       return;
     }
 
@@ -218,9 +217,9 @@ export class AccountSnapshotController {
 
     const parsedParams = accountSnapshotParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)));
       return;
     }
 

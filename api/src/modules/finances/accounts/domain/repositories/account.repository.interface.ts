@@ -11,7 +11,10 @@ export interface AccountRepository {
     filter: GetAccountsQuery,
     pagination: PaginationType,
   ): Promise<{ accounts: Account[]; total: number }>;
-  findById(userId: string, id: string): Promise<(Account & { balances?: BalanceSnapshot[] }) | null>;
+  findById(
+    userId: string,
+    id: string,
+  ): Promise<(Account & { balances?: BalanceSnapshot[] }) | null>;
   findByName(userId: string, name: string): Promise<Account | null>;
   update(id: string, data: UpdateAccountData): Promise<Account>;
   softDelete(id: string): Promise<Account>;

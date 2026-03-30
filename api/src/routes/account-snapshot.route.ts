@@ -24,7 +24,9 @@ const accountRepository = new PrismaAccountRepository();
 
 const createAccountSnapshotUseCase = new CreateAccountSnapshotUseCase(accountSnapshotRepository);
 const getAccountSnapshotsUseCase = new GetAccountSnapshotsUseCase(accountSnapshotRepository);
-const getAccountSnapshotDetailUseCase = new GetAccountSnapshotDetailUseCase(accountSnapshotRepository);
+const getAccountSnapshotDetailUseCase = new GetAccountSnapshotDetailUseCase(
+  accountSnapshotRepository,
+);
 const updateAccountSnapshotUseCase = new UpdateAccountSnapshotUseCase(accountSnapshotRepository);
 const deleteAccountSnapshotUseCase = new DeleteAccountSnapshotUseCase(accountSnapshotRepository);
 

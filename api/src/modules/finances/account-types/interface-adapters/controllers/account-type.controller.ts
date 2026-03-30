@@ -36,9 +36,7 @@ export class AccountTypeController {
 
     const parsed = createAccountTypeSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
-      );
+      res.status(422).json(createErrorResponse("Validation error", zodErrorMapper(parsed.error)));
       return;
     }
 
@@ -71,9 +69,7 @@ export class AccountTypeController {
 
     const parsed = getAccountTypesQuerySchema.safeParse(req.query);
     if (!parsed.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsed.error)),
-      );
+      res.status(422).json(createErrorResponse("Validation error", zodErrorMapper(parsed.error)));
       return;
     }
 
@@ -96,9 +92,9 @@ export class AccountTypeController {
 
     const parsedParams = accountTypeParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)));
       return;
     }
 
@@ -137,9 +133,9 @@ export class AccountTypeController {
 
     const parsedBody = updateAccountTypeSchema.safeParse(req.body);
     if (!parsedBody.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedBody.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedBody.error)));
       return;
     }
 
@@ -184,9 +180,9 @@ export class AccountTypeController {
 
     const parsedParams = accountTypeParamsSchema.safeParse(req.params);
     if (!parsedParams.success) {
-      res.status(422).json(
-        createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)),
-      );
+      res
+        .status(422)
+        .json(createErrorResponse("Validation error", zodErrorMapper(parsedParams.error)));
       return;
     }
 

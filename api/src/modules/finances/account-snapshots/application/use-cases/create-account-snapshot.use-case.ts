@@ -16,7 +16,7 @@ export class CreateAccountSnapshotUseCase {
       account_id: input.account_id,
       amount: input.amount,
       date: input.date,
-      note: input.note,
+      ...(input.note && { note: input.note }),
     });
 
     return {

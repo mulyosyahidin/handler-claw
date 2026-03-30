@@ -11,6 +11,7 @@ import apiKeyRouter from "./api-key.route.js";
 import accountTypeRouter from "./account-type.route.js";
 import accountRouter from "./account.route.js";
 import accountSnapshotRouter from "./account-snapshot.route.js";
+import financeOverviewRouter from "./finance-overview.route.js";
 
 const router: Router = Router();
 
@@ -26,5 +27,6 @@ router.use("/api-keys", apiKeyRouter);
 router.use("/finances/account-types", accountTypeRouter);
 router.use("/finances/accounts", accountRouter);
 router.use("/finances/account-snapshots", accountSnapshotRouter);
+router.use("/finances/overview", financeOverviewRouter);
 
 export default router;

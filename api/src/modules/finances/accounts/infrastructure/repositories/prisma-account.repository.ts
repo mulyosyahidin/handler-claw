@@ -1,5 +1,9 @@
 import { prisma } from "../../../../../config/index.js";
-import { Prisma, type Account, type BalanceSnapshot } from "../../../../../lib/generated/prisma/client.js";
+import {
+  Prisma,
+  type Account,
+  type BalanceSnapshot,
+} from "../../../../../lib/generated/prisma/client.js";
 import type { PaginationType } from "../../../../../lib/types/pagination.type.js";
 import type { CreateAccountData, GetAccountsQuery } from "../../application/dtos/account.dto.js";
 import type {
@@ -18,7 +22,10 @@ export class PrismaAccountRepository implements AccountRepository {
     });
   }
 
-  async findById(userId: string, id: string): Promise<(Account & { balances?: BalanceSnapshot[] }) | null> {
+  async findById(
+    userId: string,
+    id: string,
+  ): Promise<(Account & { balances?: BalanceSnapshot[] }) | null> {
     const account = await prisma.account.findUnique({
       where: { id },
       include: {

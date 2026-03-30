@@ -41,7 +41,7 @@ export class PrismaAccountSnapshotRepository implements AccountSnapshotRepositor
   }
 
   async findByDate(accountId: string, date: Date): Promise<BalanceSnapshot | null> {
-    // Normalize date to YYYY-MM-DD for comparison if needed, 
+    // Normalize date to YYYY-MM-DD for comparison if needed,
     // but Prisma's @db.Date should handle it if passed correctly as Date object
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
