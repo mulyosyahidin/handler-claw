@@ -35,11 +35,29 @@ jobs:
         working-directory: handlerclaw
         run: flutter pub get
 
+      - name: Create google-services.json
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > handlerclaw/android/app/google-services.json
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > handlerclaw/android/app/handlerclaw-new-release.jks
+
+      - name: Create key.properties
+        run: |
+          cat > handlerclaw/android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=handlerclaw-new-release.jks
+          EOF
+
       - name: Build Release APK
         working-directory: handlerclaw
         run: |
           flutter build apk --release \
             --dart-define=API_BASE_URL=${{ vars.API_BASE_URL }} \
+            --dart-define=APP_BASE_URL=${{ vars.APP_BASE_URL }} \
             --dart-define=SHOW_DEBUG_PAGE=false
 
       - name: Distribute to Firebase App Distribution
