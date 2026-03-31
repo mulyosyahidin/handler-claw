@@ -94,24 +94,7 @@ class _AccountsPageState extends ConsumerState<AccountsPage> {
       );
     }
 
-    if (accounts!.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.account_balance_wallet_outlined,
-              size: 64,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text('Tidak ada rekening ditemukan', style: AppTextStyles.body()),
-          ],
-        ),
-      );
-    }
-
-    final liquid = accounts.where((a) => a.category == 'LIQUID').toList();
+    final liquid = accounts!.where((a) => a.category == 'LIQUID').toList();
     final investment = accounts
         .where((a) => a.category == 'INVESTMENT')
         .toList();
@@ -283,6 +266,38 @@ class _AccountsPageState extends ConsumerState<AccountsPage> {
             ),
             _buildAccountList(others),
           ],
+
+          if (accounts.isEmpty)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.account_balance_wallet_outlined,
+                      size: 64,
+                      color: Color(0x33000000), // Subtle color
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Belum ada daftar rekening',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0x99000000),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Ketuk ikon + untuk menambah rekening baru',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, color: Color(0x66000000)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],

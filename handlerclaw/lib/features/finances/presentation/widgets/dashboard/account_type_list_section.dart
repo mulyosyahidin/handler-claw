@@ -6,6 +6,7 @@ import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/widgets/shimmer_box.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_type_entity.dart';
+import 'package:handlerclaw/features/finances/presentation/widgets/dashboard/empty_section_state.dart';
 import 'package:handlerclaw/features/finances/presentation/widgets/shared/finance_widget_helpers.dart';
 
 class AccountTypeListSection extends ConsumerWidget {
@@ -39,35 +40,38 @@ class AccountTypeListSection extends ConsumerWidget {
         const SizedBox(height: 12),
         SizedBox(
           height: 100,
-          child:
-              isLoading && accountTypes.isEmpty
-                  ? ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    itemBuilder:
-                        (context, index) => const Padding(
-                          padding: EdgeInsets.only(right: 12),
-                          child: ShimmerBox(width: 100, height: 100),
-                        ),
-                  )
-                  : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: accountTypes.length > 3 ? 3 : accountTypes.length,
-                    itemBuilder: (context, index) {
-                      final type = accountTypes[index];
-                      return _TypeItem(
-                        name: type.name,
-                        count: type.accountCount,
-                        icon: FinanceWidgetHelpers.getIconForCategory(
-                          type.category,
-                        ),
-                        color: FinanceWidgetHelpers.getColorForCategory(
-                          type.category,
-                        ),
-                        isLoading: isLoading,
-                      );
-                    },
+          child: isLoading && accountTypes.isEmpty
+              ? ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) => const Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: ShimmerBox(width: 100, height: 100),
                   ),
+                )
+              : accountTypes.isEmpty
+              ? const EmptySectionState(
+                  message: 'Belum ada tipe akun',
+                  icon: Icons.account_balance_wallet_outlined,
+                )
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: accountTypes.length > 3 ? 3 : accountTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = accountTypes[index];
+                    return _TypeItem(
+                      name: type.name,
+                      count: type.accountCount,
+                      icon: FinanceWidgetHelpers.getIconForCategory(
+                        type.category,
+                      ),
+                      color: FinanceWidgetHelpers.getColorForCategory(
+                        type.category,
+                      ),
+                      isLoading: isLoading,
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -112,20 +116,20 @@ class _TypeItem extends StatelessWidget {
           isLoading
               ? const ShimmerBox(width: 50, height: 12)
               : Text(
-                name,
-                style: AppTextStyles.body(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+                  name,
+                  style: AppTextStyles.body(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
           if (count > 0 || isLoading)
             isLoading
                 ? const Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: ShimmerBox(width: 30, height: 10),
-                )
+                    padding: EdgeInsets.only(top: 4),
+                    child: ShimmerBox(width: 30, height: 10),
+                  )
                 : Text('$count Akun', style: AppTextStyles.label(fontSize: 10)),
         ],
       ),

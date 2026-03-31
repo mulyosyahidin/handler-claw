@@ -124,12 +124,13 @@ class _AccountTypesPageState extends ConsumerState<AccountTypesPage> {
               ),
             ),
 
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Divider(),
+          if (categories.isNotEmpty && types.isNotEmpty)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              ),
             ),
-          ),
 
           // Grouped Account Types
           if (isLoading)
@@ -142,6 +143,32 @@ class _AccountTypesPageState extends ConsumerState<AccountTypesPage> {
                     child: const ShimmerBox(width: double.infinity, height: 80),
                   ),
                   childCount: 8,
+                ),
+              ),
+            )
+          else if (types.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.account_balance_wallet_outlined,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Belum ada tipe akun',
+                      style: AppTextStyles.body(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Ketuk ikon + untuk menambah tipe akun baru',
+                      style: AppTextStyles.label(),
+                    ),
+                  ],
                 ),
               ),
             )

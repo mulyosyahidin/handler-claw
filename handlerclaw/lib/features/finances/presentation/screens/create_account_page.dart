@@ -2,6 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
@@ -46,7 +47,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
           title: 'Berhasil',
           description: 'Rekening berhasil ditambahkan',
         );
-        context.pop();
+        _nameController.clear();
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(
@@ -71,6 +72,10 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
   @override
   Widget build(BuildContext context) {
     final accountTypesAsync = ref.watch(accountTypeControllerProvider);
+    final hasAccountTypes = accountTypesAsync.maybeWhen(
+      data: (result) => result.accountTypes.isNotEmpty,
+      orElse: () => true,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -117,6 +122,62 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
               // Account Type Dropdown
               accountTypesAsync.when(
                 data: (result) {
+                  if (result.accountTypes.isEmpty) {
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.errorContainer.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.error.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.warning_amber_rounded,
+                                color: Theme.of(context).colorScheme.error,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Tipe akun belum tersedia. Kamu harus buat tipe akun dulu sebelum bisa nambah rekening.',
+                                  style: AppTextStyles.body(
+                                    fontSize: 13,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onErrorContainer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          FilledButton.icon(
+                            onPressed: () =>
+                                context.push(Routes.financeCreateAccountType),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.error,
+                              foregroundColor: Colors.white,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            icon: const Icon(Icons.add, size: 18),
+                            label: const Text('Atur Tipe Akun'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return DropdownButtonFormField<String>(
                     initialValue: _selectedAccountTypeId,
                     isExpanded: true,
@@ -164,7 +225,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
 
               // Submit Button
               ElevatedButton(
-                onPressed: _isLoading ? null : _submit,
+                onPressed: (_isLoading || !hasAccountTypes) ? null : _submit,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

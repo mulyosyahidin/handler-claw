@@ -25,7 +25,7 @@ export interface AccountRepository {
     userId: string,
     id: string,
   ): Promise<(Account & { accountType: AccountType; balances: BalanceSnapshot[] }) | null>;
-  findByName(userId: string, name: string): Promise<Account | null>;
+  findByNameAndType(userId: string, name: string, accountTypeId: string): Promise<Account | null>;
   update(
     id: string,
     data: UpdateAccountData,

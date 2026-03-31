@@ -1,12 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
+import 'package:handlerclaw/features/finances/application/finance_controller.dart';
 import 'package:handlerclaw/features/finances/data/repositories/finance_snapshot_repository_impl.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_snapshot_entity.dart';
 
 final accountSnapshotsProvider =
-    FutureProvider.family<List<AccountSnapshotEntity>, String>((ref, accountId) async {
-  final repository = ref.read(accountSnapshotRepositoryProvider);
-  return await repository.getSnapshots(accountId);
-});
+    FutureProvider.family<List<AccountSnapshotEntity>, String>((
+      ref,
+      accountId,
+    ) async {
+      final repository = ref.read(accountSnapshotRepositoryProvider);
+      return await repository.getSnapshots(accountId);
+    });
 
 class CreateSnapshotController extends AsyncNotifier<void> {
   @override
@@ -27,16 +32,19 @@ class CreateSnapshotController extends AsyncNotifier<void> {
         date: date,
         note: note,
       );
-      
+
       ref.invalidate(accountSnapshotsProvider(accountId));
+      ref.invalidate(accountsControllerProvider);
+      ref.invalidate(accountDetailProvider(accountId));
+      ref.invalidate(financeControllerProvider);
     });
   }
 }
 
 final createSnapshotControllerProvider =
     AsyncNotifierProvider<CreateSnapshotController, void>(
-  CreateSnapshotController.new,
-);
+      CreateSnapshotController.new,
+    );
 
 class DeleteSnapshotController extends AsyncNotifier<void> {
   @override
@@ -51,11 +59,14 @@ class DeleteSnapshotController extends AsyncNotifier<void> {
       final repository = ref.read(accountSnapshotRepositoryProvider);
       await repository.deleteSnapshot(id);
       ref.invalidate(accountSnapshotsProvider(accountId));
+      ref.invalidate(accountsControllerProvider);
+      ref.invalidate(accountDetailProvider(accountId));
+      ref.invalidate(financeControllerProvider);
     });
   }
 }
 
 final deleteSnapshotControllerProvider =
     AsyncNotifierProvider<DeleteSnapshotController, void>(
-  DeleteSnapshotController.new,
-);
+      DeleteSnapshotController.new,
+    );

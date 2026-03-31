@@ -45,7 +45,10 @@ class AccountTypeRepositoryImpl implements IAccountTypeRepository {
 
   @override
   Future<void> deleteAccountType(String id) async {
-    await _remoteDataSource.deleteAccountType(id);
+    final response = await _remoteDataSource.deleteAccountType(id);
+    if (!response.success) {
+      throw Exception(response.message);
+    }
   }
 
   @override

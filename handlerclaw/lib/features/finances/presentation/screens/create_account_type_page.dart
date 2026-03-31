@@ -1,7 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
@@ -34,7 +33,9 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(accountTypeControllerProvider.notifier).createAccountType(
+      await ref
+          .read(accountTypeControllerProvider.notifier)
+          .createAccountType(
             name: _nameController.text.trim(),
             category: _selectedCategory,
           );
@@ -45,7 +46,7 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
           title: 'Berhasil',
           description: 'Tipe akun berhasil ditambahkan',
         );
-        context.pop();
+        _nameController.clear();
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(
@@ -92,7 +93,7 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Name Field
               TextFormField(
                 controller: _nameController,
@@ -113,7 +114,7 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
                 enabled: !_isLoading,
               ),
               const SizedBox(height: 24),
-              
+
               // Category Dropdown
               DropdownButtonFormField<String>(
                 initialValue: _selectedCategory,
@@ -130,11 +131,13 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
                     child: Text(category),
                   );
                 }).toList(),
-                onChanged: _isLoading ? null : (value) {
-                  if (value != null) {
-                    setState(() => _selectedCategory = value);
-                  }
-                },
+                onChanged: _isLoading
+                    ? null
+                    : (value) {
+                        if (value != null) {
+                          setState(() => _selectedCategory = value);
+                        }
+                      },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Pilih kategori';
@@ -143,7 +146,7 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
                 },
               ),
               const SizedBox(height: 48),
-              
+
               // Submit Button
               ElevatedButton(
                 onPressed: _isLoading ? null : _submit,

@@ -13,25 +13,34 @@ class PrayerLogPage extends ConsumerStatefulWidget {
   ConsumerState<PrayerLogPage> createState() => _PrayerLogPageState();
 }
 
-class _PrayerLogPageState extends ConsumerState<PrayerLogPage> {
+class _PrayerLogPageState extends ConsumerState<PrayerLogPage>
+    with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      ref.read(prayerLogListControllerProvider.notifier).loadMore();
+    if (!mounted || !_scrollController.hasClients) return;
+
+    // Only load more if we are on the first tab (Journal)
+    if (_tabController.index == 0) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(prayerLogListControllerProvider.notifier).loadMore();
+      }
     }
   }
 
@@ -82,35 +91,33 @@ class _PrayerLogPageState extends ConsumerState<PrayerLogPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(prayerLogListControllerProvider);
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Jurnal Solat', style: AppTextStyles.title()),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh_rounded),
-              onPressed: _refresh,
-            ),
-          ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Jurnal'),
-              Tab(text: 'Ringkasan'),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Jurnal Solat', style: AppTextStyles.title()),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _refresh,
           ),
-        ),
-        body: TabBarView(
-          children: [
-            JournalTab(
-              scrollController: _scrollController,
-              onRefresh: _refresh,
-              selectDateRange: () => _selectDateRange(context),
-            ),
-            SummaryTab(selectDateRange: () => _selectDateRange(context)),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Jurnal'),
+            Tab(text: 'Ringkasan'),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          JournalTab(
+            scrollController: _scrollController,
+            onRefresh: _refresh,
+            selectDateRange: () => _selectDateRange(context),
+          ),
+          SummaryTab(selectDateRange: () => _selectDateRange(context)),
+        ],
       ),
     );
   }

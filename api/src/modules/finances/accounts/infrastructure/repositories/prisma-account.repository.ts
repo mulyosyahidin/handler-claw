@@ -63,11 +63,16 @@ export class PrismaAccountRepository implements AccountRepository {
     return account;
   }
 
-  async findByName(userId: string, name: string): Promise<Account | null> {
+  async findByNameAndType(
+    userId: string,
+    name: string,
+    accountTypeId: string,
+  ): Promise<Account | null> {
     return prisma.account.findFirst({
       where: {
         userId,
         name,
+        accountTypeId,
         deletedAt: null,
       },
     });

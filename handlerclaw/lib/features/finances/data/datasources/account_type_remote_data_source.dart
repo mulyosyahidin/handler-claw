@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
+import 'package:handlerclaw/core/models/api_response_dto.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:handlerclaw/features/finances/data/responses/account_types_response.dart';
@@ -106,8 +107,8 @@ class AccountTypeRemoteDataSource {
       final response = await _dio.patch(
         endpoint,
         data: {
-          'name': ?name,
-          'category': ?category,
+          'name': name,
+          'category': category,
         },
       );
 
@@ -134,13 +135,15 @@ class AccountTypeRemoteDataSource {
     }
   }
 
-  Future<void> deleteAccountType(String id) async {
+  Future<ApiResponseDto<dynamic>> deleteAccountType(String id) async {
     final endpoint = "${ApiEndpoint.financeAccountTypes}/$id";
 
     try {
       Logger.api("DELETE", endpoint);
 
-      await _dio.delete(endpoint);
+      final response = await _dio.delete(endpoint);
+
+      return ApiResponseDto<dynamic>.fromJson(response.data, (json) => json);
     } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
       FirebaseCrashlytics.instance.recordError(
@@ -148,6 +151,12 @@ class AccountTypeRemoteDataSource {
         stackTrace,
         reason: 'AccountTypeRemoteDataSource.deleteAccountType (DioException)',
       );
+      if (e.response != null) {
+        return ApiResponseDto<dynamic>.fromJson(
+          e.response!.data,
+          (json) => json,
+        );
+      }
       rethrow;
     } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");

@@ -6,6 +6,7 @@ import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/currency_utils.dart';
+import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
@@ -60,7 +61,7 @@ class AccountTypeTile extends ConsumerWidget {
             style: AppTextStyles.body(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            FinanceWidgetHelpers.getCategoryLabel(type.category),
+            '${type.accountCount} Akun',
             style: AppTextStyles.label(fontSize: 12),
           ),
           trailing: Column(
@@ -70,10 +71,6 @@ class AccountTypeTile extends ConsumerWidget {
               Text(
                 CurrencyUtils.formatIdr(type.currentTotalAmount),
                 style: AppTextStyles.body(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '${type.accountCount} Akun',
-                style: AppTextStyles.label(fontSize: 10),
               ),
             ],
           ),

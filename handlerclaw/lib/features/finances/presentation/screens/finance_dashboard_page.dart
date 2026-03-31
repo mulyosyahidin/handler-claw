@@ -29,40 +29,32 @@ class FinanceDashboardPage extends ConsumerWidget {
         ],
       ),
       body: financeAsync.when(
-        data:
-            (finance) => _buildContent(
-              context,
-              ref,
-              finance,
-              isLoading: financeAsync.isRefreshing,
-            ),
-        loading:
-            () => _buildContent(
-              context,
-              ref,
-              null, // No data yet, show full layout skeletons
-              isLoading: true,
-            ),
-        error:
-            (err, stack) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Error: $err',
-                    style: AppTextStyles.body(color: Colors.red),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed:
-                        () => ref
-                            .read(financeControllerProvider.notifier)
-                            .refresh(),
-                    child: const Text('Retry'),
-                  ),
-                ],
+        data: (finance) => _buildContent(
+          context,
+          ref,
+          finance,
+          isLoading: financeAsync.isRefreshing,
+        ),
+        loading: () => _buildContent(
+          context,
+          ref,
+          null, // No data yet, show full layout skeletons
+          isLoading: true,
+        ),
+        error: (err, stack) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: $err', style: AppTextStyles.body(color: Colors.red)),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () =>
+                    ref.read(financeControllerProvider.notifier).refresh(),
+                child: const Text('Retry'),
               ),
-            ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -91,14 +83,13 @@ class FinanceDashboardPage extends ConsumerWidget {
 
             FinanceSummaryGrid(finance: finance, isLoading: isLoading),
 
-            const SizedBox(height: 32),
-
-            TopMoversListSection(
-              movers: finance?.topMovers ?? [],
-              isLoading: isLoading,
-            ),
-
-            const SizedBox(height: 32),
+            if (isLoading || (finance?.topMovers.isNotEmpty ?? false)) ...[
+              const SizedBox(height: 32),
+              TopMoversListSection(
+                movers: finance?.topMovers ?? [],
+                isLoading: isLoading,
+              ),
+            ],
 
             AccountTypeListSection(
               accountTypes: finance?.accountTypes ?? [],

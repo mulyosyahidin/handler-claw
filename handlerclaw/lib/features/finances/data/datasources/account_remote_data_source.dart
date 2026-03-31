@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
+import 'package:handlerclaw/core/models/api_response_dto.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:handlerclaw/features/finances/data/responses/accounts_response.dart';
@@ -23,11 +24,7 @@ class AccountRemoteDataSource {
 
       final response = await _dio.get(
         endpoint,
-        queryParameters: {
-          'page': page,
-          'per_page': perPage,
-          'search': search,
-        },
+        queryParameters: {'page': page, 'per_page': perPage, 'search': search},
       );
 
       return AccountsResponseDto.fromJson(response.data);
@@ -53,7 +50,7 @@ class AccountRemoteDataSource {
     }
   }
 
-  Future<void> createAccount({
+  Future<ApiResponseDto<dynamic>> createAccount({
     required String name,
     required String accountTypeId,
   }) async {
@@ -62,13 +59,12 @@ class AccountRemoteDataSource {
     try {
       Logger.api("POST", endpoint);
 
-      await _dio.post(
+      final response = await _dio.post(
         endpoint,
-        data: {
-          'name': name,
-          'account_type_id': accountTypeId,
-        },
+        data: {'name': name, 'account_type_id': accountTypeId},
       );
+
+      return ApiResponseDto<dynamic>.fromJson(response.data, (json) => json);
     } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
       FirebaseCrashlytics.instance.recordError(
@@ -76,6 +72,12 @@ class AccountRemoteDataSource {
         stackTrace,
         reason: 'AccountRemoteDataSource.createAccount (DioException)',
       );
+      if (e.response != null) {
+        return ApiResponseDto<dynamic>.fromJson(
+          e.response!.data,
+          (json) => json,
+        );
+      }
       rethrow;
     } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
@@ -111,7 +113,7 @@ class AccountRemoteDataSource {
     }
   }
 
-  Future<void> updateAccount({
+  Future<ApiResponseDto<dynamic>> updateAccount({
     required String id,
     String? name,
     String? accountTypeId,
@@ -121,13 +123,12 @@ class AccountRemoteDataSource {
     try {
       Logger.api("PATCH", endpoint);
 
-      await _dio.patch(
+      final response = await _dio.patch(
         endpoint,
-        data: {
-          'name': ?name,
-          'account_type_id': ?accountTypeId,
-        },
+        data: {'name': name, 'account_type_id': accountTypeId},
       );
+
+      return ApiResponseDto<dynamic>.fromJson(response.data, (json) => json);
     } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
       FirebaseCrashlytics.instance.recordError(
@@ -135,6 +136,12 @@ class AccountRemoteDataSource {
         stackTrace,
         reason: 'AccountRemoteDataSource.updateAccount (DioException)',
       );
+      if (e.response != null) {
+        return ApiResponseDto<dynamic>.fromJson(
+          e.response!.data,
+          (json) => json,
+        );
+      }
       rethrow;
     } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
@@ -147,13 +154,15 @@ class AccountRemoteDataSource {
     }
   }
 
-  Future<void> deleteAccount(String id) async {
+  Future<ApiResponseDto<dynamic>> deleteAccount(String id) async {
     final endpoint = "${ApiEndpoint.financeAccounts}/$id";
 
     try {
       Logger.api("DELETE", endpoint);
 
-      await _dio.delete(endpoint);
+      final response = await _dio.delete(endpoint);
+
+      return ApiResponseDto<dynamic>.fromJson(response.data, (json) => json);
     } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
       FirebaseCrashlytics.instance.recordError(
@@ -161,6 +170,12 @@ class AccountRemoteDataSource {
         stackTrace,
         reason: 'AccountRemoteDataSource.deleteAccount (DioException)',
       );
+      if (e.response != null) {
+        return ApiResponseDto<dynamic>.fromJson(
+          e.response!.data,
+          (json) => json,
+        );
+      }
       rethrow;
     } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
@@ -174,7 +189,9 @@ class AccountRemoteDataSource {
   }
 }
 
-final accountRemoteDataSourceProvider = Provider<AccountRemoteDataSource>((ref) {
+final accountRemoteDataSourceProvider = Provider<AccountRemoteDataSource>((
+  ref,
+) {
   final dio = ref.read(dioProvider);
   return AccountRemoteDataSource(dio);
 });

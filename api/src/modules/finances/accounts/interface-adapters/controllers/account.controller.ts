@@ -41,7 +41,11 @@ export class AccountController {
     }
 
     try {
-      const existing = await this.accountRepository.findByName(userId, parsed.data.name);
+      const existing = await this.accountRepository.findByNameAndType(
+        userId,
+        parsed.data.name,
+        parsed.data.account_type_id,
+      );
       if (existing) {
         res.status(409).json(
           createErrorResponse("Nama akun sudah digunakan", {
@@ -145,7 +149,11 @@ export class AccountController {
       }
 
       if (parsedBody.data.name !== undefined) {
-        const existing = await this.accountRepository.findByName(userId, parsedBody.data.name);
+        const existing = await this.accountRepository.findByNameAndType(
+          userId,
+          parsedBody.data.name,
+          parsedBody.data.account_type_id ?? account.accountTypeId,
+        );
         if (existing && existing.id !== parsedParams.data.id) {
           res.status(409).json(
             createErrorResponse("Nama akun sudah digunakan", {

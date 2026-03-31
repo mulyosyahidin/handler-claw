@@ -38,11 +38,14 @@ class AccountRepositoryImpl implements IAccountRepository {
   Future<void> createAccount({
     required String name,
     required String accountTypeId,
-  }) {
-    return _remoteDataSource.createAccount(
+  }) async {
+    final response = await _remoteDataSource.createAccount(
       name: name,
       accountTypeId: accountTypeId,
     );
+    if (!response.success) {
+      throw Exception(response.message);
+    }
   }
 
   @override
@@ -61,17 +64,23 @@ class AccountRepositoryImpl implements IAccountRepository {
     required String id,
     String? name,
     String? accountTypeId,
-  }) {
-    return _remoteDataSource.updateAccount(
+  }) async {
+    final response = await _remoteDataSource.updateAccount(
       id: id,
       name: name,
       accountTypeId: accountTypeId,
     );
+    if (!response.success) {
+      throw Exception(response.message);
+    }
   }
 
   @override
-  Future<void> deleteAccount(String id) {
-    return _remoteDataSource.deleteAccount(id);
+  Future<void> deleteAccount(String id) async {
+    final response = await _remoteDataSource.deleteAccount(id);
+    if (!response.success) {
+      throw Exception(response.message);
+    }
   }
 }
 

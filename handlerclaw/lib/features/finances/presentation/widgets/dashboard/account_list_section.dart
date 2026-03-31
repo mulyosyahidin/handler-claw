@@ -5,6 +5,7 @@ import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/widgets/shimmer_box.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
 import 'package:handlerclaw/features/finances/presentation/widgets/accounts/account_tile.dart';
+import 'package:handlerclaw/features/finances/presentation/widgets/dashboard/empty_section_state.dart';
 
 class AccountListSection extends StatelessWidget {
   final List<AccountEntity> accounts;
@@ -48,7 +49,12 @@ class AccountListSection extends StatelessWidget {
                 )
                 .take(4),
             ...accounts.where((a) => a.category == 'DEBT').take(1),
-          ].map((acc) => AccountTile(account: acc)),
+          ].map((acc) => AccountTile(account: acc))
+        else
+          const EmptySectionState(
+            message: 'Belum ada daftar rekening',
+            icon: Icons.account_balance_outlined,
+          ),
       ],
     );
   }

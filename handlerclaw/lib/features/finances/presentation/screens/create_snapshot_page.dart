@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
+import 'package:handlerclaw/core/utils/toast_utils.dart';
 import 'package:handlerclaw/features/finances/application/account_snapshot_controller.dart';
 
 class CreateSnapshotPage extends ConsumerStatefulWidget {
@@ -47,12 +48,12 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final amount = double.tryParse(
-      _amountController.text.replaceAll(',', '.'),
-    );
+    final amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     if (amount == null) return;
 
-    await ref.read(createSnapshotControllerProvider.notifier).createSnapshot(
+    await ref
+        .read(createSnapshotControllerProvider.notifier)
+        .createSnapshot(
           accountId: widget.accountId,
           amount: amount,
           date: _selectedDate,
@@ -64,21 +65,19 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
     final state = ref.read(createSnapshotControllerProvider);
     if (state.hasError) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal menyimpan: ${state.error}'),
-          backgroundColor: Colors.red,
-        ),
+      ToastUtils.showError(
+        context,
+        title: 'Gagal',
+        description: state.error.toString().replaceAll('Exception: ', ''),
       );
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Snapshot berhasil disimpan!'),
-          backgroundColor: Colors.green,
-        ),
+      ToastUtils.showSuccess(
+        context,
+        title: 'Berhasil',
+        description: 'Snapshot saldo berhasil disimpan',
       );
-      Navigator.of(context).pop(true); // pop dengan result true → trigger refresh
+      Navigator.of(context).pop(true);
     }
   }
 
@@ -109,7 +108,9 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
                 ],
@@ -117,7 +118,9 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                   hintText: 'Contoh: 1500000',
                   prefixText: 'Rp ',
                   filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                  fillColor: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.4,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
@@ -130,7 +133,10 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 validator: (value) {
@@ -158,7 +164,9 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                     vertical: 16,
                   ),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: colorScheme.outlineVariant.withValues(alpha: 0.5),
@@ -184,10 +192,7 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
               const SizedBox(height: 24),
 
               // ── Note (opsional) ──
-              Text(
-                'Catatan (opsional)',
-                style: AppTextStyles.label(),
-              ),
+              Text('Catatan (opsional)', style: AppTextStyles.label()),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _noteController,
@@ -195,7 +200,9 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                 decoration: InputDecoration(
                   hintText: 'Tambahkan catatan...',
                   filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                  fillColor: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.4,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
@@ -208,7 +215,10 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -236,7 +246,7 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
                           ),
                         )
                       : Text(
-                          'Simpan Snapshot',
+                          'Simpan',
                           style: AppTextStyles.body(
                             fontWeight: FontWeight.bold,
                             color: colorScheme.onPrimary,
@@ -253,8 +263,18 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
