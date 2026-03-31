@@ -5,6 +5,7 @@ import 'package:handlerclaw/features/auth/application/login_controller.dart';
 import 'package:handlerclaw/features/home/domain/entities/home_overview_entity.dart';
 import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/app_drawer.dart';
+import 'package:handlerclaw/features/home/presentation/widgets/net_worth_card.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/prayer_chip.dart';
 import 'package:handlerclaw/features/home/presentation/widgets/summary_card.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
@@ -18,7 +19,7 @@ class HomePage extends ConsumerWidget {
     final userName = authSession.value?.user?.name ?? 'Claw Master';
 
     final overviewAsync = ref.watch(homeControllerProvider);
- 
+
     return Scaffold(
       appBar: AppBar(
         title: Text('HandlerClaw', style: AppTextStyles.title()),
@@ -47,8 +48,11 @@ class HomePage extends ConsumerWidget {
             children: [
               // Welcome Header
               Text('Halo, $userName!', style: AppTextStyles.hero()),
-              const SizedBox(height: 32),
- 
+              const SizedBox(height: 24),
+
+              // Total Net Worth Card
+              const NetWorthCard(),
+
               // Summary Grid
               Text('App Summary', style: AppTextStyles.heading()),
               const SizedBox(height: 16),
@@ -109,9 +113,12 @@ class HomePage extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 32),
- 
+
                     // Today's Prayer Status (Inside Data)
-                    Text('Jurnal Solat Hari Ini', style: AppTextStyles.heading()),
+                    Text(
+                      'Jurnal Solat Hari Ini',
+                      style: AppTextStyles.heading(),
+                    ),
                     const SizedBox(height: 16),
                     if (overview.prayerStatus.isEmpty)
                       Text(
@@ -148,47 +155,62 @@ class HomePage extends ConsumerWidget {
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
                       childAspectRatio: 1.2,
-                      children: const [
-                        SummaryCardSkeleton(
+                      children: [
+                        SummaryCard(
                           title: 'WA Logs',
+                          value: '',
                           subtitle: 'Global messages',
                           icon: Icons.chat_bubble_outline,
                           color: Colors.blue,
+                          isLoading: true,
                         ),
-                        SummaryCardSkeleton(
+                        SummaryCard(
                           title: 'Prayer Logs',
+                          value: '',
                           subtitle: 'Your spiritual stats',
                           icon: Icons.mosque_outlined,
                           color: Colors.green,
+                          isLoading: true,
                         ),
-                        SummaryCardSkeleton(
+                        SummaryCard(
                           title: 'Webhooks',
+                          value: '',
                           subtitle: 'Active automations',
                           icon: Icons.webhook,
                           color: Colors.orange,
+                          isLoading: true,
                         ),
-                        SummaryCardSkeleton(
+                        SummaryCard(
                           title: 'Notifications',
+                          value: '',
                           subtitle: 'Sent alerts',
                           icon: Icons.notifications_none_outlined,
                           color: Colors.redAccent,
+                          isLoading: true,
                         ),
-                        SummaryCardSkeleton(
+                        SummaryCard(
                           title: 'Your Devices',
+                          value: '',
                           subtitle: 'Registered gadgets',
                           icon: Icons.devices,
                           color: Colors.purple,
+                          isLoading: true,
                         ),
-                        SummaryCardSkeleton(
+                        SummaryCard(
                           title: 'API Keys',
+                          value: '',
                           subtitle: 'Active access keys',
                           icon: Icons.vpn_key_outlined,
                           color: Colors.teal,
+                          isLoading: true,
                         ),
                       ],
                     ),
                     const SizedBox(height: 32),
-                    Text('Jurnal Solat Hari Ini', style: AppTextStyles.heading()),
+                    Text(
+                      'Jurnal Solat Hari Ini',
+                      style: AppTextStyles.heading(),
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,

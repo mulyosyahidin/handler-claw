@@ -1,7 +1,7 @@
 enum ApiKeyStatus {
-  ACTIVE,
-  REVOKED,
-  EXPIRED,
+  active,
+  revoked,
+  expired,
 }
 
 class ApiKeyEntity {
@@ -23,6 +23,6 @@ class ApiKeyEntity {
     this.plainKey,
   });
 
-  bool get isActive => status == ApiKeyStatus.ACTIVE;
-  bool get isRevoked => status == ApiKeyStatus.REVOKED;
+  bool get isActive => status == ApiKeyStatus.active;
+  bool get isRevoked => status == ApiKeyStatus.revoked;
 }

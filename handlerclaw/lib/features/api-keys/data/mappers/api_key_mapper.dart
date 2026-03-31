@@ -17,13 +17,13 @@ class ApiKeyMapper {
   static ApiKeyStatus _mapStatus(String status) {
     switch (status.toUpperCase()) {
       case 'ACTIVE':
-        return ApiKeyStatus.ACTIVE;
+        return ApiKeyStatus.active;
       case 'REVOKED':
-        return ApiKeyStatus.REVOKED;
+        return ApiKeyStatus.revoked;
       case 'EXPIRED':
-        return ApiKeyStatus.EXPIRED;
+        return ApiKeyStatus.expired;
       default:
-        return ApiKeyStatus.ACTIVE;
+        return ApiKeyStatus.active;
     }
   }
 }

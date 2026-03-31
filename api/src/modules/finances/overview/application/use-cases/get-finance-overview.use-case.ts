@@ -1,5 +1,4 @@
 import { prisma } from "../../../../../config/index.js";
-import { toAccountSnapshotEntity } from "../../../account-snapshots/infrastructure/mappers/account-snapshot.mapper.js";
 import type {
   GetFinanceOverviewResponse,
   FinanceOverviewAccountItem,
@@ -30,9 +29,13 @@ export class GetFinanceOverviewUseCase {
 
     // 3. Map Accounts and calculate their current total per Type
     const typeTotals = new Map<string, number>();
+    const typeCounts = new Map<string, number>();
 
-    // Initialize totals with 0 for all active types
-    accountTypes.forEach((t) => typeTotals.set(t.id, 0));
+    // Initialize totals and counts with 0 for all active types
+    accountTypes.forEach((t) => {
+      typeTotals.set(t.id, 0);
+      typeCounts.set(t.id, 0);
+    });
 
     let totalNetWorth = 0;
     const categoryTotals = {
@@ -51,6 +54,9 @@ export class GetFinanceOverviewUseCase {
         const currentTypeTotal = typeTotals.get(type.id) || 0;
         typeTotals.set(type.id, currentTypeTotal + currentAmount);
 
+        const currentTypeCount = typeCounts.get(type.id) || 0;
+        typeCounts.set(type.id, currentTypeCount + 1);
+
         // Update Category Totals and Net Worth
         if (type.category === "DEBT") {
           categoryTotals.debt += currentAmount;
@@ -67,8 +73,8 @@ export class GetFinanceOverviewUseCase {
       return {
         id: acc.id,
         name: acc.name,
+        category: type?.category ?? "LIQUID",
         current_amount: currentAmount,
-        snapshots: acc.balances.map(toAccountSnapshotEntity),
       };
     });
 
@@ -77,6 +83,7 @@ export class GetFinanceOverviewUseCase {
       name: t.name,
       category: t.category,
       current_total_amount: typeTotals.get(t.id) || 0,
+      account_count: typeCounts.get(t.id) || 0,
     }));
 
     // 4. Calculate Advanced Metrics

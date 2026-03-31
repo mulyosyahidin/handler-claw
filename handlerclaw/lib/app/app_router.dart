@@ -17,15 +17,26 @@ import 'package:handlerclaw/features/prayer-logs/presentation/screens/add_prayer
 import 'package:handlerclaw/features/whatsapp-logs/presentation/screens/whatsapp_logs_page.dart';
 import 'package:handlerclaw/features/debug/presentation/screens/debug_page.dart';
 import 'package:handlerclaw/features/api-keys/presentation/screens/api_key_list_screen.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/finance_dashboard_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/accounts_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/account_types_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/account_snapshots_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/create_snapshot_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/create_account_type_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/create_account_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/edit_account_type_page.dart';
+import 'package:handlerclaw/features/finances/presentation/screens/edit_account_page.dart';
+import 'package:handlerclaw/features/finances/domain/entities/account_type_entity.dart';
+import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
 class Routes {
   static const splash = "/splash";
   static const login = "/login";
- 
+
   static const home = "/home";
   static const profile = "/profile";
- 
+
   static const notificationDetail = "/notification-detail/:id";
   static const notificationList = "/notifications";
   static const whatsappLogs = "/whatsapp-logs";
@@ -33,12 +44,23 @@ class Routes {
   static const devices = "/devices";
   static const addLog = "/add-log";
   static const apiKeys = "/api-keys";
+  static const finance = "/finances";
+  static const financeAccounts = "/finances/accounts";
+  static const financeCreateAccount = "/finances/accounts/create";
+  static const financeAccountTypes = "/finances/account-types";
+  static const financeCreateAccountType = "/finances/account-types/create";
+  static const financeEditAccountType = "/finances/account-types/:id/edit";
+  static const financeAccountSnapshots =
+      "/finances/accounts/:accountId/snapshots";
+  static const financeEditAccount = "/finances/accounts/edit";
+  static const financeCreateSnapshot =
+      "/finances/accounts/:accountId/snapshots/create";
   static const debug = "/debug";
 }
- 
+
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = RouterNotifier(ref);
- 
+
   return GoRouter(
     initialLocation: Routes.splash,
     navigatorKey: rootNavigatorKey,
@@ -96,6 +118,61 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.apiKeys,
         builder: (context, state) => const ApiKeyListScreen(),
       ),
+      GoRoute(
+        path: Routes.finance,
+        builder: (context, state) => const FinanceDashboardPage(),
+      ),
+      GoRoute(
+        path: Routes.financeAccounts,
+        builder: (context, state) => const AccountsPage(),
+      ),
+      GoRoute(
+        path: Routes.financeCreateAccount,
+        builder: (context, state) => const CreateAccountPage(),
+      ),
+      GoRoute(
+        path: Routes.financeAccountTypes,
+        builder: (context, state) => const AccountTypesPage(),
+      ),
+      GoRoute(
+        path: Routes.financeCreateAccountType,
+        builder: (context, state) => const CreateAccountTypePage(),
+      ),
+      GoRoute(
+        path: Routes.financeEditAccountType,
+        builder: (context, state) {
+          final type = state.extra as AccountTypeEntity;
+          return EditAccountTypePage(type: type);
+        },
+      ),
+      GoRoute(
+        path: Routes.financeAccountSnapshots,
+        builder: (context, state) {
+          final accountId = state.pathParameters['accountId']!;
+          return AccountSnapshotsPage(
+            accountId: accountId,
+          );
+        },
+      ),
+      GoRoute(
+        path: Routes.financeEditAccount,
+        builder: (context, state) {
+          final account = state.extra as AccountEntity;
+          return EditAccountPage(account: account);
+        },
+      ),
+      GoRoute(
+        path: Routes.financeCreateSnapshot,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final accountId = extra['accountId'] as String? ?? '';
+          final accountName = extra['accountName'] as String? ?? '';
+          return CreateSnapshotPage(
+            accountId: accountId,
+            accountName: accountName,
+          );
+        },
+      ),
     ],
     redirect: notifier.redirect,
   );
@@ -139,7 +216,7 @@ class RouterNotifier extends ChangeNotifier {
       return Routes.login;
     }
     if (isAuthenticated && location == Routes.login) return Routes.home;
-    
+
     // Prevent access to debug page if it's disabled in Env
     if (location == Routes.debug && !Env.showDebugPage) {
       return Routes.home;

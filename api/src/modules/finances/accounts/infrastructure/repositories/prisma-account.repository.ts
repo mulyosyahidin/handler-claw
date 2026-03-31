@@ -3,6 +3,7 @@ import {
   Prisma,
   type Account,
   type BalanceSnapshot,
+  type AccountType,
 } from "../../../../../lib/generated/prisma/client.js";
 import type { PaginationType } from "../../../../../lib/types/pagination.type.js";
 import type { CreateAccountData, GetAccountsQuery } from "../../application/dtos/account.dto.js";
@@ -12,23 +13,18 @@ import type {
 } from "../../domain/repositories/account.repository.interface.js";
 
 export class PrismaAccountRepository implements AccountRepository {
-  async create(userId: string, data: CreateAccountData): Promise<Account> {
+  async create(
+    userId: string,
+    data: CreateAccountData,
+  ): Promise<Account & { accountType: AccountType; balances: BalanceSnapshot[] }> {
     return await prisma.account.create({
       data: {
         userId,
         name: data.name,
         accountTypeId: data.account_type_id,
       },
-    });
-  }
-
-  async findById(
-    userId: string,
-    id: string,
-  ): Promise<(Account & { balances?: BalanceSnapshot[] }) | null> {
-    const account = await prisma.account.findUnique({
-      where: { id },
       include: {
+        accountType: true,
         balances: {
           where: {
             deletedAt: null,
@@ -36,6 +32,28 @@ export class PrismaAccountRepository implements AccountRepository {
           orderBy: {
             date: "desc",
           },
+          take: 1,
+        },
+      },
+    });
+  }
+
+  async findById(
+    userId: string,
+    id: string,
+  ): Promise<(Account & { accountType: AccountType; balances: BalanceSnapshot[] }) | null> {
+    const account = await prisma.account.findUnique({
+      where: { id },
+      include: {
+        accountType: true,
+        balances: {
+          where: {
+            deletedAt: null,
+          },
+          orderBy: {
+            date: "desc",
+          },
+          take: 1,
         },
       },
     });
@@ -55,7 +73,10 @@ export class PrismaAccountRepository implements AccountRepository {
     });
   }
 
-  async update(id: string, data: UpdateAccountData): Promise<Account> {
+  async update(
+    id: string,
+    data: UpdateAccountData,
+  ): Promise<Account & { accountType: AccountType; balances: BalanceSnapshot[] }> {
     const updateData: any = {};
     if (data.name !== undefined) updateData.name = data.name;
     if (data.account_type_id !== undefined) updateData.accountTypeId = data.account_type_id;
@@ -63,6 +84,18 @@ export class PrismaAccountRepository implements AccountRepository {
     return await prisma.account.update({
       where: { id },
       data: updateData,
+      include: {
+        accountType: true,
+        balances: {
+          where: {
+            deletedAt: null,
+          },
+          orderBy: {
+            date: "desc",
+          },
+          take: 1,
+        },
+      },
     });
   }
 
@@ -79,7 +112,10 @@ export class PrismaAccountRepository implements AccountRepository {
     userId: string,
     filter: GetAccountsQuery,
     pagination: PaginationType,
-  ): Promise<{ accounts: Account[]; total: number }> {
+  ): Promise<{
+    accounts: (Account & { accountType: AccountType; balances: BalanceSnapshot[] })[];
+    total: number;
+  }> {
     const { skip, take } = pagination;
     const normalizedSearch = filter.search?.trim();
 
@@ -99,6 +135,18 @@ export class PrismaAccountRepository implements AccountRepository {
         skip,
         take,
         orderBy: { createdAt: "desc" },
+        include: {
+          accountType: true,
+          balances: {
+            where: {
+              deletedAt: null,
+            },
+            orderBy: {
+              date: "desc",
+            },
+            take: 1,
+          },
+        },
       }),
       prisma.account.count({ where }),
     ]);

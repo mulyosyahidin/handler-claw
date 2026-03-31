@@ -1,5 +1,9 @@
 import type { PaginationMetaDto } from "../../../../../lib/types/pagination-meta-dto.js";
 import type { IAccount } from "../../domain/entities/account.entity.js";
+export type AccountDto = Omit<IAccount, "balances"> & {
+  current_amount: number;
+  category: string;
+};
 
 /**
  * Input Data Contracts
@@ -29,18 +33,18 @@ export type GetAccountsQuery = {
  * Response Contracts
  */
 export type CreateAccountResponse = {
-  account: IAccount;
+  account: AccountDto;
 };
 
 export type GetAccountsResponse = {
-  accounts: IAccount[];
+  accounts: AccountDto[];
   meta: PaginationMetaDto;
 };
 
 export type GetAccountDetailResponse = {
-  account: IAccount;
+  account: AccountDto;
 };
 
 export type UpdateAccountResponse = {
-  account: IAccount;
+  account: AccountDto;
 };

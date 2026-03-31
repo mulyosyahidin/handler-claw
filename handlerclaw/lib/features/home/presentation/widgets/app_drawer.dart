@@ -299,6 +299,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                     },
                   ),
                   _DrawerNavItem(
+                    icon: Icons.account_balance_wallet_rounded,
+                    label: 'Keuangan',
+                    isActive:
+                        GoRouterState.of(context).matchedLocation ==
+                        Routes.finance,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(Routes.finance);
+                    },
+                  ),
+                  _DrawerNavItem(
                     icon: Icons.notifications_rounded,
                     label: 'Notifikasi',
                     isActive:

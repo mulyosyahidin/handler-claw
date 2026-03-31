@@ -40,7 +40,7 @@ class ApiKeySuccessDialog extends StatelessWidget {
               'Simpan kunci ini sekarang. Untuk alasan keamanan, kunci ini tidak akan ditampilkan lagi setelah Anda menutup dialog ini.',
               style: AppTextStyles.body(
                 fontSize: 14,
-                color: colorScheme.onSurface.withOpacity(0.7),
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
@@ -49,7 +49,7 @@ class ApiKeySuccessDialog extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
+                border: Border.all(color: colorScheme.outline.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [

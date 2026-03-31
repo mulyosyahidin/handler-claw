@@ -19,4 +19,8 @@ class ApiEndpoint {
   static const String apiKeyDetail = "/api-keys/{id}";
   static const String apiKeyRevoke = "/api-keys/{id}/revoke";
   static const String apiKeyRotate = "/api-keys/{id}/rotate";
+  static const String financeOverview = "/finances/overview";
+  static const String financeAccountTypes = "/finances/account-types";
+  static const String financeAccountSnapshots = "/finances/account-snapshots";
+  static const String financeAccounts = "/finances/accounts";
 }

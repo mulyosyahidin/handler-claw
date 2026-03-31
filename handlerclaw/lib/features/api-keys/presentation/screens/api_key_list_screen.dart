@@ -13,15 +13,7 @@ class ApiKeyListScreen extends ConsumerWidget {
     final state = ref.watch(apiKeyListControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('API Keys', style: AppTextStyles.title()),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreateDialog(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text('API Keys', style: AppTextStyles.title())),
       body: state.when(
         data: (data) => _buildList(context, ref, data),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -47,7 +39,7 @@ class ApiKeyListScreen extends ConsumerWidget {
             Icon(
               Icons.vpn_key_outlined,
               size: 64,
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(

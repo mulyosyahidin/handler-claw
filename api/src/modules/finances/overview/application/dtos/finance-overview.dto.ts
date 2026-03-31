@@ -1,17 +1,16 @@
-import type { IAccountSnapshot } from "../../../account-snapshots/domain/entities/account-snapshot.entity.js";
-
 export type FinanceOverviewAccountTypeItem = {
   id: string;
   name: string;
   category: string;
   current_total_amount: number;
+  account_count: number;
 };
 
 export type FinanceOverviewAccountItem = {
   id: string;
   name: string;
+  category: string;
   current_amount: number;
-  snapshots: IAccountSnapshot[];
 };
 
 export type FinanceOverviewCategoryTotals = {

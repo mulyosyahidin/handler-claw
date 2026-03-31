@@ -1,12 +1,16 @@
-import type { Account, BalanceSnapshot } from "../../../../../lib/generated/prisma/client.js";
-import { toAccountSnapshotEntity } from "../../../account-snapshots/infrastructure/mappers/account-snapshot.mapper.js";
-import type { IAccount } from "../../domain/entities/account.entity.js";
+import type {
+  Account,
+  AccountType,
+  BalanceSnapshot,
+} from "../../../../../lib/generated/prisma/client.js";
+import type { AccountDto } from "../../application/dtos/account.dto.js";
 
-type AccountWithBalances = Account & {
-  balances?: BalanceSnapshot[];
+type AccountWithRelations = Account & {
+  accountType: AccountType;
+  balances: BalanceSnapshot[];
 };
 
-export function toAccountEntity(data: AccountWithBalances): IAccount {
+export function toAccountEntity(data: AccountWithRelations): AccountDto {
   return {
     id: data.id,
     user_id: data.userId,
@@ -14,6 +18,7 @@ export function toAccountEntity(data: AccountWithBalances): IAccount {
     account_type_id: data.accountTypeId,
     created_at: data.createdAt,
     updated_at: data.updatedAt,
-    balances: data.balances ? data.balances.map(toAccountSnapshotEntity) : undefined,
+    current_amount: Number(data.balances[0]?.amount ?? 0),
+    category: data.accountType.category,
   };
 }
