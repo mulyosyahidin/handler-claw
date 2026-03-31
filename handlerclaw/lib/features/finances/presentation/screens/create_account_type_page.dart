@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -46,7 +47,12 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
         );
         context.pop();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'CreateAccountTypePage._submit',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

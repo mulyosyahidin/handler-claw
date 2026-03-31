@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -332,7 +333,12 @@ class _AccountSnapshotsPageState extends ConsumerState<AccountSnapshotsPage> {
                               description: 'Snapshot berhasil dihapus',
                             );
                           }
-                        } catch (e) {
+                        } catch (e, stackTrace) {
+                          FirebaseCrashlytics.instance.recordError(
+                            e,
+                            stackTrace,
+                            reason: 'AccountSnapshotsPage.onDismissed',
+                          );
                           setState(() => _dismissedIds.remove(snapshot.id));
                           final stableContext = rootNavigatorKey.currentContext ?? context;
                           if (stableContext.mounted) {

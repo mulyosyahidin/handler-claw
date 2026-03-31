@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/auth/token_storage.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
@@ -58,8 +59,16 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
       await tokenStorage.saveUser(userEntity);
 
       return AuthSession.authenticated(token, userEntity);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       final statusCode = e.response?.statusCode;
+
+      if (statusCode != 401) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'AuthSessionController.build (DioException)',
+        );
+      }
 
       if (statusCode == 401) {
         Logger.warning("AuthSession: Session expired (401). Clearing session.");
@@ -78,9 +87,13 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
         "AuthSession: Network error and no cached user. Returning unauthenticated.",
       );
       return AuthSession.unauthenticated();
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("AuthSession: Unexpected error: $e");
-
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthSessionController.build (Unexpected)',
+      );
       if (cachedUser != null) {
         Logger.warning("AuthSession: Falling back to CACHED user.");
         return AuthSession.authenticated(token, cachedUser);

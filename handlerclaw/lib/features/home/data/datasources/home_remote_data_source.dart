@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -19,14 +20,24 @@ class HomeRemoteDataSource {
       final response = await _dio.get(endpoint);
 
       return OverviewResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'HomeRemoteDataSource.getOverview (DioException)',
+      );
       if (e.response != null) {
         return OverviewResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'HomeRemoteDataSource.getOverview (Unexpected)',
+      );
       rethrow;
     }
   }

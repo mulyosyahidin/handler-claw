@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 import 'package:handlerclaw/features/api-keys/domain/entities/api_key_entity.dart';
@@ -74,7 +75,12 @@ class ApiKeyListController extends AsyncNotifier<ApiKeyListState> {
         meta: response.meta,
         isLoadingMore: false,
       ));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ApiKeyListController.loadMore',
+      );
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
     }
   }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 
@@ -37,8 +38,13 @@ class GoogleAuthService {
       }
 
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error('Error during Google Sign-In: $e');
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'GoogleAuthService.signInWithGoogle',
+      );
       rethrow;
     }
   }

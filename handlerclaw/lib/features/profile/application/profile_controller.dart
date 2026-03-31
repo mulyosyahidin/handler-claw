@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
 import 'package:handlerclaw/core/data/mappers/user_mapper.dart';
@@ -41,6 +42,11 @@ class ProfileController extends AsyncNotifier<void> {
       state = const AsyncData(null);
       return response;
     } catch (e, st) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        st,
+        reason: 'ProfileController.updateProfile',
+      );
       state = AsyncError(e, st);
       rethrow;
     }
@@ -63,6 +69,11 @@ class ProfileController extends AsyncNotifier<void> {
       state = const AsyncData(null);
       return response;
     } catch (e, st) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        st,
+        reason: 'ProfileController.updatePassword',
+      );
       state = AsyncError(e, st);
       rethrow;
     }
@@ -99,6 +110,11 @@ class ProfileController extends AsyncNotifier<void> {
       state = const AsyncData(null);
       return response;
     } catch (e, st) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        st,
+        reason: 'ProfileController.updateAvatar',
+      );
       state = AsyncError(e, st);
       rethrow;
     }

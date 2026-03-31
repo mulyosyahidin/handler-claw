@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/notifications/data/mappers/notification_mapper.dart';
 import 'package:handlerclaw/features/notifications/data/repositories/notification_repository_impl.dart';
@@ -45,7 +46,12 @@ class NotificationListController extends AsyncNotifier<NotificationListState> {
         meta: response.data?.meta,
         isLoadingMore: false,
       ));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'NotificationListController.loadMore',
+      );
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
     }
   }

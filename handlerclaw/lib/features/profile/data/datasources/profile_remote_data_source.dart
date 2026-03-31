@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -29,14 +30,24 @@ class ProfileRemoteDataSource {
       );
 
       return ProfileUpdateResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updateProfile (DioException)',
+      );
       if (e.response != null) {
         return ProfileUpdateResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updateProfile (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -61,13 +72,23 @@ class ProfileRemoteDataSource {
       );
 
       return PasswordUpdateResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updatePassword (DioException)',
+      );
       if (e.response != null) {
         return PasswordUpdateResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updatePassword (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -88,14 +109,24 @@ class ProfileRemoteDataSource {
       );
 
       return ProfileUpdateResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updateAvatar (DioException)',
+      );
       if (e.response != null) {
         return ProfileUpdateResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileRemoteDataSource.updateAvatar (Unexpected)',
+      );
       rethrow;
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/providers/auth_session_provider.dart';
@@ -54,7 +55,12 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
           );
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileUpdateForm._handleImagePick',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,
@@ -150,7 +156,12 @@ class _ProfileUpdateFormState extends ConsumerState<ProfileUpdateForm> {
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'ProfileUpdateForm._handleSubmit',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

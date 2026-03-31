@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -36,14 +37,24 @@ class PrayerLogRemoteDataSource {
       );
 
       return PrayerLogListResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.getLogs (DioException)',
+      );
       if (e.response != null) {
         return PrayerLogListResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.getLogs (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -68,14 +79,24 @@ class PrayerLogRemoteDataSource {
       );
 
       return PrayerLogSummaryResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.getSummary (DioException)',
+      );
       if (e.response != null) {
         return PrayerLogSummaryResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.getSummary (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -87,11 +108,21 @@ class PrayerLogRemoteDataSource {
       Logger.api("POST", endpoint);
 
       await _dio.post(endpoint, data: data.toJson());
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.create (DioException)',
+      );
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PrayerLogRemoteDataSource.create (Unexpected)',
+      );
       rethrow;
     }
   }

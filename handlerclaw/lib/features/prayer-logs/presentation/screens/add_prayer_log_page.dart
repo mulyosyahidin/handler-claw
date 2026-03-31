@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/prayer-logs/application/today_prayer_controller.dart';
@@ -142,7 +143,12 @@ class _AddPrayerLogPageState extends ConsumerState<AddPrayerLogPage> {
           context.go(Routes.home);
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AddPrayerLogPage._save',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
@@ -138,7 +139,12 @@ class ApiKeyCard extends ConsumerWidget {
                     );
                   }
                 }
-              } catch (e) {
+              } catch (e, stackTrace) {
+                FirebaseCrashlytics.instance.recordError(
+                  e,
+                  stackTrace,
+                  reason: 'ApiKeyCard._confirmAction ($action)',
+                );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Gagal melakukan $action: $e')),

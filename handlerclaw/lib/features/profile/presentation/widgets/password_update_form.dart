@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/profile/application/profile_controller.dart';
@@ -62,7 +63,12 @@ class _PasswordUpdateFormState extends ConsumerState<PasswordUpdateForm> {
           }
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'PasswordUpdateForm._handleSubmit',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

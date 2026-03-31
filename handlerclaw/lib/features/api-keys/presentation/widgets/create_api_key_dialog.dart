@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
@@ -38,7 +39,12 @@ class _CreateApiKeyDialogState extends ConsumerState<CreateApiKeyDialog> {
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'CreateApiKeyDialog._handleCreate',
+      );
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(

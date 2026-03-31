@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/auth/application/login_controller.dart';
@@ -78,7 +79,12 @@ class _LoginPageState extends ConsumerState<LoginPage>
           description: successMessage,
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'LoginPage._handleLogin',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,
@@ -113,7 +119,12 @@ class _LoginPageState extends ConsumerState<LoginPage>
           description: successMessage,
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'LoginPage._handleGoogleLogin',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

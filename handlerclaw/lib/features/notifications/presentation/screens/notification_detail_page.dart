@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -283,7 +284,12 @@ class _NotificationDetailPageState
                       );
                     }
                   }
-                } catch (e) {
+                } catch (e, stackTrace) {
+                  FirebaseCrashlytics.instance.recordError(
+                    e,
+                    stackTrace,
+                    reason: 'NotificationDetailPage.actionButtons (LaunchUrl)',
+                  );
                   if (mounted) {
                     ToastUtils.showError(
                       context,
@@ -333,7 +339,12 @@ class _NotificationDetailPageState
         'Des',
       ];
       return '${local.day} ${months[local.month - 1]} ${local.year}, ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'NotificationDetailPage._formatTimestamp',
+      );
       return dateTime.toIso8601String();
     }
   }

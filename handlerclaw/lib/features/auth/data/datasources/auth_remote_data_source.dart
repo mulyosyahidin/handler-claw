@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -30,11 +31,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {"email": email, "password": password},
       );
       return LoginResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.login (DioException)',
+      );
       _handleDioError(e, endpoint);
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.login (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -55,11 +66,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final response = await dio.post(endpoint, data: data);
       return LoginResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.loginWithGoogle (DioException)',
+      );
       _handleDioError(e, endpoint);
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.loginWithGoogle (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -71,11 +92,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.api("GET", endpoint);
       final response = await dio.get(endpoint);
       return MeResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.getMe (DioException)',
+      );
       _handleDioError(e, endpoint);
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.getMe (Unexpected)',
+      );
       rethrow;
     }
   }

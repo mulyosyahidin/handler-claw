@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/devices/data/repositories/user_device_repository_impl.dart';
 import 'package:handlerclaw/features/devices/domain/entities/user_device_entity.dart';
@@ -77,7 +78,12 @@ class UserDevicesController extends AsyncNotifier<UserDevicesState> {
         totalPages: result.totalPages,
         isLoadingMore: false,
       ));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'UserDevicesController.loadMore',
+      );
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
     }
   }

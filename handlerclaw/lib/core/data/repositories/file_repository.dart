@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
 import 'package:handlerclaw/core/data/responses/file_upload_response_dto.dart';
@@ -22,7 +23,12 @@ class FileRepository {
       );
 
       return FileUploadResponseDto.fromJson(response.data);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'FileRepository.uploadFile',
+      );
       rethrow;
     }
   }

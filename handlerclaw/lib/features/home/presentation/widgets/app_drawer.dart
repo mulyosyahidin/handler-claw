@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -101,7 +102,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
       setState(() => _isLoggingOut = true);
       try {
         await widget.onLogout();
-      } catch (e) {
+      } catch (e, stackTrace) {
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'AppDrawer._showLogoutConfirmation',
+        );
         if (mounted) {
           setState(() => _isLoggingOut = false);
         }

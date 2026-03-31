@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -56,7 +57,12 @@ class _EditAccountPageState extends ConsumerState<EditAccountPage> {
         );
         context.pop();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'EditAccountPage._submit',
+      );
       if (mounted) {
         ToastUtils.showError(
           context,

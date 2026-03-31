@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,7 +54,12 @@ class AccountTile extends ConsumerWidget {
               description: 'Rekening berhasil dihapus',
             );
           }
-        } catch (e) {
+        } catch (e, stackTrace) {
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'AccountTile._deleteAccount',
+          );
           final stableContext = rootNavigatorKey.currentContext;
           if (stableContext != null && stableContext.mounted) {
             ToastUtils.showError(

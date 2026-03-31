@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/prayer-logs/application/home_widget_service.dart';
 import 'package:handlerclaw/features/prayer-logs/domain/entities/prayer_log_summary_entity.dart';
@@ -18,7 +19,12 @@ class TodayPrayerController extends AsyncNotifier<SummaryItemEntity?> {
       
       HomeWidgetService.updateWidget(todaySummary);
       return todaySummary;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'TodayPrayerController._fetchTodaySummary',
+      );
       HomeWidgetService.updateWidget(null);
       rethrow;
     }

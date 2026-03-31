@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/prayer-logs/domain/entities/prayer_log_entity.dart';
 import 'package:handlerclaw/features/prayer-logs/domain/repositories/prayer_log_repository.dart';
@@ -136,6 +137,11 @@ class PrayerLogListController extends AsyncNotifier<PrayerLogListState> {
         ),
       );
     } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stack,
+        reason: 'PrayerLogListController.loadMore',
+      );
       state = AsyncError(e, stack);
     }
   }

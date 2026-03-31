@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -180,7 +181,12 @@ class AccountTypeTile extends ConsumerWidget {
                     description: 'Tipe akun berhasil dihapus',
                   );
                 }
-              } catch (e) {
+              } catch (e, stackTrace) {
+                FirebaseCrashlytics.instance.recordError(
+                  e,
+                  stackTrace,
+                  reason: 'AccountTypeTile._showDeleteConfirmation',
+                );
                 final activeContext =
                     rootNavigatorKey.currentContext ?? context;
                 if (activeContext.mounted) {

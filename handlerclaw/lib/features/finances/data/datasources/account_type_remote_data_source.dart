@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -30,14 +31,24 @@ class AccountTypeRemoteDataSource {
       );
 
       return AccountTypesResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.getAccountTypes (DioException)',
+      );
       if (e.response != null) {
         return AccountTypesResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.getAccountTypes (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -60,14 +71,24 @@ class AccountTypeRemoteDataSource {
       );
 
       return AccountTypesResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.createAccountType (DioException)',
+      );
       if (e.response != null) {
         return AccountTypesResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.createAccountType (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -91,14 +112,24 @@ class AccountTypeRemoteDataSource {
       );
 
       return AccountTypesResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.updateAccountType (DioException)',
+      );
       if (e.response != null) {
         return AccountTypesResponseDto.fromJson(e.response!.data);
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.updateAccountType (Unexpected)',
+      );
       rethrow;
     }
   }
@@ -110,11 +141,21 @@ class AccountTypeRemoteDataSource {
       Logger.api("DELETE", endpoint);
 
       await _dio.delete(endpoint);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Api Error on endpoint $endpoint: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.deleteAccountType (DioException)',
+      );
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Unexpected error on endpoint $endpoint: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AccountTypeRemoteDataSource.deleteAccountType (Unexpected)',
+      );
       rethrow;
     }
   }

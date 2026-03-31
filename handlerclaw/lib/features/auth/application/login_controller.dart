@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:handlerclaw/core/utils/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/features/auth/application/google_auth_service.dart';
@@ -58,8 +59,13 @@ class LoginController {
         "os_version": deviceInfo["os_version"],
         "os_build_id": deviceInfo["os_build_id"],
       };
-    } catch (e) {
+    } catch (e, stackTrace) {
       Logger.error("Error collecting device info for Google Login: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'LoginController.loginWithGoogle (Device Info)',
+      );
       // Continue without device info if collection fails
     }
 
@@ -86,7 +92,12 @@ class LoginController {
     try {
       // 1. Mark device as logged out in the backend
       await _deviceRepository.markAsLogout();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'LoginController.logout',
+      );
       // Silent fail - continue logout anyway
     }
 

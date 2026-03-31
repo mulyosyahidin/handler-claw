@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/config/api_endpoint.dart';
 import 'package:handlerclaw/core/networks/dio_client.dart';
@@ -31,8 +32,13 @@ class UserDeviceRemoteDataSource {
       );
 
       return UserDeviceListResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Error fetching devices: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'UserDeviceRemoteDataSource.getDevices',
+      );
       rethrow;
     }
   }
@@ -46,8 +52,13 @@ class UserDeviceRemoteDataSource {
       final response = await dio.get(endpoint);
 
       return UserDeviceDetailResponseDto.fromJson(response.data);
-    } on DioException catch (e) {
+    } on DioException catch (e, stackTrace) {
       Logger.error("Error fetching device detail: ${e.message}");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'UserDeviceRemoteDataSource.getDeviceDetail',
+      );
       rethrow;
     }
   }

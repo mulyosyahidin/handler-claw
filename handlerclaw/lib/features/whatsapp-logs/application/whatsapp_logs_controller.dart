@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:handlerclaw/core/models/pagination_meta_dto.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,7 +82,12 @@ class WhatsappLogListController extends AsyncNotifier<WhatsappLogListState> {
         meta: response.meta,
         isLoadingMore: false,
       ));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'WhatsappLogListController.loadMore',
+      );
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
     }
   }
