@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
@@ -55,6 +56,7 @@ class _EditAccountPageState extends ConsumerState<EditAccountPage> {
           title: 'Berhasil',
           description: 'Rekening berhasil diperbarui',
         );
+        ref.read(homeControllerProvider.notifier).refresh();
         context.pop();
       }
     } catch (e, stackTrace) {

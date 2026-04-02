@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:handlerclaw/app/app_router.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 
@@ -47,6 +48,7 @@ class _CreateAccountPageState extends ConsumerState<CreateAccountPage> {
           title: 'Berhasil',
           description: 'Rekening berhasil ditambahkan',
         );
+        ref.read(homeControllerProvider.notifier).refresh();
         _nameController.clear();
       }
     } catch (e, stackTrace) {

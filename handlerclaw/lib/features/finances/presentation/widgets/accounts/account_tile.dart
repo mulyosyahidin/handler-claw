@@ -7,6 +7,7 @@ import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/currency_utils.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
 import 'package:handlerclaw/features/finances/presentation/widgets/shared/finance_widget_helpers.dart';
@@ -53,6 +54,7 @@ class AccountTile extends ConsumerWidget {
               title: 'Berhasil',
               description: 'Rekening berhasil dihapus',
             );
+            ref.read(homeControllerProvider.notifier).refresh();
           }
         } catch (e, stackTrace) {
           FirebaseCrashlytics.instance.recordError(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/account_snapshot_controller.dart';
 
 class CreateSnapshotPage extends ConsumerStatefulWidget {
@@ -77,6 +78,7 @@ class _CreateSnapshotPageState extends ConsumerState<CreateSnapshotPage> {
         title: 'Berhasil',
         description: 'Snapshot saldo berhasil disimpan',
       );
+      ref.read(homeControllerProvider.notifier).refresh();
       Navigator.of(context).pop(true);
     }
   }

@@ -5,6 +5,8 @@ import 'package:handlerclaw/features/prayer-logs/application/prayer_log_summary_
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/journal_tab.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/summary_tab.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
+import 'package:go_router/go_router.dart';
+import 'package:handlerclaw/app/app_router.dart';
 
 class PrayerLogPage extends ConsumerStatefulWidget {
   const PrayerLogPage({super.key});
@@ -118,6 +120,10 @@ class _PrayerLogPageState extends ConsumerState<PrayerLogPage>
           ),
           SummaryTab(selectDateRange: () => _selectDateRange(context)),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(Routes.createPrayerLog),
+        child: const Icon(Icons.add),
       ),
     );
   }

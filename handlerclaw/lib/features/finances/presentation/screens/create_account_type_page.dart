@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 
 class CreateAccountTypePage extends ConsumerStatefulWidget {
@@ -46,6 +47,7 @@ class _CreateAccountTypePageState extends ConsumerState<CreateAccountTypePage> {
           title: 'Berhasil',
           description: 'Tipe akun berhasil ditambahkan',
         );
+        ref.read(homeControllerProvider.notifier).refresh();
         _nameController.clear();
       }
     } catch (e, stackTrace) {

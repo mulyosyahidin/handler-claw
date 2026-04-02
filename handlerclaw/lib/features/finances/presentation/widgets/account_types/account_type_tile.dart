@@ -7,6 +7,7 @@ import 'package:handlerclaw/app/navigation_keys.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
 import 'package:handlerclaw/core/utils/currency_utils.dart';
 import 'package:handlerclaw/core/utils/toast_utils.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/finances/application/account_type_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_type_entity.dart';
@@ -176,6 +177,7 @@ class AccountTypeTile extends ConsumerWidget {
                     title: 'Berhasil',
                     description: 'Tipe akun berhasil dihapus',
                   );
+                  ref.read(homeControllerProvider.notifier).refresh();
                 }
               } catch (e, stackTrace) {
                 FirebaseCrashlytics.instance.recordError(

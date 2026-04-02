@@ -8,6 +8,9 @@ import 'package:handlerclaw/core/widgets/shimmer_box.dart';
 import 'package:handlerclaw/features/finances/application/accounts_controller.dart';
 import 'package:handlerclaw/features/finances/domain/entities/account_entity.dart';
 import 'package:handlerclaw/features/finances/presentation/widgets/accounts/account_tile.dart';
+import 'package:handlerclaw/features/finances/presentation/widgets/accounts/accounts_summary_card.dart';
+import 'package:handlerclaw/features/finances/presentation/widgets/accounts/account_section_header.dart';
+import 'package:handlerclaw/features/finances/presentation/widgets/accounts/empty_accounts_placeholder.dart';
 
 class AccountsPage extends ConsumerStatefulWidget {
   const AccountsPage({super.key});
@@ -136,187 +139,65 @@ class _AccountsPageState extends ConsumerState<AccountsPage> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.secondary,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Total Kekayaan Bersih',
-                      style: AppTextStyles.label(
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      CurrencyUtils.formatIdr(netWorth),
-                      style: AppTextStyles.title(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Aset',
-                                style: AppTextStyles.label(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                ),
-                              ),
-                              Text(
-                                CurrencyUtils.formatIdr(totalAssets),
-                                style: AppTextStyles.body(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 1,
-                          height: 30,
-                          color: Colors.white.withValues(alpha: 0.2),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                'Hutang',
-                                style: AppTextStyles.label(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                ),
-                              ),
-                              Text(
-                                CurrencyUtils.formatIdr(debtTotal),
-                                style: AppTextStyles.body(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              child: AccountsSummaryCard(
+                netWorth: netWorth,
+                totalAssets: totalAssets,
+                debtTotal: debtTotal,
               ),
             ),
           ),
 
           // ── Liquid Section ──
           if (liquid.isNotEmpty) ...[
-            _buildSectionHeader(
-              'Kas & Bank',
-              CurrencyUtils.formatIdr(liquidTotal),
+            SliverToBoxAdapter(
+              child: AccountSectionHeader(
+                title: 'Kas & Bank',
+                total: CurrencyUtils.formatIdr(liquidTotal),
+              ),
             ),
             _buildAccountList(liquid),
           ],
 
           // ── Investment Section ──
           if (investment.isNotEmpty) ...[
-            _buildSectionHeader(
-              'Investasi',
-              CurrencyUtils.formatIdr(investmentTotal),
+            SliverToBoxAdapter(
+              child: AccountSectionHeader(
+                title: 'Investasi',
+                total: CurrencyUtils.formatIdr(investmentTotal),
+              ),
             ),
             _buildAccountList(investment),
           ],
 
           // ── Debt Section ──
           if (debt.isNotEmpty) ...[
-            _buildSectionHeader(
-              'Hutang & Cicilan',
-              CurrencyUtils.formatIdr(debtTotal),
+            SliverToBoxAdapter(
+              child: AccountSectionHeader(
+                title: 'Hutang & Cicilan',
+                total: CurrencyUtils.formatIdr(debtTotal),
+              ),
             ),
             _buildAccountList(debt),
           ],
 
           // ── Others Section ──
           if (others.isNotEmpty) ...[
-            _buildSectionHeader(
-              'Lainnya',
-              CurrencyUtils.formatIdr(othersTotal),
+            SliverToBoxAdapter(
+              child: AccountSectionHeader(
+                title: 'Lainnya',
+                total: CurrencyUtils.formatIdr(othersTotal),
+              ),
             ),
             _buildAccountList(others),
           ],
 
           if (accounts.isEmpty)
             const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 60, horizontal: 40),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.account_balance_wallet_outlined,
-                      size: 64,
-                      color: Color(0x33000000), // Subtle color
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Belum ada daftar rekening',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0x99000000),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Ketuk ikon + untuk menambah rekening baru',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: Color(0x66000000)),
-                    ),
-                  ],
-                ),
-              ),
+              child: EmptyAccountsPlaceholder(),
             ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title, String total) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: AppTextStyles.title(fontSize: 16)),
-            const SizedBox(height: 4),
-            Text('Total: $total', style: AppTextStyles.label(fontSize: 12)),
-          ],
-        ),
       ),
     );
   }

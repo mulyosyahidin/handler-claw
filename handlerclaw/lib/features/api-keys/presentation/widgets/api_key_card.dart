@@ -2,6 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handlerclaw/core/theme/app_text_styles.dart';
+import 'package:handlerclaw/features/home/application/home_controller.dart';
 import 'package:handlerclaw/features/api-keys/application/api_keys_controller.dart';
 import 'package:handlerclaw/features/api-keys/domain/entities/api_key_entity.dart';
 import 'package:handlerclaw/app/navigation_keys.dart';
@@ -139,6 +140,7 @@ class ApiKeyCard extends ConsumerWidget {
                     );
                   }
                 }
+                ref.read(homeControllerProvider.notifier).refresh();
               } catch (e, stackTrace) {
                 FirebaseCrashlytics.instance.recordError(
                   e,
