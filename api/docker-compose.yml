@@ -1,0 +1,84 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: db_handler_claw
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - internal
+
+  handler_claw_api_blue:
+    image: ${DOCKER_IMAGE}
+    container_name: handler-claw-api-blue
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - INSTANCE_NAME=api-blue
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/api/health-check || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+    volumes:
+      - api_uploads:/app/public/uploads
+
+  handler_claw_api_green:
+    image: ${DOCKER_IMAGE}
+    container_name: handler-claw-api-green
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - INSTANCE_NAME=api-green
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/api/health-check || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+    volumes:
+      - api_uploads:/app/public/uploads
+      - api_logs:/app/logs
+
+volumes:
+  postgres_data:
+    driver: local
+  api_uploads:
+    driver: local
+  api_logs:
+    driver: local
+
+networks:
+  internal:
+    external: true

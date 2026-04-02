@@ -1,0 +1,431 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "finance"]
+}
+
+enum PrayerCategory {
+  WAJIB
+  SUNNAH
+
+  @@schema("public")
+}
+
+enum PrayerType {
+  SUBUH
+  DZUHUR
+  ASHAR
+  MAGHRIB
+  ISYA
+  JUMAT
+
+  DHUHA
+  TAHAJUD
+  WITIR
+
+  @@schema("public")
+}
+
+enum PrayerMethod {
+  JAMAAH
+  SENDIRI
+
+  @@schema("public")
+}
+
+enum PrayerPlace {
+  MASJID
+  RUMAH
+  LAINNYA
+
+  @@schema("public")
+}
+
+enum UserDevicePlatform {
+  ANDROID
+  IOS
+  WEB
+  WINDOWS
+
+  @@schema("public")
+}
+
+enum UserDeviceStatus {
+  ACTIVE
+  LOGGED_OUT
+  INVALID_TOKEN
+
+  @@schema("public")
+}
+
+enum NotificationWebhookStatus {
+  RECEIVED
+  PROCESSING
+  PROCESSED
+
+  @@schema("public")
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+
+  @@schema("public")
+}
+
+enum UserDriver {
+  EMAIL
+  GOOGLE
+
+  @@schema("public")
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+
+  @@schema("public")
+}
+
+enum EmailLogStatus {
+  SENT
+  FAILED
+
+  @@schema("public")
+}
+
+enum EmailLogType {
+  TEMPLATE
+  PLAIN
+
+  @@schema("public")
+}
+
+enum AccountCategory {
+  LIQUID
+  DEBT
+  INVESTMENT
+
+  @@schema("finance")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  driver      UserDriver @default(EMAIL)
+  email       String    @unique
+  name        String
+  password    String?
+  lastLoginAt DateTime? @map("last_login_at")
+  avatarUrl   String?   @map("avatar_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  prayerLogs PrayerLog[]
+  userDevices    UserDevice[]
+  notificationWebhooks NotificationWebhook[]
+  notifications Notification[]
+  whatsappLogs  WhatsappLog[]
+  apiKeys ApiKey[]
+  accountTypes AccountType[]
+  accounts Account[]
+
+  @@map("users")
+  @@schema("public")
+}
+
+model PrayerLog {
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  date     DateTime       @db.Date
+  prayer   PrayerType
+  category PrayerCategory
+
+  performed   Boolean   @default(false)
+  performedAt DateTime? @map("performed_at")
+
+  method PrayerMethod?
+  place  PrayerPlace?
+
+  isQadha Boolean @default(false) @map("is_qadha")
+
+  notes String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, date])
+
+  @@map("prayer_logs")
+  @@schema("public")
+}
+
+model WhatsappLog {
+  id String @id @default(uuid())
+  
+  receivedAt DateTime @default(now()) @map("received_at")
+
+  // Device & routing
+  device String @db.VarChar(30)
+  mode   String @db.VarChar(10)
+
+  // Sender info
+  sender     String  @db.VarChar(50)
+  senderLid  String? @map("sender_lid") @db.VarChar(60)
+  senderName String? @map("sender_name") @db.VarChar(100)
+
+  // Group info
+  isGroup     Boolean @default(false) @map("is_group")
+  groupId     String? @map("group_id") @db.VarChar(60)
+  memberPhone String? @map("member_phone") @db.VarChar(30)
+  memberLid   String? @map("member_lid") @db.VarChar(60)
+
+  // Message
+  messageText String? @map("message_text") @db.Text
+  messageType String  @map("message_type") @db.VarChar(20)
+  isForwarded Boolean @default(false) @map("is_forwarded")
+  isQuick     Boolean @default(false) @map("is_quick")
+  inboxId     Int     @default(0) @map("inbox_id")
+
+  // Media (null kalau plain text)
+  extension String? @db.VarChar(20)
+  filename  String? @db.VarChar(255)
+  url       String? @db.VarChar(500)
+  location  String? @db.VarChar(255)
+
+  // Poll
+  pollName    String? @map("poll_name") @db.VarChar(255)
+  pollChoices Json?   @map("poll_choices")
+
+  // Original timestamp dari WA
+  waTimestamp BigInt @map("wa_timestamp")
+
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sender])
+  @@index([device])
+  @@index([receivedAt])
+  @@index([isGroup])
+
+  @@map("whatsapp_logs")
+  @@schema("public")
+}
+
+model UserDevice {
+  id     String           @id @default(uuid())
+  userId String           @map("user_id")
+  status UserDeviceStatus @default(ACTIVE)
+
+  deviceId    String  @map("device_id")
+  deviceBrand String? @map("device_brand")
+  deviceModel String? @map("device_model")
+  osBuildId   String? @map("os_build_id")
+  osVersion   String? @map("os_version")
+
+  fcmToken String             @map("fcm_token")
+  platform UserDevicePlatform @default(ANDROID)
+
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@unique([userId, deviceId])
+  @@index([userId])
+
+  @@map("user_devices")
+  @@schema("public")
+}
+
+model NotificationWebhook {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+
+  status  NotificationWebhookStatus @default(RECEIVED)
+  content Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([createdAt])
+
+  @@map("notification_webhooks")
+  @@schema("public")
+}
+
+model Notification {
+  id                    String @id @default(uuid())
+  notificationWebhookId String @map("notification_webhook_id")
+
+  userId       String @map("user_id")
+  userDeviceId String @map("user_device_id")
+
+  title String
+  body  String
+  data  Json?
+
+  triggeredAt DateTime? @map("triggered_at")
+
+  status       NotificationStatus @default(PENDING)
+  fcmMessageId String?            @map("fcm_message_id")
+
+  sentAt   DateTime? @map("sent_at")
+  failedAt DateTime? @map("failed_at")
+
+  retryCount   Int     @default(0) @map("retry_count")
+  errorMessage String? @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  notificationWebhook NotificationWebhook @relation(fields: [notificationWebhookId], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userDevice          UserDevice          @relation(fields: [userDeviceId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([userId])
+  @@index([userDeviceId])
+
+  @@map("notifications")
+  @@schema("public")
+}
+
+model File {
+  id String @id @default(uuid())
+
+  fileName String @map("file_name")
+  fileType String @map("file_type")
+  fileSize Int @map("file_size")
+  filePath String @map("file_path")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("files")
+  @@schema("public")
+}
+
+model ApiKey {
+  id String @id @default(uuid())
+  userId String @map("user_id")
+
+  keyPreview String @map("key_preview")
+  keyFull String @map("key_full")
+
+  name String
+  status ApiKeyStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+  @@schema("public")
+}
+
+model EmailLog {
+  id String @id @default(uuid())
+
+  from    String
+  to      String
+  subject String
+  type    EmailLogType
+
+  templateName String? @map("template_name")
+  context      Json?
+  attachments  Json?
+
+  resendId     String? @map("resend_id")
+  status       EmailLogStatus
+  errorMessage String?        @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([createdAt])
+
+  @@map("email_logs")
+  @@schema("public")
+}
+
+model AccountType {
+  id String @id @default(uuid())
+  userId    String          @map("user_id")
+
+  name String
+  category AccountCategory
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  accounts Account[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account_types")
+  @@schema("finance")
+}
+
+model Account {
+  id        String          @id @default(uuid())
+  userId    String          @map("user_id")
+
+  name      String
+  accountTypeId String @map("account_type_id")
+
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  balances  BalanceSnapshot[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountType AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+  @@schema("finance")
+}
+
+model BalanceSnapshot {
+  id        String   @id @default(uuid())
+
+  accountId String   @map("account_id")
+  amount    Decimal  @db.Decimal(20, 2)
+  date      DateTime @db.Date
+
+  note String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, date])
+
+  @@map("balance_snapshots")
+  @@schema("finance")
+}

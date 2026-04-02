@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Layer 1: Base Gradient (Vibrant Aurora) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#667eea"
+                android:centerColor="#764ba2"
+                android:endColor="#6B8DD6" />
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+
+    <!-- Layer 2: Top-left Glow -->
+    <item
+        android:top="-50dp"
+        android:left="-30dp"
+        android:width="150dp"
+        android:height="150dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="75dp"
+                android:startColor="#4DFFFFFF"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Layer 3: Bottom-right Deep Glow -->
+    <item
+        android:bottom="-40dp"
+        android:right="-20dp"
+        android:width="120dp"
+        android:height="120dp">
+        <shape android:shape="oval">
+            <solid android:color="#22000000" />
+        </shape>
+    </item>
+
+    <!-- Layer 4: Inner Glossy Card -->
+    <item
+        android:top="4dp"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#B3FFFFFF"
+                android:endColor="#E6FFFFFF" />
+            <corners android:radius="20dp" />
+            <stroke
+                android:width="1dp"
+                android:color="#66FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>

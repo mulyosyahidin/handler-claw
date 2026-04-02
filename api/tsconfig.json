@@ -7,10 +7,11 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "preserve",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "es2022",
     "types": ["node"],
+
     // For nodejs:
     "lib": ["es2022"],
     // "types": ["node"],
@@ -42,12 +43,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
 
-    "forceConsistentCasingInFileNames": true,
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

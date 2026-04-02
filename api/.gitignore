@@ -17,6 +17,7 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+!.env.production.example
 
 # OS
 .DS_Store
@@ -35,3 +36,8 @@ pids/
 
 # AI Tools
 .claude/
+/src/lib/generated/prisma
+
+# Uploads
+/public/uploads/**
+!/public/uploads/.gitkeep
