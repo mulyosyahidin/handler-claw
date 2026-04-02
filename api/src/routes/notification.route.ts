@@ -1,20 +1,20 @@
 import { Router } from "express";
-import { PrismaNotificationRepository } from "../modules/notification/infrastructure/repositories/prisma-notification.repository.js";
-import { PrismaUserDeviceRepository } from "../modules/user-device/infrastructure/repositories/prisma-user-device.repository.js";
-import { FirebaseNotificationService } from "../modules/notification/infrastructure/services/firebase-notification.service.js";
-import { CreateNotificationWebhookUseCase } from "../modules/notification/application/use-cases/create-notification-webhook.use-case.js";
-import { SendNotificationUseCase } from "../modules/notification/application/use-cases/send-notification.use-case.js";
-import { GetNotificationsUseCase } from "../modules/notification/application/use-cases/get-notifications.use-case.js";
-import { GetNotificationDetailUseCase } from "../modules/notification/application/use-cases/get-notification-detail.use-case.js";
-import { NotificationController } from "../modules/notification/interface-adapters/controllers/notification.controller.js";
+import { PrismaNotificationRepository } from "../modules/_shared/notifications/infrastructure/repositories/prisma-notification.repository.js";
+import { PrismaUserDeviceRepository } from "../modules/(jwt-auth)/user-devices/infrastructure/repositories/prisma-user-device.repository.js";
+import { FirebaseNotificationService } from "../modules/_shared/notifications/infrastructure/services/firebase-notification.service.js";
+import { CreateNotificationWebhookUseCase } from "../modules/_shared/notifications/application/use-cases/create-notification-webhook.use-case.js";
+import { SendNotificationUseCase } from "../modules/_shared/notifications/application/use-cases/send-notification.use-case.js";
+import { GetNotificationsUseCase } from "../modules/_shared/notifications/application/use-cases/get-notifications.use-case.js";
+import { GetNotificationDetailUseCase } from "../modules/_shared/notifications/application/use-cases/get-notification-detail.use-case.js";
+import { NotificationController } from "../modules/(jwt-auth)/notifications/interface-adapters/controllers/notification.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
-import { createNotificationWebhookSchema } from "../modules/notification/infrastructure/models/notification-webhook.schema.js";
-import { PrismaNotificationWebhookRepository } from "../modules/notification/infrastructure/repositories/prisma-notification-webhook.repository.js";
+import { createNotificationWebhookSchema } from "../modules/_shared/notifications/infrastructure/models/notification-webhook.schema.js";
+import { PrismaNotificationWebhookRepository } from "../modules/_shared/notifications/infrastructure/repositories/prisma-notification-webhook.repository.js";
 import {
   getNotificationParamsSchema,
   getNotificationsQuerySchema,
-} from "../modules/notification/infrastructure/models/notification.schema.js";
+} from "../modules/_shared/notifications/infrastructure/models/notification.schema.js";
 
 const notificationRouter: Router = Router();
 

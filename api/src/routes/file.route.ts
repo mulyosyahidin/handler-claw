@@ -1,9 +1,9 @@
 import { Router } from "express";
 import multer from "multer";
 import { getUploadDir, generateFilename } from "../utils/file-storage.js";
-import { FileController } from "../modules/files/interface-adapters/controllers/file.controller.js";
-import { PrismaFileRepository } from "../modules/files/infrastructure/repositories/prisma-file.repository.js";
-import { UploadFileUseCase } from "../modules/files/application/use-cases/upload-file.use-case.js";
+import { FileController } from "../modules/(jwt-auth)/files/interface-adapters/controllers/file.controller.js";
+import { PrismaFileRepository } from "../modules/_shared/files/infrastructure/repositories/prisma-file.repository.js";
+import { UploadFileUseCase } from "../modules/_shared/files/application/use-cases/upload-file.use-case.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 

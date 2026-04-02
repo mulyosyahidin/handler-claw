@@ -69,11 +69,14 @@ services:
       - internal
     volumes:
       - api_uploads:/app/public/uploads
+      - api_logs:/app/logs
 
 volumes:
   postgres_data:
     driver: local
   api_uploads:
+    driver: local
+  api_logs:
     driver: local
 
 networks:

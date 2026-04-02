@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { PrismaAccountRepository } from "../modules/finances/accounts/infrastructure/repositories/prisma-account.repository.js";
-import { CreateAccountUseCase } from "../modules/finances/accounts/application/use-cases/create-account.use-case.js";
-import { GetAccountsUseCase } from "../modules/finances/accounts/application/use-cases/get-accounts.use-case.js";
-import { GetAccountDetailUseCase } from "../modules/finances/accounts/application/use-cases/get-account-detail.use-case.js";
-import { UpdateAccountUseCase } from "../modules/finances/accounts/application/use-cases/update-account.use-case.js";
-import { DeleteAccountUseCase } from "../modules/finances/accounts/application/use-cases/delete-account.use-case.js";
-import { AccountController } from "../modules/finances/accounts/interface-adapters/controllers/account.controller.js";
+import { PrismaAccountRepository } from "../modules/(jwt-auth)/finances/accounts/infrastructure/repositories/prisma-account.repository.js";
+import { CreateAccountUseCase } from "../modules/(jwt-auth)/finances/accounts/application/use-cases/create-account.use-case.js";
+import { GetAccountsUseCase } from "../modules/(jwt-auth)/finances/accounts/application/use-cases/get-accounts.use-case.js";
+import { GetAccountDetailUseCase } from "../modules/(jwt-auth)/finances/accounts/application/use-cases/get-account-detail.use-case.js";
+import { UpdateAccountUseCase } from "../modules/(jwt-auth)/finances/accounts/application/use-cases/update-account.use-case.js";
+import { DeleteAccountUseCase } from "../modules/(jwt-auth)/finances/accounts/application/use-cases/delete-account.use-case.js";
+import { AccountController } from "../modules/(jwt-auth)/finances/accounts/interface-adapters/controllers/account.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
@@ -13,7 +13,7 @@ import {
   updateAccountSchema,
   getAccountsQuerySchema,
   accountParamsSchema,
-} from "../modules/finances/accounts/infrastructure/models/account.schema.js";
+} from "../modules/(jwt-auth)/finances/accounts/infrastructure/models/account.schema.js";
 
 const accountRouter: Router = Router();
 

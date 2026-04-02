@@ -10,8 +10,8 @@ import { UpdateProfileUseCase } from "../modules/auth/application/use-cases/upda
 import { UpdatePasswordUseCase } from "../modules/auth/application/use-cases/update-password.use-case.js";
 import { GoogleLoginUseCase } from "../modules/auth/application/use-cases/google-login.use-case.js";
 import { UpdateAvatarUseCase } from "../modules/auth/application/use-cases/update-avatar.use-case.js";
-import { PrismaFileRepository } from "../modules/files/infrastructure/repositories/prisma-file.repository.js";
-import { PrismaUserDeviceRepository } from "../modules/user-device/infrastructure/repositories/prisma-user-device.repository.js";
+import { PrismaFileRepository } from "../modules/_shared/files/infrastructure/repositories/prisma-file.repository.js";
+import { PrismaUserDeviceRepository } from "../modules/(jwt-auth)/user-devices/infrastructure/repositories/prisma-user-device.repository.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 

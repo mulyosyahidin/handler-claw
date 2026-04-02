@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { PrismaOverviewRepository } from "../modules/overview/infrastructure/repositories/prisma-overview.repository.js";
-import { GetOverviewUseCase } from "../modules/overview/application/use-cases/get-overview.use-case.js";
-import { OverviewController } from "../modules/overview/interface-adapters/controllers/overview.controller.js";
+import { PrismaOverviewRepository } from "../modules/(jwt-auth)/overview/infrastructure/repositories/prisma-overview.repository.js";
+import { GetOverviewUseCase } from "../modules/(jwt-auth)/overview/application/use-cases/get-overview.use-case.js";
+import { OverviewController } from "../modules/(jwt-auth)/overview/interface-adapters/controllers/overview.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 

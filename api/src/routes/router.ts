@@ -12,6 +12,10 @@ import accountTypeRouter from "./account-type.route.js";
 import accountRouter from "./account.route.js";
 import accountSnapshotRouter from "./account-snapshot.route.js";
 import financeOverviewRouter from "./finance-overview.route.js";
+import appPrayerLogRouter from "./app-prayer-log.route.js";
+import appWhatsappLogRouter from "./app-whatsapp-log.route.js";
+import appNotificationRouter from "./app-notification.route.js";
+import appFileRouter from "./app-file.route.js";
 
 const router: Router = Router();
 
@@ -28,5 +32,10 @@ router.use("/finances/account-types", accountTypeRouter);
 router.use("/finances/accounts", accountRouter);
 router.use("/finances/account-snapshots", accountSnapshotRouter);
 router.use("/finances/overview", financeOverviewRouter);
+
+router.use("/app/prayer-logs", appPrayerLogRouter);
+router.use("/app/whatsapp-logs", appWhatsappLogRouter);
+router.use("/app/notifications", appNotificationRouter);
+router.use("/app/files", appFileRouter);
 
 export default router;

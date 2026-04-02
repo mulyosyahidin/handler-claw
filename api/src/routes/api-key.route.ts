@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { PrismaApiKeyRepository } from "../modules/api-keys/infrastructure/repositories/prisma-api-key.repository.js";
-import { CreateApiKeyUseCase } from "../modules/api-keys/application/use-cases/create-api-key.use-case.js";
-import { GetApiKeysUseCase } from "../modules/api-keys/application/use-cases/get-api-keys.use-case.js";
-import { GetApiKeyDetailUseCase } from "../modules/api-keys/application/use-cases/get-api-key-detail.use-case.js";
-import { DeleteApiKeyUseCase } from "../modules/api-keys/application/use-cases/delete-api-key.use-case.js";
-import { RevokeApiKeyUseCase } from "../modules/api-keys/application/use-cases/revoke-api-key.use-case.js";
-import { RotateApiKeyUseCase } from "../modules/api-keys/application/use-cases/rotate-api-key.use-case.js";
-import { UpdateApiKeyUseCase } from "../modules/api-keys/application/use-cases/update-api-key.use-case.js";
-import { ApiKeyController } from "../modules/api-keys/interface-adapters/controllers/api-key.controller.js";
+import { PrismaApiKeyRepository } from "../modules/(jwt-auth)/api-keys/infrastructure/repositories/prisma-api-key.repository.js";
+import { CreateApiKeyUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/create-api-key.use-case.js";
+import { GetApiKeysUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/get-api-keys.use-case.js";
+import { GetApiKeyDetailUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/get-api-key-detail.use-case.js";
+import { DeleteApiKeyUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/delete-api-key.use-case.js";
+import { RevokeApiKeyUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/revoke-api-key.use-case.js";
+import { RotateApiKeyUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/rotate-api-key.use-case.js";
+import { UpdateApiKeyUseCase } from "../modules/(jwt-auth)/api-keys/application/use-cases/update-api-key.use-case.js";
+import { ApiKeyController } from "../modules/(jwt-auth)/api-keys/interface-adapters/controllers/api-key.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
@@ -15,7 +15,7 @@ import {
   updateApiKeySchema,
   getApiKeysQuerySchema,
   apiKeyParamsSchema,
-} from "../modules/api-keys/infrastructure/models/api-key.schema.js";
+} from "../modules/(jwt-auth)/api-keys/infrastructure/models/api-key.schema.js";
 
 const apiKeyRouter: Router = Router();
 

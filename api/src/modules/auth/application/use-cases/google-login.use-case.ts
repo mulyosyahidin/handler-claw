@@ -1,7 +1,7 @@
 import type { UserRepository } from "../../domain/repositories/user.repository.interface.js";
 import type { TokenService } from "../../domain/services/token.service.interface.js";
-import type { UserDeviceRepository } from "../../../user-device/domain/repositories/user-device.repository.interface.js";
-import type { FileRepository } from "../../../files/domain/repositories/file.repository.interface.js";
+import type { UserDeviceRepository } from "../../../(jwt-auth)/user-devices/domain/repositories/user-device.repository.interface.js";
+import type { FileRepository } from "../../../_shared/files/domain/repositories/file.repository.interface.js";
 import { downloadExternalImage } from "../../../../utils/file-storage.js";
 import type { GoogleLoginRequest, LoginResponse } from "../dtos/auth.dto.js";
 import { toUserEntity } from "../../infrastructure/mappers/user.mapper.js";

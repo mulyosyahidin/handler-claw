@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { PrismaUserDeviceRepository } from "../modules/user-device/infrastructure/repositories/prisma-user-device.repository.js";
-import { RegisterUserDeviceUseCase } from "../modules/user-device/application/use-cases/register-user-device.use-case.js";
-import { GetUserDevicesUseCase } from "../modules/user-device/application/use-cases/get-user-devices.use-case.js";
-import { GetUserDeviceDetailUseCase } from "../modules/user-device/application/use-cases/get-user-device-detail.use-case.js";
-import { UpdateUserDeviceStatusUseCase } from "../modules/user-device/application/use-cases/update-user-device-status.use-case.js";
-import { UserDeviceController } from "../modules/user-device/interface-adapters/controllers/user-device.controller.js";
+import { PrismaUserDeviceRepository } from "../modules/(jwt-auth)/user-devices/infrastructure/repositories/prisma-user-device.repository.js";
+import { RegisterUserDeviceUseCase } from "../modules/(jwt-auth)/user-devices/application/use-cases/register-user-device.use-case.js";
+import { GetUserDevicesUseCase } from "../modules/(jwt-auth)/user-devices/application/use-cases/get-user-devices.use-case.js";
+import { GetUserDeviceDetailUseCase } from "../modules/(jwt-auth)/user-devices/application/use-cases/get-user-device-detail.use-case.js";
+import { UpdateUserDeviceStatusUseCase } from "../modules/(jwt-auth)/user-devices/application/use-cases/update-user-device-status.use-case.js";
+import { UserDeviceController } from "../modules/(jwt-auth)/user-devices/interface-adapters/controllers/user-device.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
@@ -12,7 +12,7 @@ import {
   updateUserDeviceStatusSchema,
   getUserDevicesQuerySchema,
   getUserDeviceParamsSchema,
-} from "../modules/user-device/infrastructure/models/user-device.schema.js";
+} from "../modules/(jwt-auth)/user-devices/infrastructure/models/user-device.schema.js";
 
 const userDeviceRouter: Router = Router();
 

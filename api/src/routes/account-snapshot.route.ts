@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { PrismaAccountSnapshotRepository } from "../modules/finances/account-snapshots/infrastructure/repositories/prisma-account-snapshot.repository.js";
-import { PrismaAccountRepository } from "../modules/finances/accounts/infrastructure/repositories/prisma-account.repository.js";
-import { CreateAccountSnapshotUseCase } from "../modules/finances/account-snapshots/application/use-cases/create-account-snapshot.use-case.js";
-import { GetAccountSnapshotsUseCase } from "../modules/finances/account-snapshots/application/use-cases/get-account-snapshots.use-case.js";
-import { GetAccountSnapshotDetailUseCase } from "../modules/finances/account-snapshots/application/use-cases/get-account-snapshot-detail.use-case.js";
-import { UpdateAccountSnapshotUseCase } from "../modules/finances/account-snapshots/application/use-cases/update-account-snapshot.use-case.js";
-import { DeleteAccountSnapshotUseCase } from "../modules/finances/account-snapshots/application/use-cases/delete-account-snapshot.use-case.js";
-import { AccountSnapshotController } from "../modules/finances/account-snapshots/interface-adapters/controllers/account-snapshot.controller.js";
+import { PrismaAccountSnapshotRepository } from "../modules/(jwt-auth)/finances/account-snapshots/infrastructure/repositories/prisma-account-snapshot.repository.js";
+import { PrismaAccountRepository } from "../modules/(jwt-auth)/finances/accounts/infrastructure/repositories/prisma-account.repository.js";
+import { CreateAccountSnapshotUseCase } from "../modules/(jwt-auth)/finances/account-snapshots/application/use-cases/create-account-snapshot.use-case.js";
+import { GetAccountSnapshotsUseCase } from "../modules/(jwt-auth)/finances/account-snapshots/application/use-cases/get-account-snapshots.use-case.js";
+import { GetAccountSnapshotDetailUseCase } from "../modules/(jwt-auth)/finances/account-snapshots/application/use-cases/get-account-snapshot-detail.use-case.js";
+import { UpdateAccountSnapshotUseCase } from "../modules/(jwt-auth)/finances/account-snapshots/application/use-cases/update-account-snapshot.use-case.js";
+import { DeleteAccountSnapshotUseCase } from "../modules/(jwt-auth)/finances/account-snapshots/application/use-cases/delete-account-snapshot.use-case.js";
+import { AccountSnapshotController } from "../modules/(jwt-auth)/finances/account-snapshots/interface-adapters/controllers/account-snapshot.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
@@ -14,7 +14,7 @@ import {
   updateAccountSnapshotSchema,
   getAccountSnapshotsQuerySchema,
   accountSnapshotParamsSchema,
-} from "../modules/finances/account-snapshots/infrastructure/models/account-snapshot.schema.js";
+} from "../modules/(jwt-auth)/finances/account-snapshots/infrastructure/models/account-snapshot.schema.js";
 
 const accountSnapshotRouter: Router = Router();
 

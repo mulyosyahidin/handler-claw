@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { PrismaPrayerLogRepository } from "../modules/prayer-log/infrastructure/repositories/prisma-prayer-log.repository.js";
-import { CreatePrayerLogUseCase } from "../modules/prayer-log/application/use-cases/create-prayer-log.use-case.js";
-import { GetPrayerLogsUseCase } from "../modules/prayer-log/application/use-cases/get-prayer-logs.use-case.js";
-import { GetPrayerLogsSummaryUseCase } from "../modules/prayer-log/application/use-cases/get-prayer-logs-summary.use-case.js";
-import { PrayerLogController } from "../modules/prayer-log/interface-adapters/controllers/prayer-log.controller.js";
+import { PrismaPrayerLogRepository } from "../modules/_shared/prayer-logs/infrastructure/repositories/prisma-prayer-log.repository.js";
+import { CreatePrayerLogUseCase } from "../modules/_shared/prayer-logs/application/use-cases/create-prayer-log.use-case.js";
+import { GetPrayerLogsUseCase } from "../modules/_shared/prayer-logs/application/use-cases/get-prayer-logs.use-case.js";
+import { GetPrayerLogsSummaryUseCase } from "../modules/_shared/prayer-logs/application/use-cases/get-prayer-logs-summary.use-case.js";
+import { PrayerLogController } from "../modules/(jwt-auth)/prayer-logs/interface-adapters/controllers/prayer-log.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
   getPrayerLogsQuerySchema,
   getPrayerLogsSummaryQuerySchema,
   insertLogPrayerSchema,
-} from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
+} from "../modules/_shared/prayer-logs/infrastructure/models/prayer-log.schema.js";
 
 const prayerLogRouter: Router = Router();
 

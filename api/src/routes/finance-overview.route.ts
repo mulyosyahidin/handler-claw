@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { GetFinanceOverviewUseCase } from "../modules/finances/overview/application/use-cases/get-finance-overview.use-case.js";
-import { FinanceOverviewController } from "../modules/finances/overview/interface-adapters/controllers/finance-overview.controller.js";
+import { GetFinanceOverviewUseCase } from "../modules/(jwt-auth)/finances/overview/application/use-cases/get-finance-overview.use-case.js";
+import { FinanceOverviewController } from "../modules/(jwt-auth)/finances/overview/interface-adapters/controllers/finance-overview.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import { z } from "zod";

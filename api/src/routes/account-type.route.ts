@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { PrismaAccountTypeRepository } from "../modules/finances/account-types/infrastructure/repositories/prisma-account-type.repository.js";
-import { CreateAccountTypeUseCase } from "../modules/finances/account-types/application/use-cases/create-account-type.use-case.js";
-import { GetAccountTypesUseCase } from "../modules/finances/account-types/application/use-cases/get-account-types.use-case.js";
-import { GetAccountTypeDetailUseCase } from "../modules/finances/account-types/application/use-cases/get-account-type-detail.use-case.js";
-import { UpdateAccountTypeUseCase } from "../modules/finances/account-types/application/use-cases/update-account-type.use-case.js";
-import { DeleteAccountTypeUseCase } from "../modules/finances/account-types/application/use-cases/delete-account-type.use-case.js";
-import { AccountTypeController } from "../modules/finances/account-types/interface-adapters/controllers/account-type.controller.js";
+import { PrismaAccountTypeRepository } from "../modules/(jwt-auth)/finances/account-types/infrastructure/repositories/prisma-account-type.repository.js";
+import { CreateAccountTypeUseCase } from "../modules/(jwt-auth)/finances/account-types/application/use-cases/create-account-type.use-case.js";
+import { GetAccountTypesUseCase } from "../modules/(jwt-auth)/finances/account-types/application/use-cases/get-account-types.use-case.js";
+import { GetAccountTypeDetailUseCase } from "../modules/(jwt-auth)/finances/account-types/application/use-cases/get-account-type-detail.use-case.js";
+import { UpdateAccountTypeUseCase } from "../modules/(jwt-auth)/finances/account-types/application/use-cases/update-account-type.use-case.js";
+import { DeleteAccountTypeUseCase } from "../modules/(jwt-auth)/finances/account-types/application/use-cases/delete-account-type.use-case.js";
+import { AccountTypeController } from "../modules/(jwt-auth)/finances/account-types/interface-adapters/controllers/account-type.controller.js";
 import { authMiddleware } from "../middleware/index.js";
 import { registry } from "../lib/openapi-registry.js";
 import {
@@ -13,7 +13,7 @@ import {
   updateAccountTypeSchema,
   getAccountTypesQuerySchema,
   accountTypeParamsSchema,
-} from "../modules/finances/account-types/infrastructure/models/account-type.schema.js";
+} from "../modules/(jwt-auth)/finances/account-types/infrastructure/models/account-type.schema.js";
 
 const accountTypeRouter: Router = Router();
 

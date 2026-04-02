@@ -3,7 +3,7 @@ import {
   loginSchema,
   refreshTokenSchema,
 } from "../modules/auth/infrastructure/models/auth.schema.js";
-import { insertLogPrayerSchema } from "../modules/prayer-log/infrastructure/models/prayer-log.schema.js";
+import { insertLogPrayerSchema } from "../modules/_shared/prayer-logs/infrastructure/models/prayer-log.schema.js";
 import { z } from "zod";
 
 const prayerDateTypeEnum = z.enum([
@@ -39,6 +39,12 @@ const bearerAuth = registry.registerComponent("securitySchemes", "bearerAuth", {
   type: "http",
   scheme: "bearer",
   bearerFormat: "JWT",
+});
+
+export const apiKeyAuth = registry.registerComponent("securitySchemes", "apiKeyAuth", {
+  type: "apiKey",
+  in: "header",
+  name: "x-api-key",
 });
 
 // REGISTER AUTH ROUTES
