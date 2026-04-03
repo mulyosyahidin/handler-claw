@@ -80,11 +80,14 @@ jobs:
           JWT_EXPIRES_IN: ${{ vars.JWT_EXPIRES_IN }}
           WAG_SECRET: ${{ secrets.WAG_SECRET }}
           WAG_BASE_URL: ${{ vars.WAG_BASE_URL }}
+          APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+          APP_URL: ${{ vars.APP_URL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL,JWT_EXPIRES_IN,WAG_SECRET,WAG_BASE_URL
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL,JWT_EXPIRES_IN,WAG_SECRET,WAG_BASE_URL,APP_BASE_URL,API_BASE_URL,APP_URL
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
@@ -97,6 +100,7 @@ jobs:
             DOCS_USERNAME=${{ vars.DOCS_USERNAME || 'admin' }}
             DB_HOST=db
             DB_PORT=5432
+            TZ=${{ vars.TZ || 'UTC' }}
             EOF
 
             # Injeksi variabel dinamis
@@ -118,6 +122,9 @@ jobs:
             printf "JWT_EXPIRES_IN=%s\n" "$JWT_EXPIRES_IN" >> .env
             printf "WAG_SECRET=%s\n" "$WAG_SECRET" >> .env
             printf "WAG_BASE_URL=%s\n" "$WAG_BASE_URL" >> .env
+            printf "APP_BASE_URL=%s\n" "$APP_BASE_URL" >> .env
+            printf "API_BASE_URL=%s\n" "$API_BASE_URL" >> .env
+            printf "APP_URL=%s\n" "$APP_URL" >> .env
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env
