@@ -5,6 +5,7 @@ class ApiEndpoint {
   static const String profileAvatar = "/auth/profile/avatar";
   static const String authLogin = "/auth/login";
   static const String authGoogle = "/auth/google";
+  static const String authRefresh = "/auth/refresh-access-token";
 
   static const String notificationList = "/notifications";
   static const String notificationDetail = "/notifications/{id}";

@@ -77,11 +77,12 @@ jobs:
           FIREBASE_CLIENT_EMAIL: ${{ vars.FIREBASE_CLIENT_EMAIL }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM_EMAIL: ${{ vars.RESEND_FROM_EMAIL }}
+          JWT_EXPIRES_IN: ${{ vars.JWT_EXPIRES_IN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL,JWT_EXPIRES_IN
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
@@ -112,6 +113,7 @@ jobs:
             printf "FIREBASE_CLIENT_EMAIL=%s\n" "$FIREBASE_CLIENT_EMAIL" >> .env
             printf "RESEND_API_KEY=%s\n" "$RESEND_API_KEY" >> .env
             printf "RESEND_FROM_EMAIL=%s\n" "$RESEND_FROM_EMAIL" >> .env
+            printf "JWT_EXPIRES_IN=%s\n" "$JWT_EXPIRES_IN" >> .env
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env
@@ -127,22 +129,22 @@ jobs:
 
             # 4. Database Migration & Seeding (Prisma)
             echo "🔄 Running Migrations..."
-            docker compose --env-file .env run --rm handler_claw_api_blue npx prisma migrate deploy
+            docker compose run --rm handlerclaw_api_blue npx prisma migrate deploy
             
             echo "🌱 Seeding Database..."
-            docker compose --env-file .env run --rm handler_claw_api_blue node dist/prisma/seed.js
+            docker compose run --rm handlerclaw_api_blue node dist/prisma/seed.js
 
             # 5. Update Green Instance
-            echo "🚀 Starting handler_claw_api_green..."
-            docker compose --env-file .env up -d handler_claw_api_green
+            echo "🚀 Starting handlerclaw_api_green..."
+            docker compose up -d handlerclaw_api_green
 
             # 6. Strict Health Check Loop
-            echo "🔍 Verifying handler_claw_api_green health..."
+            echo "🔍 Verifying handlerclaw_api_green health..."
             count=0
-            while [ "$(docker inspect --format='{{.State.Health.Status}}' handler-claw-api-green)" != "healthy" ]; do
+            while [ "$(docker inspect --format='{{.State.Health.Status}}' handlerclaw-api-green)" != "healthy" ]; do
               if [ $count -gt 20 ]; then
                 echo "❌ Deployment Failed: Green instance is unhealthy."
-                docker compose --env-file .env stop handler_claw_api_green
+                docker compose stop handlerclaw_api_green
                 exit 1
               fi
               echo "⏳ Waiting for health check... ($((count*5))s)"
@@ -151,8 +153,8 @@ jobs:
             done
 
             # 7. Update Blue Instance
-            echo "✅ Green is healthy! Updating handler_claw_api_blue..."
-            docker compose --env-file .env up -d handler_claw_api_blue
+            echo "✅ Green is healthy! Updating handlerclaw_api_blue..."
+            docker compose up -d handlerclaw_api_blue
 
             # 8. Reload Nginx Proxy
             echo "🔄 Reloading Nginx Proxy..."

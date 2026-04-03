@@ -14,6 +14,7 @@ abstract class AuthRemoteDataSource {
     Map<String, dynamic>? deviceInfo,
   });
   Future<MeResponseDto> getMe();
+  Future<String> refreshToken(String oldToken);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -106,6 +107,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         e,
         stackTrace,
         reason: 'AuthRemoteDataSource.getMe (Unexpected)',
+      );
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> refreshToken(String oldToken) async {
+    const endpoint = ApiEndpoint.authRefresh;
+    try {
+      Logger.api("POST", endpoint);
+      // Kirim token lama langsung tanpa melalui interceptor (hindari loop)
+      final response = await dio.post(
+        endpoint,
+        data: {"refresh_token": oldToken},
+        options: Options(headers: {"Authorization": "Bearer $oldToken"}),
+      );
+      final data = response.data as Map<String, dynamic>;
+      return data['data']['access_token'] as String;
+    } on DioException catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.refreshToken (DioException)',
+      );
+      _handleDioError(e, endpoint);
+      rethrow;
+    } catch (e, stackTrace) {
+      Logger.error("Unexpected error on refreshToken: $e");
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AuthRemoteDataSource.refreshToken (Unexpected)',
       );
       rethrow;
     }

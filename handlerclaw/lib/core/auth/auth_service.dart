@@ -113,6 +113,8 @@ class AuthSessionController extends AsyncNotifier<AuthSession> {
   }
 
   Future<void> logout() async {
+    final tokenStorage = ref.read(tokenStorageProvider);
+    await tokenStorage.clear();
     state = AsyncData(AuthSession.unauthenticated());
   }
 }

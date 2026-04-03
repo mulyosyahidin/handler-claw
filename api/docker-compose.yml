@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: db_handler_claw
+    container_name: db_handlerclaw
     restart: unless-stopped
     env_file:
       - .env
@@ -16,9 +16,9 @@ services:
     networks:
       - internal
 
-  handler_claw_api_blue:
+  handlerclaw_api_blue:
     image: ${DOCKER_IMAGE}
-    container_name: handler-claw-api-blue
+    container_name: handlerclaw-api-blue
     restart: always
     env_file:
       - .env
@@ -43,9 +43,9 @@ services:
     volumes:
       - api_uploads:/app/public/uploads
 
-  handler_claw_api_green:
+  handlerclaw_api_green:
     image: ${DOCKER_IMAGE}
-    container_name: handler-claw-api-green
+    container_name: handlerclaw-api-green
     restart: always
     env_file:
       - .env
