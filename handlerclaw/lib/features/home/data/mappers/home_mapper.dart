@@ -5,7 +5,7 @@ class HomeMapper {
   static HomeOverviewEntity fromData(OverviewData data) {
     final dto = data.count;
     return HomeOverviewEntity(
-      totalWhatsappLogs: dto.whatsappLog,
+      totalWhatsappLogs: dto.whatsappMessage,
       totalPrayerLogs: dto.prayerLog,
       totalReminderHooks: dto.notificationWebhook,
       totalNotifications: dto.notification,

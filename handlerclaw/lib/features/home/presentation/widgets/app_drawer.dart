@@ -328,13 +328,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer>
                   ),
                   _DrawerNavItem(
                     icon: Icons.chat_rounded,
-                    label: 'WhatsApp Logs',
+                    label: 'WhatsApp Messages',
                     isActive:
                         GoRouterState.of(context).matchedLocation ==
-                        Routes.whatsappLogs,
+                        Routes.whatsappMessages,
                     onTap: () {
                       Navigator.pop(context);
-                      context.push(Routes.whatsappLogs);
+                      context.push(Routes.whatsappMessages);
                     },
                   ),
                   _DrawerNavItem(

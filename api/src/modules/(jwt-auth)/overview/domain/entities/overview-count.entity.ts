@@ -1,5 +1,5 @@
 export type IOverviewCount = {
-  whatsapp_log: number;
+  whatsapp_message: number;
   prayer_log: number;
   notification_webhook: number;
   notification: number;

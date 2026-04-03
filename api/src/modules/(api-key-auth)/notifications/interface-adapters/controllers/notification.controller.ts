@@ -46,13 +46,11 @@ export class AppNotificationController {
       res.status(201).json(createSuccessResponse("Berhasil memproses notifikasi", result));
     } catch (error: any) {
       logger.error("AppNotificationController::createNotificationWebhook() Error:", error);
-      res
-        .status(500)
-        .json(
-          createErrorResponse("Internal server error", {
-            error: "Gagal memproses notifikasi via API Key",
-          }),
-        );
+      res.status(500).json(
+        createErrorResponse("Internal server error", {
+          error: "Gagal memproses notifikasi via API Key",
+        }),
+      );
     }
   };
 }

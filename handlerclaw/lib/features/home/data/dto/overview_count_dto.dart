@@ -1,5 +1,5 @@
 class OverviewCountDto {
-  final int whatsappLog;
+  final int whatsappMessage;
   final int prayerLog;
   final int notificationWebhook;
   final int notification;
@@ -7,7 +7,7 @@ class OverviewCountDto {
   final int apiKey;
 
   OverviewCountDto({
-    required this.whatsappLog,
+    required this.whatsappMessage,
     required this.prayerLog,
     required this.notificationWebhook,
     required this.notification,
@@ -17,7 +17,7 @@ class OverviewCountDto {
 
   factory OverviewCountDto.fromJson(Map<String, dynamic> json) {
     return OverviewCountDto(
-      whatsappLog: json['whatsapp_log'] ?? 0,
+      whatsappMessage: json['whatsapp_message'] ?? 0,
       prayerLog: json['prayer_log'] ?? 0,
       notificationWebhook: json['notification_webhook'] ?? 0,
       notification: json['notification'] ?? 0,

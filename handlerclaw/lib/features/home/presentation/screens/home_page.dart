@@ -69,9 +69,9 @@ class HomePage extends ConsumerWidget {
                       childAspectRatio: 1.2,
                       children: [
                         SummaryCard(
-                          title: 'WA Logs',
+                          title: 'Messages',
                           value: overview.totalWhatsappLogs.toString(),
-                          subtitle: 'Global messages',
+                          subtitle: 'WhatsApp messages',
                           icon: Icons.chat_bubble_outline,
                           color: Colors.blue,
                         ),
@@ -157,9 +157,9 @@ class HomePage extends ConsumerWidget {
                       childAspectRatio: 1.2,
                       children: [
                         SummaryCard(
-                          title: 'WA Logs',
+                          title: 'Messages',
                           value: '',
-                          subtitle: 'Global messages',
+                          subtitle: 'WhatsApp messages',
                           icon: Icons.chat_bubble_outline,
                           color: Colors.blue,
                           isLoading: true,

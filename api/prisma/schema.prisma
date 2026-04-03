@@ -11,7 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "finance"]
+  schemas  = ["public", "finance", "whatsapp"]
 }
 
 enum PrayerCategory {
@@ -135,10 +135,10 @@ model User {
   userDevices    UserDevice[]
   notificationWebhooks NotificationWebhook[]
   notifications Notification[]
-  whatsappLogs  WhatsappLog[]
   apiKeys ApiKey[]
   accountTypes AccountType[]
   accounts Account[]
+  webhookLogs WebhookLog[]
 
   @@map("users")
   @@schema("public")
@@ -170,59 +170,6 @@ model PrayerLog {
   @@index([userId, date])
 
   @@map("prayer_logs")
-  @@schema("public")
-}
-
-model WhatsappLog {
-  id String @id @default(uuid())
-  
-  receivedAt DateTime @default(now()) @map("received_at")
-
-  // Device & routing
-  device String @db.VarChar(30)
-  mode   String @db.VarChar(10)
-
-  // Sender info
-  sender     String  @db.VarChar(50)
-  senderLid  String? @map("sender_lid") @db.VarChar(60)
-  senderName String? @map("sender_name") @db.VarChar(100)
-
-  // Group info
-  isGroup     Boolean @default(false) @map("is_group")
-  groupId     String? @map("group_id") @db.VarChar(60)
-  memberPhone String? @map("member_phone") @db.VarChar(30)
-  memberLid   String? @map("member_lid") @db.VarChar(60)
-
-  // Message
-  messageText String? @map("message_text") @db.Text
-  messageType String  @map("message_type") @db.VarChar(20)
-  isForwarded Boolean @default(false) @map("is_forwarded")
-  isQuick     Boolean @default(false) @map("is_quick")
-  inboxId     Int     @default(0) @map("inbox_id")
-
-  // Media (null kalau plain text)
-  extension String? @db.VarChar(20)
-  filename  String? @db.VarChar(255)
-  url       String? @db.VarChar(500)
-  location  String? @db.VarChar(255)
-
-  // Poll
-  pollName    String? @map("poll_name") @db.VarChar(255)
-  pollChoices Json?   @map("poll_choices")
-
-  // Original timestamp dari WA
-  waTimestamp BigInt @map("wa_timestamp")
-
-  userId String? @map("user_id")
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([sender])
-  @@index([device])
-  @@index([receivedAt])
-  @@index([isGroup])
-
-  @@map("whatsapp_logs")
   @@schema("public")
 }
 
@@ -428,4 +375,96 @@ model BalanceSnapshot {
 
   @@map("balance_snapshots")
   @@schema("finance")
+}
+
+model WebhookLog {
+  id String @id  @default(uuid())
+
+  userId String @map("user_id")
+  deviceId String @map("device_id")
+  event String @db.VarChar(255)
+  payload Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  whatsappMessages WhatsappMessage[]
+
+  @@index([userId])
+  @@map("webhook_logs")
+  @@schema("whatsapp")
+}
+
+enum WhatsappMessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  STICKER
+  VIDEO_NOTE
+  LOCATION
+  LIVE_LOCATION
+  CONTACT
+  CONTACTS_ARRAY
+  REACTION
+
+  @@schema("whatsapp")
+}
+
+model WhatsappMessage {
+  id String @id // WhatsApp Message ID
+
+  webhookLogId String @map("webhook_log_id")
+  webhookLog   WebhookLog @relation(fields: [webhookLogId], references: [id], onDelete: Cascade)
+
+  // Header info
+  chatId     String  @map("chat_id") @db.VarChar(50)
+  chatLid    String? @map("chat_lid") @db.VarChar(60)
+  from       String  @db.VarChar(50)
+  fromLid    String? @map("from_lid") @db.VarChar(60)
+  fromName   String? @map("from_name") @db.VarChar(100)
+  isFromMe   Boolean @default(false) @map("is_from_me")
+  waTimestamp DateTime @map("wa_timestamp")
+
+  // Content
+  messageType WhatsappMessageType @map("message_type")
+  body        String? @db.Text
+  
+  // Reply & Forward
+  repliedToId String? @map("replied_to_id") @db.VarChar(100)
+  quotedBody  String? @map("quoted_body") @db.Text
+  isForwarded Boolean @default(false) @map("is_forwarded")
+
+  // Media (image, video, audio, document, sticker, video_note)
+  mediaPath    String? @map("media_path") @db.VarChar(500)
+  mediaCaption String? @map("media_caption") @db.Text
+  originalUrl  String? @map("original_url") @db.VarChar(500)
+
+  // Location
+  latitude       Float?
+  longitude      Float?
+  locationThumbnail String? @map("location_thumbnail") @db.Text // Base64
+  locationSequence BigInt? @map("location_sequence")
+
+  // Contact
+  contactName String? @map("contact_name") @db.VarChar(100)
+  contactVcard String? @map("contact_vcard") @db.Text
+  contacts     Json?   @map("contacts") // Stores contacts_array if multiple
+
+  // Reaction
+  reaction         String? @db.VarChar(10)
+  reactedMessageId String? @map("reacted_message_id") @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([webhookLogId])
+  @@index([chatId])
+  @@index([from])
+  @@index([waTimestamp])
+  @@index([messageType])
+  @@map("whatsapp_messages")
+  @@schema("whatsapp")
 }

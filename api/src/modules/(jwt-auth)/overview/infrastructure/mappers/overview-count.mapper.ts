@@ -1,7 +1,7 @@
 import type { IOverviewCount } from "../../domain/entities/overview-count.entity.js";
 
 export function toOverviewCountEntity(data: {
-  whatsapp_log: number;
+  whatsapp_message: number;
   prayer_log: number;
   notification_webhook: number;
   notification: number;
@@ -9,7 +9,7 @@ export function toOverviewCountEntity(data: {
   api_key: number;
 }): IOverviewCount {
   return {
-    whatsapp_log: data.whatsapp_log,
+    whatsapp_message: data.whatsapp_message,
     prayer_log: data.prayer_log,
     notification_webhook: data.notification_webhook,
     notification: data.notification,

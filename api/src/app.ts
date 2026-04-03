@@ -7,10 +7,29 @@ import { getOpenApiDocumentation } from "./lib/openapi-registry.js";
 
 const app: Express = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+app.use(
+  express.urlencoded({
+    extended: true,
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
 app.use(express.static("public"));
 app.use(requestLogger);
+
+// Fix "Do not know how to serialize a BigInt" error for JSON responses
+app.set("json replacer", (_key: string, value: any) =>
+  typeof value === "bigint" ? value.toString() : value,
+);
+
 app.use("/api", router);
 
 app.use(

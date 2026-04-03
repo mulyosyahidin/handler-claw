@@ -4,7 +4,7 @@ import type { IOverviewCount } from "../../domain/entities/overview-count.entity
  * Data Contracts
  */
 export type OverviewCounts = {
-  whatsapp_log: number;
+  whatsapp_message: number;
   prayer_log: number;
   notification_webhook: number;
   notification: number;

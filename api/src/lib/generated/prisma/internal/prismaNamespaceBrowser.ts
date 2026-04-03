@@ -51,7 +51,6 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 export const ModelName = {
   User: 'User',
   PrayerLog: 'PrayerLog',
-  WhatsappLog: 'WhatsappLog',
   UserDevice: 'UserDevice',
   NotificationWebhook: 'NotificationWebhook',
   Notification: 'Notification',
@@ -60,7 +59,9 @@ export const ModelName = {
   EmailLog: 'EmailLog',
   AccountType: 'AccountType',
   Account: 'Account',
-  BalanceSnapshot: 'BalanceSnapshot'
+  BalanceSnapshot: 'BalanceSnapshot',
+  WebhookLog: 'WebhookLog',
+  WhatsappMessage: 'WhatsappMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -111,36 +112,6 @@ export const PrayerLogScalarFieldEnum = {
 } as const
 
 export type PrayerLogScalarFieldEnum = (typeof PrayerLogScalarFieldEnum)[keyof typeof PrayerLogScalarFieldEnum]
-
-
-export const WhatsappLogScalarFieldEnum = {
-  id: 'id',
-  receivedAt: 'receivedAt',
-  device: 'device',
-  mode: 'mode',
-  sender: 'sender',
-  senderLid: 'senderLid',
-  senderName: 'senderName',
-  isGroup: 'isGroup',
-  groupId: 'groupId',
-  memberPhone: 'memberPhone',
-  memberLid: 'memberLid',
-  messageText: 'messageText',
-  messageType: 'messageType',
-  isForwarded: 'isForwarded',
-  isQuick: 'isQuick',
-  inboxId: 'inboxId',
-  extension: 'extension',
-  filename: 'filename',
-  url: 'url',
-  location: 'location',
-  pollName: 'pollName',
-  pollChoices: 'pollChoices',
-  waTimestamp: 'waTimestamp',
-  userId: 'userId'
-} as const
-
-export type WhatsappLogScalarFieldEnum = (typeof WhatsappLogScalarFieldEnum)[keyof typeof WhatsappLogScalarFieldEnum]
 
 
 export const UserDeviceScalarFieldEnum = {
@@ -282,6 +253,53 @@ export const BalanceSnapshotScalarFieldEnum = {
 export type BalanceSnapshotScalarFieldEnum = (typeof BalanceSnapshotScalarFieldEnum)[keyof typeof BalanceSnapshotScalarFieldEnum]
 
 
+export const WebhookLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  event: 'event',
+  payload: 'payload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WebhookLogScalarFieldEnum = (typeof WebhookLogScalarFieldEnum)[keyof typeof WebhookLogScalarFieldEnum]
+
+
+export const WhatsappMessageScalarFieldEnum = {
+  id: 'id',
+  webhookLogId: 'webhookLogId',
+  chatId: 'chatId',
+  chatLid: 'chatLid',
+  from: 'from',
+  fromLid: 'fromLid',
+  fromName: 'fromName',
+  isFromMe: 'isFromMe',
+  waTimestamp: 'waTimestamp',
+  messageType: 'messageType',
+  body: 'body',
+  repliedToId: 'repliedToId',
+  quotedBody: 'quotedBody',
+  isForwarded: 'isForwarded',
+  mediaPath: 'mediaPath',
+  mediaCaption: 'mediaCaption',
+  originalUrl: 'originalUrl',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  locationThumbnail: 'locationThumbnail',
+  locationSequence: 'locationSequence',
+  contactName: 'contactName',
+  contactVcard: 'contactVcard',
+  contacts: 'contacts',
+  reaction: 'reaction',
+  reactedMessageId: 'reactedMessageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WhatsappMessageScalarFieldEnum = (typeof WhatsappMessageScalarFieldEnum)[keyof typeof WhatsappMessageScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -290,19 +308,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

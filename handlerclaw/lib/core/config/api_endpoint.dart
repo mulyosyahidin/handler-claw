@@ -10,7 +10,7 @@ class ApiEndpoint {
   static const String notificationList = "/notifications";
   static const String notificationDetail = "/notifications/{id}";
   static const String overview = "/overview";
-  static const String whatsappLogList = "/whatsapp-logs";
+  static const String whatsappMessageList = "/whatsapp-messages";
   static const String prayerLogList = "/prayer-logs";
   static const String prayerLogSummary = "/prayer-logs/summary";
   static const String userDevice = "/user-devices";

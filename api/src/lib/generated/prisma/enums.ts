@@ -125,3 +125,21 @@ export const AccountCategory = {
 } as const
 
 export type AccountCategory = (typeof AccountCategory)[keyof typeof AccountCategory]
+
+
+export const WhatsappMessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  DOCUMENT: 'DOCUMENT',
+  STICKER: 'STICKER',
+  VIDEO_NOTE: 'VIDEO_NOTE',
+  LOCATION: 'LOCATION',
+  LIVE_LOCATION: 'LIVE_LOCATION',
+  CONTACT: 'CONTACT',
+  CONTACTS_ARRAY: 'CONTACTS_ARRAY',
+  REACTION: 'REACTION'
+} as const
+
+export type WhatsappMessageType = (typeof WhatsappMessageType)[keyof typeof WhatsappMessageType]

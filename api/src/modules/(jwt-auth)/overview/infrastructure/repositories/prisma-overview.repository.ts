@@ -5,9 +5,15 @@ import type { OverviewRepository } from "../../domain/repositories/overview.repo
 
 export class PrismaOverviewRepository implements OverviewRepository {
   async getUserOverviewCounts(userId: string): Promise<OverviewCounts> {
-    const [whatsapp_log, prayer_log, notification_webhook, notification, device, api_key] =
+    const [whatsapp_message, prayer_log, notification_webhook, notification, device, api_key] =
       await Promise.all([
-        prisma.whatsappLog.count({ where: { userId } }),
+        prisma.whatsappMessage.count({
+          where: {
+            webhookLog: {
+              userId,
+            },
+          },
+        }),
         prisma.prayerLog.count({ where: { userId } }),
         prisma.notificationWebhook.count({ where: { userId } }),
         prisma.notification.count({ where: { userId } }),
@@ -18,7 +24,7 @@ export class PrismaOverviewRepository implements OverviewRepository {
       ]);
 
     return {
-      whatsapp_log,
+      whatsapp_message,
       prayer_log,
       notification_webhook,
       notification,

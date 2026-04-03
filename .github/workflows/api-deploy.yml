@@ -78,11 +78,13 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM_EMAIL: ${{ vars.RESEND_FROM_EMAIL }}
           JWT_EXPIRES_IN: ${{ vars.JWT_EXPIRES_IN }}
+          WAG_SECRET: ${{ secrets.WAG_SECRET }}
+          WAG_BASE_URL: ${{ vars.WAG_BASE_URL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL,JWT_EXPIRES_IN
+          envs: JWT_SECRET,DATABASE_URL,DB_PASSWORD,DOCKER_IMAGE,DEFAULT_USER_EMAIL,DEFAULT_USER_NAME,DEFAULT_USER_PASSWORD,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY,FIREBASE_CLIENT_EMAIL,RESEND_API_KEY,RESEND_FROM_EMAIL,JWT_EXPIRES_IN,WAG_SECRET,WAG_BASE_URL
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
 
@@ -114,6 +116,8 @@ jobs:
             printf "RESEND_API_KEY=%s\n" "$RESEND_API_KEY" >> .env
             printf "RESEND_FROM_EMAIL=%s\n" "$RESEND_FROM_EMAIL" >> .env
             printf "JWT_EXPIRES_IN=%s\n" "$JWT_EXPIRES_IN" >> .env
+            printf "WAG_SECRET=%s\n" "$WAG_SECRET" >> .env
+            printf "WAG_BASE_URL=%s\n" "$WAG_BASE_URL" >> .env
 
             # Escape tanda $ menjadi $$
             sed -i 's/\$/$$/g' .env

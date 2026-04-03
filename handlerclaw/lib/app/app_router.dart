@@ -15,7 +15,9 @@ import 'package:handlerclaw/features/splash/presentation/screens/splash_page.dar
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/prayer_log_page.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/add_prayer_log_page.dart';
 import 'package:handlerclaw/features/prayer-logs/presentation/screens/create_prayer_log_page.dart';
-import 'package:handlerclaw/features/whatsapp-logs/presentation/screens/whatsapp_logs_page.dart';
+import 'package:handlerclaw/features/whatsapp-hooks/presentation/screens/whatsapp_hooks_page.dart';
+import 'package:handlerclaw/features/whatsapp-hooks/presentation/screens/whatsapp_message_detail_page.dart';
+import 'package:handlerclaw/features/whatsapp-hooks/domain/entities/whatsapp_message_entity.dart';
 import 'package:handlerclaw/features/debug/presentation/screens/debug_page.dart';
 import 'package:handlerclaw/features/api-keys/presentation/screens/api_key_list_screen.dart';
 import 'package:handlerclaw/features/finances/presentation/screens/finance_dashboard_page.dart';
@@ -40,7 +42,8 @@ class Routes {
 
   static const notificationDetail = "/notification-detail/:id";
   static const notificationList = "/notifications";
-  static const whatsappLogs = "/whatsapp-logs";
+  static const whatsappMessages = "/whatsapp-messages";
+  static const whatsappMessageDetail = "/whatsapp-messages/:id";
   static const prayerLogs = "/prayer-logs";
   static const createPrayerLog = "/prayer-logs/create";
   static const devices = "/devices";
@@ -94,8 +97,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.whatsappLogs,
-        builder: (context, state) => const WhatsAppLogsPage(),
+        path: Routes.whatsappMessages,
+        builder: (context, state) => const WhatsappHooksPage(),
+      ),
+      GoRoute(
+        path: Routes.whatsappMessageDetail,
+        builder: (context, state) {
+          final message = state.extra as WhatsappMessageEntity;
+          return WhatsappMessageDetailPage(message: message);
+        },
       ),
       GoRoute(
         path: Routes.prayerLogs,
